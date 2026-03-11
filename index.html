@@ -3,388 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>金算 · 专业贷款计算器</title>
-  <!-- 引入 ECharts 5 & Font Awesome 6 (免费) -->
+  <title>金算 · 专业贷款计算器（完整版）</title>
+  <!-- 引入 ECharts & Font Awesome -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      background: #f5f7fb;
-      color: #1e293b;
-      line-height: 1.5;
-    }
-
-    .app {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 24px 20px;
-    }
-
-    /* header */
-    .header {
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(145deg, #0f2b5e, #1e4a7a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .logo i {
-      background: #1e4a7a;
-      color: white;
-      padding: 12px;
-      border-radius: 24px;
-      font-size: 1.4rem;
-    }
-
-    .badge {
-      background: #e6f0ff;
-      padding: 8px 16px;
-      border-radius: 40px;
-      color: #1e4a7a;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    /* 选项卡 */
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 28px;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 10px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #64748b;
-      border-radius: 40px 40px 0 0;
-      cursor: pointer;
-      transition: 0.2s;
-      position: relative;
-    }
-
-    .tab-btn i {
-      margin-right: 8px;
-    }
-
-    .tab-btn.active {
-      color: #1e4a7a;
-      background: #ffffff;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.02);
-    }
-
-    .tab-btn.active::after {
-      content: '';
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: #1e4a7a;
-      border-radius: 3px 3px 0 0;
-    }
-
-    /* 主面板：每个计算器独立 */
-    .calculator-panel {
-      display: none;
-      background: white;
-      border-radius: 32px;
-      box-shadow: 0 20px 40px -12px rgba(0,20,40,0.15);
-      padding: 28px 24px;
-      margin-bottom: 32px;
-    }
-
-    .calculator-panel.active {
-      display: block;
-    }
-
-    /* 两列布局：输入区 + 摘要区 */
-    .calc-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      margin-bottom: 32px;
-    }
-
-    @media (max-width: 800px) {
-      .calc-row {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-    }
-
-    /* 输入卡片 */
-    .input-card {
-      background: #f8fafd;
-      border-radius: 28px;
-      padding: 24px;
-    }
-
-    .input-card h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #0f2b5e;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-    }
-
-    .input-group label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: #334155;
-      font-size: 0.95rem;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: white;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 60px;
-      padding: 0 16px;
-      transition: 0.2s;
-    }
-
-    .input-wrapper:focus-within {
-      border-color: #1e4a7a;
-      box-shadow: 0 0 0 4px rgba(30,74,122,0.1);
-    }
-
-    .input-wrapper input {
-      width: 100%;
-      padding: 14px 8px 14px 0;
-      border: none;
-      background: transparent;
-      font-size: 1.1rem;
-      outline: none;
-    }
-
-    .input-wrapper span {
-      color: #64748b;
-      font-weight: 500;
-      padding-left: 8px;
-      border-left: 1px solid #e2e8f0;
-    }
-
-    /* 期限单位切换 */
-    .term-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .term-input {
-      flex: 2;
-    }
-
-    .term-unit {
-      flex: 1;
-    }
-
-    .term-unit select {
-      width: 100%;
-      height: 100%;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 60px;
-      padding: 0 16px;
-      background: white;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #1e293b;
-      outline: none;
-    }
-
-    /* 结果摘要卡片 */
-    .summary-card {
-      background: linear-gradient(145deg, #f0f4fe, #ffffff);
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    }
-
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 16px 0;
-      border-bottom: 1px dashed #dce3ec;
-    }
-
-    .summary-item:last-child {
-      border-bottom: none;
-    }
-
-    .summary-label {
-      font-size: 1rem;
-      color: #475569;
-    }
-
-    .summary-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f2b5e;
-    }
-
-    .summary-unit {
-      font-size: 1rem;
-      color: #62748c;
-      margin-left: 4px;
-    }
-
-    /* 图表区 */
-    .chart-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 32px;
-    }
-
-    .chart-card {
-      background: #f9fcff;
-      border-radius: 24px;
-      padding: 16px;
-    }
-
-    .chart-container {
-      width: 100%;
-      height: 240px;
-    }
-
-    /* 还款计划表 */
-    .schedule-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 20px 0 16px;
-    }
-
-    .schedule-header h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-
-    .pagination {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .pagination button {
-      background: white;
-      border: 1px solid #cbd5e1;
-      border-radius: 30px;
-      width: 36px;
-      height: 36px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .pagination button:hover {
-      background: #1e4a7a;
-      color: white;
-      border-color: #1e4a7a;
-    }
-
-    .pagination span {
-      font-weight: 500;
-    }
-
-    .table-wrapper {
-      max-height: 360px;
-      overflow-y: auto;
-      border-radius: 20px;
-      border: 1px solid #e9eef3;
-      background: white;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    th {
-      background: #f0f5fa;
-      padding: 16px 10px;
-      font-weight: 600;
-      color: #1e3a5f;
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid #eef2f6;
-      text-align: right;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5f7fb; color: #1e293b; line-height: 1.5; }
+    .app { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+    .header { margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.8rem; font-weight: 700; background: linear-gradient(145deg, #0f2b5e, #1e4a7a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .logo i { background: #1e4a7a; color: white; padding: 12px; border-radius: 24px; font-size: 1.4rem; -webkit-text-fill-color: white; }
+    .badge { background: #e6f0ff; padding: 8px 16px; border-radius: 40px; color: #1e4a7a; font-weight: 500; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    .tab-btn { background: transparent; border: none; padding: 12px 28px; font-size: 1.1rem; font-weight: 600; color: #64748b; border-radius: 40px 40px 0 0; cursor: pointer; transition: 0.2s; position: relative; }
+    .tab-btn i { margin-right: 8px; }
+    .tab-btn.active { color: #1e4a7a; background: #ffffff; box-shadow: 0 -2px 8px rgba(0,0,0,0.02); }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: -12px; left: 0; width: 100%; height: 3px; background: #1e4a7a; border-radius: 3px 3px 0 0; }
+    .calculator-panel { display: none; background: white; border-radius: 32px; box-shadow: 0 20px 40px -12px rgba(0,20,40,0.15); padding: 28px 24px; margin-bottom: 32px; }
+    .calculator-panel.active { display: block; }
+    .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+    @media (max-width:800px){ .calc-row { grid-template-columns:1fr; } }
+    .input-card { background: #f8fafd; border-radius: 28px; padding: 24px; }
+    .input-card h3 { font-size:1.4rem; font-weight:600; margin-bottom:20px; display:flex; align-items:center; gap:8px; color:#0f2b5e; }
+    .input-group { margin-bottom:20px; }
+    .input-group label { display:block; font-weight:500; margin-bottom:8px; color:#334155; font-size:0.95rem; }
+    .input-wrapper { display:flex; align-items:center; background:white; border:1.5px solid #e2e8f0; border-radius:60px; padding:0 16px; transition:0.2s; }
+    .input-wrapper:focus-within { border-color:#1e4a7a; box-shadow:0 0 0 4px rgba(30,74,122,0.1); }
+    .input-wrapper input { width:100%; padding:14px 8px 14px 0; border:none; background:transparent; font-size:1.1rem; outline:none; }
+    .input-wrapper span { color:#64748b; font-weight:500; padding-left:8px; border-left:1px solid #e2e8f0; }
+    .term-row { display:flex; gap:12px; }
+    .term-input { flex:2; }
+    .term-unit { flex:1; }
+    .term-unit select { width:100%; height:100%; border:1.5px solid #e2e8f0; border-radius:60px; padding:0 16px; background:white; font-size:1rem; font-weight:500; color:#1e293b; outline:none; }
+    .summary-card { background: linear-gradient(145deg, #f0f4fe, #ffffff); border-radius: 28px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+    .summary-item { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 0; border-bottom: 1px dashed #dce3ec; }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-label { font-size: 1rem; color: #475569; }
+    .summary-value { font-size: 2rem; font-weight: 700; color: #0f2b5e; }
+    .summary-unit { font-size: 1rem; color: #62748c; margin-left: 4px; }
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+    .chart-card { background: #f9fcff; border-radius: 24px; padding: 16px; }
+    .chart-container { width: 100%; height: 240px; }
+    .schedule-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 16px; }
+    .schedule-header h3 { font-size: 1.3rem; font-weight: 600; }
+    .pagination { display: flex; gap: 8px; align-items: center; }
+    .pagination button { background: white; border: 1px solid #cbd5e1; border-radius: 30px; width: 36px; height: 36px; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
+    .pagination button:hover { background: #1e4a7a; color: white; border-color: #1e4a7a; }
+    .pagination span { font-weight: 500; }
+    .table-wrapper { max-height: 360px; overflow-y: auto; border-radius: 20px; border: 1px solid #e9eef3; background: white; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { background: #f0f5fa; padding: 16px 10px; font-weight: 600; color: #1e3a5f; position: sticky; top: 0; z-index: 5; }
+    td { padding: 12px 10px; border-bottom: 1px solid #eef2f6; text-align: right; }
     td:first-child, th:first-child { text-align: center; }
-
-    /* 错误提示 */
-    .error-msg {
-      color: #b91c1c;
-      background: #fee2e2;
-      border-radius: 40px;
-      padding: 10px 18px;
-      margin-top: 16px;
-      font-size: 0.9rem;
-    }
-
-    /* 页脚 */
-    .footer {
-      margin-top: 40px;
-      text-align: center;
-      color: #64748b;
-      font-size: 0.85rem;
-    }
-
-    .footer a {
-      color: #1e4a7a;
-      text-decoration: none;
-    }
+    .error-msg { color: #b91c1c; background: #fee2e2; border-radius: 40px; padding: 10px 18px; margin-top: 16px; font-size: 0.9rem; }
+    .footer { margin-top: 40px; text-align: center; color: #64748b; font-size: 0.85rem; }
+    .footer a { color: #1e4a7a; text-decoration: none; }
   </style>
 </head>
 <body>
 <div class="app">
   <header class="header">
-    <div class="logo">
-      <i class="fas fa-calculator"></i> 
-      <span>金算 · 金融贷款工具</span>
-    </div>
+    <div class="logo"><i class="fas fa-calculator"></i> <span>金算 · 金融贷款工具</span></div>
     <div class="badge"><i class="fas fa-shield-alt"></i> 中国通用规则 · 精准计算</div>
   </header>
 
@@ -401,21 +81,9 @@
     <div class="calc-row">
       <div class="input-card">
         <h3><i class="fas fa-arrow-right" style="color:#1e4a7a;"></i> 已知月供反推利率</h3>
-        <div class="input-group">
-          <label>贷款总额 (元)</label>
-          <div class="input-wrapper"><input type="number" id="remi-amount" value="500000" step="1000"><span>元</span></div>
-        </div>
-        <div class="input-group">
-          <label>贷款期限</label>
-          <div class="term-row">
-            <div class="term-input input-wrapper"><input type="number" id="remi-term" value="30" step="1"></div>
-            <div class="term-unit"><select id="remi-term-unit"><option value="12" selected>年</option><option value="1">月</option><option value="3">季度</option></select></div>
-          </div>
-        </div>
-        <div class="input-group">
-          <label>每期还款额 (元)</label>
-          <div class="input-wrapper"><input type="number" id="remi-pmt" value="3200" step="10"><span>元</span></div>
-        </div>
+        <div class="input-group"><label>贷款总额 (元)</label><div class="input-wrapper"><input type="number" id="remi-amount" value="500000" step="1000"><span>元</span></div></div>
+        <div class="input-group"><label>贷款期限</label><div class="term-row"><div class="term-input input-wrapper"><input type="number" id="remi-term" value="30" step="1"></div><div class="term-unit"><select id="remi-term-unit"><option value="12" selected>年</option><option value="1">月</option><option value="3">季度</option></select></div></div></div>
+        <div class="input-group"><label>每期还款额 (元)</label><div class="input-wrapper"><input type="number" id="remi-pmt" value="3200" step="10"><span>元</span></div></div>
         <div id="remi-error" class="error-msg" style="display: none;"></div>
       </div>
       <div class="summary-card" id="remi-summary">
@@ -424,33 +92,39 @@
         <div class="summary-item"><span class="summary-label">总利息</span><span><span class="summary-value" id="remi-total-interest">0.00</span><span class="summary-unit">元</span></span></div>
       </div>
     </div>
-    <!-- 图表 -->
     <div class="chart-row">
       <div class="chart-card"><div id="remi-chart-pie" class="chart-container"></div></div>
       <div class="chart-card"><div id="remi-chart-line" class="chart-container"></div></div>
     </div>
-    <!-- 还款计划表 -->
     <div class="schedule-header">
       <h3><i class="fas fa-table"></i> 等额本息还款计划</h3>
-      <div class="pagination" id="remi-pagination"><button id="remi-prev"><i class="fas fa-chevron-left"></i></button><span id="remi-page">1/1</span><button id="remi-next"><i class="fas fa-chevron-right"></i></button></div>
+      <div class="pagination" id="remi-pagination">
+        <button id="remi-prev"><i class="fas fa-chevron-left"></i></button>
+        <span id="remi-page">1/1</span>
+        <button id="remi-next"><i class="fas fa-chevron-right"></i></button>
+      </div>
     </div>
-    <div class="table-wrapper"><table id="remi-table"><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody></tbody></table></div>
+    <div class="table-wrapper"><table><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody id="remi-table-body"></tbody></table></div>
   </div>
 
-  <!-- 面板2: 先息后本反推 (结构类似, 为篇幅简写核心, 实际完整包含) -->
+  <!-- 面板2: 先息后本反推 -->
   <div id="panel-rateInterest" class="calculator-panel">
-    <div class="calc-row"> <!-- 先息后本输入区 -->
+    <div class="calc-row">
       <div class="input-card"><h3><i class="fas fa-hand-holding-usd"></i> 先息后本反推</h3>
         <div class="input-group"><label>贷款总额 (元)</label><div class="input-wrapper"><input type="number" id="rinter-amount" value="500000" step="1000"><span>元</span></div></div>
-        <div class="input-group"><label>贷款期限</label><div class="term-row"><div class="term-input input-wrapper"><input type="number" id="rinter-term" value="12" step="1"></div><div class="term-unit"><select id="rinter-term-unit"><option value="1">月</option><option value="12">年</option><option value="3">季度</option></select></div></div></div>
+        <div class="input-group"><label>贷款期限</label><div class="term-row"><div class="term-input input-wrapper"><input type="number" id="rinter-term" value="12" step="1"></div><div class="term-unit"><select id="rinter-term-unit"><option value="1" selected>月</option><option value="12">年</option><option value="3">季度</option></select></div></div></div>
         <div class="input-group"><label>每期支付利息 (元)</label><div class="input-wrapper"><input type="number" id="rinter-interest" value="2000" step="10"><span>元</span></div></div>
         <div id="rinter-error" class="error-msg" style="display: none;"></div>
       </div>
-      <div class="summary-card" id="rinter-summary"><div class="summary-item"><span>推算年化利率</span><span><span id="rinter-rate-year">0.00</span>%</span></div><div class="summary-item"><span>月利率</span><span><span id="rinter-rate-month">0.000</span>‰</span></div><div class="summary-item"><span>总利息</span><span><span id="rinter-total-interest">0.00</span>元</span></div></div>
+      <div class="summary-card" id="rinter-summary">
+        <div class="summary-item"><span>推算年化利率</span><span><span id="rinter-rate-year">0.00</span>%</span></div>
+        <div class="summary-item"><span>月利率</span><span><span id="rinter-rate-month">0.000</span>‰</span></div>
+        <div class="summary-item"><span>总利息</span><span><span id="rinter-total-interest">0.00</span>元</span></div>
+      </div>
     </div>
     <div class="chart-row"><div class="chart-card"><div id="rinter-chart-pie" class="chart-container"></div></div><div class="chart-card"><div id="rinter-chart-line" class="chart-container"></div></div></div>
     <div class="schedule-header"><h3>先息后本计划</h3><div class="pagination" id="rinter-pagination"><button id="rinter-prev"><i class="fas fa-chevron-left"></i></button><span id="rinter-page">1/1</span><button id="rinter-next"><i class="fas fa-chevron-right"></i></button></div></div>
-    <div class="table-wrapper"><table id="rinter-table"><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody></tbody></table></div>
+    <div class="table-wrapper"><table><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody id="rinter-table-body"></tbody></table></div>
   </div>
 
   <!-- 面板3: 标准等额本息 -->
@@ -462,11 +136,15 @@
         <div class="input-group"><label>贷款期限</label><div class="term-row"><div class="term-input input-wrapper"><input type="number" id="stde-term" value="30" step="1"></div><div class="term-unit"><select id="stde-term-unit"><option value="12" selected>年</option><option value="1">月</option><option value="3">季度</option></select></div></div></div>
         <div id="stde-error" class="error-msg" style="display: none;"></div>
       </div>
-      <div class="summary-card"><div class="summary-item"><span>每月月供</span><span><span id="stde-pmt">0.00</span>元</span></div><div class="summary-item"><span>总利息</span><span><span id="stde-total-interest">0.00</span>元</span></div><div class="summary-item"><span>总还款额</span><span><span id="stde-total">0.00</span>元</span></div></div>
+      <div class="summary-card">
+        <div class="summary-item"><span>每月月供</span><span><span id="stde-pmt">0.00</span>元</span></div>
+        <div class="summary-item"><span>总利息</span><span><span id="stde-total-interest">0.00</span>元</span></div>
+        <div class="summary-item"><span>总还款额</span><span><span id="stde-total">0.00</span>元</span></div>
+      </div>
     </div>
     <div class="chart-row"><div class="chart-card"><div id="stde-chart-pie" class="chart-container"></div></div><div class="chart-card"><div id="stde-chart-line" class="chart-container"></div></div></div>
     <div class="schedule-header"><h3>等额本息计划</h3><div class="pagination" id="stde-pagination"><button id="stde-prev"><i class="fas fa-chevron-left"></i></button><span id="stde-page">1/1</span><button id="stde-next"><i class="fas fa-chevron-right"></i></button></div></div>
-    <div class="table-wrapper"><table id="stde-table"><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody></tbody></table></div>
+    <div class="table-wrapper"><table><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody id="stde-table-body"></tbody></table></div>
   </div>
 
   <!-- 面板4: 标准等额本金 -->
@@ -478,11 +156,15 @@
         <div class="input-group"><label>贷款期限</label><div class="term-row"><div class="term-input input-wrapper"><input type="number" id="stdp-term" value="30" step="1"></div><div class="term-unit"><select id="stdp-term-unit"><option value="12" selected>年</option><option value="1">月</option><option value="3">季度</option></select></div></div></div>
         <div id="stdp-error" class="error-msg" style="display: none;"></div>
       </div>
-      <div class="summary-card"><div class="summary-item"><span>首月月供</span><span><span id="stdp-first">0.00</span>元</span></div><div class="summary-item"><span>每月递减</span><span><span id="stdp-decrease">0.00</span>元</span></div><div class="summary-item"><span>总利息</span><span><span id="stdp-total-interest">0.00</span>元</span></div></div>
+      <div class="summary-card">
+        <div class="summary-item"><span>首月月供</span><span><span id="stdp-first">0.00</span>元</span></div>
+        <div class="summary-item"><span>每月递减</span><span><span id="stdp-decrease">0.00</span>元</span></div>
+        <div class="summary-item"><span>总利息</span><span><span id="stdp-total-interest">0.00</span>元</span></div>
+      </div>
     </div>
     <div class="chart-row"><div class="chart-card"><div id="stdp-chart-pie" class="chart-container"></div></div><div class="chart-card"><div id="stdp-chart-line" class="chart-container"></div></div></div>
     <div class="schedule-header"><h3>等额本金计划</h3><div class="pagination" id="stdp-pagination"><button id="stdp-prev"><i class="fas fa-chevron-left"></i></button><span id="stdp-page">1/1</span><button id="stdp-next"><i class="fas fa-chevron-right"></i></button></div></div>
-    <div class="table-wrapper"><table id="stdp-table"><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody></tbody></table></div>
+    <div class="table-wrapper"><table><thead><tr><th>期数</th><th>月供(元)</th><th>利息(元)</th><th>本金(元)</th><th>剩余本金(元)</th></tr></thead><tbody id="stdp-table-body"></tbody></table></div>
   </div>
 
   <footer class="footer">
@@ -493,37 +175,104 @@
 
 <script>
   (function() {
-    // ---------- 全局辅助函数 ----------
+    // ---------- 通用工具函数 ----------
     const roundMoney = (val) => Math.round(val * 100) / 100;
     const formatMoney = (val) => val.toFixed(2);
     const formatPercent = (val) => val.toFixed(2);
     const formatPermil = (val) => (val * 1000).toFixed(3); // 月利率转‰
 
-    // 根据单位获取月数系数
-    const unitToMonth = (unitVal) => parseInt(unitVal, 10); // 年12, 月1, 季度3
+    // 根据单位值获取月数系数: 年12, 月1, 季度3
+    function getUnitFactor(unitSelect) {
+      return parseInt(unitSelect.value, 10);
+    }
 
     // 从期限输入+单位获取总月数
     function getMonths(termValue, unitSelect) {
-      const unit = parseInt(unitSelect.value, 10);
-      return termValue * unit;
+      return termValue * getUnitFactor(unitSelect);
     }
 
-    // ---------- 等额本息计算器 (标准) ----------
-    function calcEmiSchedule(P, annualRate, months) {
-      if (P <= 0 || months <= 0 || annualRate < 0) return null;
+    // 单位切换自动换算：保持总月数不变，更新输入框的值
+    function attachUnitConverter(termInput, unitSelect) {
+      unitSelect.addEventListener('change', function() {
+        let term = parseFloat(termInput.value);
+        if (isNaN(term) || term <= 0) return;
+        const oldUnit = parseInt(this.dataset.lastUnit || this.value, 10);
+        const newUnit = parseInt(this.value, 10);
+        // 保存当前单位用于下次换算
+        this.dataset.lastUnit = this.value;
+        // 计算总月数
+        const totalMonths = term * oldUnit;
+        // 根据新单位计算新的term值
+        const newTerm = totalMonths / newUnit;
+        if (Number.isFinite(newTerm) && newTerm > 0) {
+          termInput.value = newTerm.toFixed(termInput.value.includes('.') ? 2 : 0);
+          termInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      });
+      // 初始化 lastUnit
+      unitSelect.dataset.lastUnit = unitSelect.value;
+    }
+
+    // 渲染表格通用
+    function renderTable(tbodyId, schedule, page = 1, pageSize = 20) {
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!schedule || schedule.length === 0) return;
+      const start = (page - 1) * pageSize;
+      const end = Math.min(start + pageSize, schedule.length);
+      for (let i = start; i < end; i++) {
+        const row = schedule[i];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.period}</td><td>${formatMoney(row.payment)}</td><td>${formatMoney(row.interest)}</td><td>${formatMoney(row.principal)}</td><td>${formatMoney(row.balance)}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    // 饼图
+    function renderPieChart(containerId, principal, interest) {
+      const chart = echarts.init(document.getElementById(containerId));
+      chart.setOption({
+        tooltip: { trigger: 'item' },
+        series: [{
+          type: 'pie', radius: '60%',
+          data: [
+            { name: '本金总额', value: roundMoney(principal) },
+            { name: '利息总额', value: roundMoney(interest) }
+          ],
+          label: { show: true, formatter: '{b}: {d}%' }
+        }]
+      });
+    }
+
+    // 折线图 (利息和剩余本金)
+    function renderLineChart(containerId, periods, interestData, balanceData) {
+      const chart = echarts.init(document.getElementById(containerId));
+      chart.setOption({
+        tooltip: { trigger: 'axis' },
+        xAxis: { type: 'category', data: periods },
+        yAxis: { type: 'value', name: '金额 (元)' },
+        series: [
+          { name: '每月利息', type: 'line', data: interestData },
+          { name: '剩余本金', type: 'line', data: balanceData }
+        ]
+      });
+    }
+
+    // ---------- 等额本息标准计划生成 (返回schedule和pmt) ----------
+    function generateEmiSchedule(P, annualRate, months) {
+      if (P <= 0 || months <= 0) return null;
       const monthlyRate = annualRate / 100 / 12;
       let schedule = [];
       let remaining = P;
-      let pmt = 0;
+      let pmt;
       if (annualRate === 0) {
         pmt = P / months;
         for (let i = 1; i <= months; i++) {
+          let principal = (i === months) ? remaining : pmt;
           let interest = 0;
-          let principal = pmt;
-          if (i === months) principal = remaining; // 修正尾差
-          interest = 0;
           remaining -= principal;
-          schedule.push({ period: i, payment: roundMoney(pmt), interest: roundMoney(interest), principal: roundMoney(principal), balance: roundMoney(remaining) });
+          schedule.push({ period: i, payment: roundMoney(pmt), interest: 0, principal: roundMoney(principal), balance: roundMoney(remaining) });
         }
       } else {
         const compound = Math.pow(1 + monthlyRate, months);
@@ -531,8 +280,8 @@
         for (let i = 1; i <= months; i++) {
           let interest = remaining * monthlyRate;
           let principal = pmt - interest;
-          if (i === months) principal = remaining; // 最后一期补齐
-          interest = pmt - principal; // 重新计算利息避免精度
+          if (i === months) principal = remaining; // 尾差修正
+          interest = pmt - principal; // 重新计算利息避免累积误差
           remaining -= principal;
           schedule.push({ period: i, payment: roundMoney(pmt), interest: roundMoney(interest), principal: roundMoney(principal), balance: roundMoney(remaining) });
         }
@@ -540,8 +289,8 @@
       return { schedule, pmt: roundMoney(pmt) };
     }
 
-    // ---------- 等额本金 ----------
-    function calcPrincipalSchedule(P, annualRate, months) {
+    // 等额本金计划生成
+    function generatePrincipalSchedule(P, annualRate, months) {
       if (P <= 0 || months <= 0) return null;
       const monthlyRate = annualRate / 100 / 12;
       const basePrincipal = P / months;
@@ -549,23 +298,24 @@
       let remaining = P;
       for (let i = 1; i <= months; i++) {
         let interest = remaining * monthlyRate;
-        let principal = basePrincipal;
-        if (i === months) principal = remaining; // 尾差调整
+        let principal = (i === months) ? remaining : basePrincipal;
         let payment = principal + interest;
         remaining -= principal;
         schedule.push({ period: i, payment: roundMoney(payment), interest: roundMoney(interest), principal: roundMoney(principal), balance: roundMoney(remaining) });
       }
       const first = schedule[0].payment;
       const decrease = schedule.length > 1 ? schedule[0].payment - schedule[1].payment : 0;
-      return { schedule, first, decrease };
+      return { schedule, first: roundMoney(first), decrease: roundMoney(decrease) };
     }
 
-    // ---------- 二分法反推等额本息利率 ----------
+    // 二分法反推等额本息月利率
     function findRateByEmi(P, months, pmt, tol = 1e-8, maxIter = 100) {
-      if (pmt <= P / months) return { rate: 0, error: '月供过低，无法推算' }; // 利率为0时月供正好是P/months
+      if (pmt <= P / months) return { rate: 0, error: '月供过低，无法推算' };
       let low = 0, high = 1; // 月利率上限100%
       let f_low = P / months - pmt; // 负值
-      let f_high = (P * high * Math.pow(1 + high, months) / (Math.pow(1 + high, months) - 1)) - pmt;
+      if (high === 0) return { rate: 0, error: null };
+      let compoundHigh = Math.pow(1 + high, months);
+      let f_high = P * high * compoundHigh / (compoundHigh - 1) - pmt;
       if (f_high < 0) return { rate: 0, error: '月供过高，超出推算范围' };
       for (let iter = 0; iter < maxIter; iter++) {
         let mid = (low + high) / 2;
@@ -582,72 +332,20 @@
       return { rate: (low + high) / 2, error: null };
     }
 
-    // ---------- 绘制饼图 & 折线图 (简化) ----------
-    function renderPieChart(containerId, principal, interest) {
-      const chart = echarts.init(document.getElementById(containerId));
-      chart.setOption({
-        tooltip: { trigger: 'item' },
-        series: [{
-          type: 'pie', radius: '60%',
-          data: [
-            { name: '本金总额', value: roundMoney(principal) },
-            { name: '利息总额', value: roundMoney(interest) }
-          ],
-          label: { show: true, formatter: '{b}: {d}%' }
-        }]
-      });
-    }
-
-    function renderLineChart(containerId, periods, interestData, balanceData) {
-      const chart = echarts.init(document.getElementById(containerId));
-      chart.setOption({
-        tooltip: { trigger: 'axis' },
-        xAxis: { type: 'category', data: periods },
-        yAxis: { type: 'value', name: '金额 (元)' },
-        series: [
-          { name: '每月利息', type: 'line', data: interestData },
-          { name: '剩余本金', type: 'line', data: balanceData }
-        ]
-      });
-    }
-
-    // ---------- 表格渲染与分页 ----------
-    function renderTable(tbodyId, schedule, page = 1, pageSize = 20) {
-      const tbody = document.getElementById(tbodyId);
-      if (!tbody) return;
-      tbody.innerHTML = '';
-      const start = (page - 1) * pageSize;
-      const end = Math.min(start + pageSize, schedule.length);
-      for (let i = start; i < end; i++) {
-        const row = schedule[i];
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${row.period}</td><td>${formatMoney(row.payment)}</td><td>${formatMoney(row.interest)}</td><td>${formatMoney(row.principal)}</td><td>${formatMoney(row.balance)}</td>`;
-        tbody.appendChild(tr);
-      }
-    }
-
-    // 以下为每个面板的控制器 (简写, 仅列举核心逻辑, 完整实现略长但原理一致)
-    // 由于篇幅限制，在此仅实现第一个面板作为完整示例，其余面板可类似扩展。但本demo展示全部面板框架。
-    // 实际生产需为每个面板绑定事件并计算。此处为了保证可运行，我们只完成第一个面板 remi 的完整逻辑。
-    // 其他面板留空但结构完整。您可依此模式自行补全。
-
-    // ========== 面板1: 等额本息反推 (完整) ==========
+    // ---------- 面板1: 等额本息反推 ----------
     const remiAmount = document.getElementById('remi-amount');
     const remiTerm = document.getElementById('remi-term');
     const remiUnit = document.getElementById('remi-term-unit');
     const remiPmt = document.getElementById('remi-pmt');
     const remiError = document.getElementById('remi-error');
-
     let remiSchedule = [];
-    let remiTotalInterest = 0;
-    let remiTotalPrincipal = 0;
+    let remiCurrentPage = 1;
 
     function updateRemi() {
       const P = parseFloat(remiAmount.value) || 0;
       const termVal = parseFloat(remiTerm.value) || 0;
       const months = getMonths(termVal, remiUnit);
       const pmt = parseFloat(remiPmt.value) || 0;
-
       if (P <= 0 || months <= 0 || pmt <= 0) {
         remiError.style.display = 'block';
         remiError.innerText = '请完整填写正数';
@@ -664,13 +362,13 @@
       document.getElementById('remi-rate-year').innerText = formatPercent(annualRate);
       document.getElementById('remi-rate-month').innerText = formatPermil(monthlyRate);
 
-      // 生成计划 (使用该月利率)
+      // 生成计划 (使用该月利率, 但每月还款额固定为输入的pmt)
       let remaining = P;
       let schedule = [];
       for (let i = 1; i <= months; i++) {
         let interest = remaining * monthlyRate;
         let principal = pmt - interest;
-        if (i === months) principal = remaining;
+        if (i === months) principal = remaining; // 最后一期还清剩余
         interest = pmt - principal;
         remaining -= principal;
         schedule.push({ period: i, payment: roundMoney(pmt), interest: roundMoney(interest), principal: roundMoney(principal), balance: roundMoney(remaining) });
@@ -678,39 +376,280 @@
       remiSchedule = schedule;
       const totalInterest = schedule.reduce((acc, cur) => acc + cur.interest, 0);
       document.getElementById('remi-total-interest').innerText = formatMoney(totalInterest);
-      // 图表
+
+      // 饼图
       renderPieChart('remi-chart-pie', P, totalInterest);
+      // 折线图 (取前120期防止过于密集，或全部)
       const periods = schedule.map(s => s.period);
       const interestData = schedule.map(s => s.interest);
       const balanceData = schedule.map(s => s.balance);
-      renderLineChart('remi-chart-line', periods.slice(0, Math.min(60, periods.length)), interestData.slice(0,60), balanceData.slice(0,60));
+      renderLineChart('remi-chart-line', periods.slice(0,120), interestData.slice(0,120), balanceData.slice(0,120));
 
-      // 分页
-      let page = 1;
+      // 分页重置
+      remiCurrentPage = 1;
       const totalPages = Math.ceil(schedule.length / 20);
-      document.getElementById('remi-page').innerText = `${page}/${totalPages}`;
-      renderTable('remi-table tbody', schedule, page);
+      document.getElementById('remi-page').innerText = `${remiCurrentPage}/${totalPages}`;
+      renderTable('remi-table-body', schedule, remiCurrentPage);
     }
 
     remiAmount.addEventListener('input', updateRemi);
     remiTerm.addEventListener('input', updateRemi);
     remiUnit.addEventListener('change', updateRemi);
     remiPmt.addEventListener('input', updateRemi);
-    updateRemi();
+    attachUnitConverter(remiTerm, remiUnit);
 
-    // 分页按钮
-    document.getElementById('remi-prev').addEventListener('click', ()=>{
-      // 此处需维护页码变量，限于篇幅略，可自行完善。
+    document.getElementById('remi-prev').addEventListener('click', () => {
+      if (!remiSchedule.length) return;
+      const totalPages = Math.ceil(remiSchedule.length / 20);
+      if (remiCurrentPage > 1) {
+        remiCurrentPage--;
+        renderTable('remi-table-body', remiSchedule, remiCurrentPage);
+        document.getElementById('remi-page').innerText = `${remiCurrentPage}/${totalPages}`;
+      }
+    });
+    document.getElementById('remi-next').addEventListener('click', () => {
+      if (!remiSchedule.length) return;
+      const totalPages = Math.ceil(remiSchedule.length / 20);
+      if (remiCurrentPage < totalPages) {
+        remiCurrentPage++;
+        renderTable('remi-table-body', remiSchedule, remiCurrentPage);
+        document.getElementById('remi-page').innerText = `${remiCurrentPage}/${totalPages}`;
+      }
     });
 
-    // ========== 选项卡切换 ==========
+    // 初始化
+    updateRemi();
+
+    // ---------- 面板2: 先息后本反推 ----------
+    const rinterAmount = document.getElementById('rinter-amount');
+    const rinterTerm = document.getElementById('rinter-term');
+    const rinterUnit = document.getElementById('rinter-term-unit');
+    const rinterInterest = document.getElementById('rinter-interest');
+    const rinterError = document.getElementById('rinter-error');
+    let rinterSchedule = [];
+    let rinterCurrentPage = 1;
+
+    function updateRinter() {
+      const P = parseFloat(rinterAmount.value) || 0;
+      const termVal = parseFloat(rinterTerm.value) || 0;
+      const months = getMonths(termVal, rinterUnit);
+      const interestPerPeriod = parseFloat(rinterInterest.value) || 0;
+      if (P <= 0 || months <= 0 || interestPerPeriod <= 0) {
+        rinterError.style.display = 'block';
+        rinterError.innerText = '请完整填写正数';
+        return;
+      }
+      if (interestPerPeriod >= P) {
+        rinterError.style.display = 'block';
+        rinterError.innerText = '每期利息不能大于或等于本金';
+        return;
+      }
+      rinterError.style.display = 'none';
+      const monthlyRate = interestPerPeriod / P;
+      const annualRate = monthlyRate * 12 * 100;
+      document.getElementById('rinter-rate-year').innerText = formatPercent(annualRate);
+      document.getElementById('rinter-rate-month').innerText = formatPermil(monthlyRate);
+
+      // 生成先息后本计划: 前 months-1 期只付利息, 最后一期还本+利息
+      let schedule = [];
+      let remaining = P;
+      for (let i = 1; i <= months; i++) {
+        let interest = remaining * monthlyRate;
+        let principal = 0;
+        let payment = interest;
+        if (i === months) {
+          principal = remaining;
+          payment = interest + principal;
+          remaining = 0;
+        } else {
+          payment = interest;
+          // 本金不变
+        }
+        schedule.push({
+          period: i,
+          payment: roundMoney(payment),
+          interest: roundMoney(interest),
+          principal: roundMoney(principal),
+          balance: roundMoney(remaining)
+        });
+        if (i < months) remaining = P; // 前n-1期本金不变
+      }
+      rinterSchedule = schedule;
+      const totalInterest = schedule.reduce((acc, cur) => acc + cur.interest, 0);
+      document.getElementById('rinter-total-interest').innerText = formatMoney(totalInterest);
+      renderPieChart('rinter-chart-pie', P, totalInterest);
+      const periods = schedule.map(s => s.period);
+      const interestData = schedule.map(s => s.interest);
+      const balanceData = schedule.map(s => s.balance);
+      renderLineChart('rinter-chart-line', periods.slice(0,120), interestData.slice(0,120), balanceData.slice(0,120));
+
+      rinterCurrentPage = 1;
+      const totalPages = Math.ceil(schedule.length / 20);
+      document.getElementById('rinter-page').innerText = `${rinterCurrentPage}/${totalPages}`;
+      renderTable('rinter-table-body', schedule, rinterCurrentPage);
+    }
+
+    rinterAmount.addEventListener('input', updateRinter);
+    rinterTerm.addEventListener('input', updateRinter);
+    rinterUnit.addEventListener('change', updateRinter);
+    rinterInterest.addEventListener('input', updateRinter);
+    attachUnitConverter(rinterTerm, rinterUnit);
+
+    document.getElementById('rinter-prev').addEventListener('click', () => {
+      if (!rinterSchedule.length) return;
+      const totalPages = Math.ceil(rinterSchedule.length / 20);
+      if (rinterCurrentPage > 1) {
+        rinterCurrentPage--;
+        renderTable('rinter-table-body', rinterSchedule, rinterCurrentPage);
+        document.getElementById('rinter-page').innerText = `${rinterCurrentPage}/${totalPages}`;
+      }
+    });
+    document.getElementById('rinter-next').addEventListener('click', () => {
+      if (!rinterSchedule.length) return;
+      const totalPages = Math.ceil(rinterSchedule.length / 20);
+      if (rinterCurrentPage < totalPages) {
+        rinterCurrentPage++;
+        renderTable('rinter-table-body', rinterSchedule, rinterCurrentPage);
+        document.getElementById('rinter-page').innerText = `${rinterCurrentPage}/${totalPages}`;
+      }
+    });
+
+    // ---------- 面板3: 标准等额本息 ----------
+    const stdeAmount = document.getElementById('stde-amount');
+    const stdeRate = document.getElementById('stde-rate');
+    const stdeTerm = document.getElementById('stde-term');
+    const stdeUnit = document.getElementById('stde-term-unit');
+    const stdeError = document.getElementById('stde-error');
+    let stdeSchedule = [];
+    let stdeCurrentPage = 1;
+
+    function updateStde() {
+      const P = parseFloat(stdeAmount.value) || 0;
+      const annualRate = parseFloat(stdeRate.value) || 0;
+      const termVal = parseFloat(stdeTerm.value) || 0;
+      const months = getMonths(termVal, stdeUnit);
+      if (P <= 0 || months <= 0 || annualRate < 0) {
+        stdeError.style.display = 'block';
+        stdeError.innerText = '请完整填写正数，利率≥0';
+        return;
+      }
+      stdeError.style.display = 'none';
+      const result = generateEmiSchedule(P, annualRate, months);
+      if (!result) return;
+      stdeSchedule = result.schedule;
+      document.getElementById('stde-pmt').innerText = formatMoney(result.pmt);
+      const totalInterest = stdeSchedule.reduce((acc, cur) => acc + cur.interest, 0);
+      document.getElementById('stde-total-interest').innerText = formatMoney(totalInterest);
+      document.getElementById('stde-total').innerText = formatMoney(P + totalInterest);
+      renderPieChart('stde-chart-pie', P, totalInterest);
+      const periods = stdeSchedule.map(s => s.period);
+      const interestData = stdeSchedule.map(s => s.interest);
+      const balanceData = stdeSchedule.map(s => s.balance);
+      renderLineChart('stde-chart-line', periods.slice(0,120), interestData.slice(0,120), balanceData.slice(0,120));
+
+      stdeCurrentPage = 1;
+      const totalPages = Math.ceil(stdeSchedule.length / 20);
+      document.getElementById('stde-page').innerText = `${stdeCurrentPage}/${totalPages}`;
+      renderTable('stde-table-body', stdeSchedule, stdeCurrentPage);
+    }
+
+    stdeAmount.addEventListener('input', updateStde);
+    stdeRate.addEventListener('input', updateStde);
+    stdeTerm.addEventListener('input', updateStde);
+    stdeUnit.addEventListener('change', updateStde);
+    attachUnitConverter(stdeTerm, stdeUnit);
+
+    document.getElementById('stde-prev').addEventListener('click', () => {
+      if (!stdeSchedule.length) return;
+      const totalPages = Math.ceil(stdeSchedule.length / 20);
+      if (stdeCurrentPage > 1) {
+        stdeCurrentPage--;
+        renderTable('stde-table-body', stdeSchedule, stdeCurrentPage);
+        document.getElementById('stde-page').innerText = `${stdeCurrentPage}/${totalPages}`;
+      }
+    });
+    document.getElementById('stde-next').addEventListener('click', () => {
+      if (!stdeSchedule.length) return;
+      const totalPages = Math.ceil(stdeSchedule.length / 20);
+      if (stdeCurrentPage < totalPages) {
+        stdeCurrentPage++;
+        renderTable('stde-table-body', stdeSchedule, stdeCurrentPage);
+        document.getElementById('stde-page').innerText = `${stdeCurrentPage}/${totalPages}`;
+      }
+    });
+
+    // ---------- 面板4: 标准等额本金 ----------
+    const stdpAmount = document.getElementById('stdp-amount');
+    const stdpRate = document.getElementById('stdp-rate');
+    const stdpTerm = document.getElementById('stdp-term');
+    const stdpUnit = document.getElementById('stdp-term-unit');
+    const stdpError = document.getElementById('stdp-error');
+    let stdpSchedule = [];
+    let stdpCurrentPage = 1;
+
+    function updateStdp() {
+      const P = parseFloat(stdpAmount.value) || 0;
+      const annualRate = parseFloat(stdpRate.value) || 0;
+      const termVal = parseFloat(stdpTerm.value) || 0;
+      const months = getMonths(termVal, stdpUnit);
+      if (P <= 0 || months <= 0 || annualRate < 0) {
+        stdpError.style.display = 'block';
+        stdpError.innerText = '请完整填写正数，利率≥0';
+        return;
+      }
+      stdpError.style.display = 'none';
+      const result = generatePrincipalSchedule(P, annualRate, months);
+      if (!result) return;
+      stdpSchedule = result.schedule;
+      document.getElementById('stdp-first').innerText = formatMoney(result.first);
+      document.getElementById('stdp-decrease').innerText = formatMoney(result.decrease);
+      const totalInterest = stdpSchedule.reduce((acc, cur) => acc + cur.interest, 0);
+      document.getElementById('stdp-total-interest').innerText = formatMoney(totalInterest);
+      renderPieChart('stdp-chart-pie', P, totalInterest);
+      const periods = stdpSchedule.map(s => s.period);
+      const interestData = stdpSchedule.map(s => s.interest);
+      const balanceData = stdpSchedule.map(s => s.balance);
+      renderLineChart('stdp-chart-line', periods.slice(0,120), interestData.slice(0,120), balanceData.slice(0,120));
+
+      stdpCurrentPage = 1;
+      const totalPages = Math.ceil(stdpSchedule.length / 20);
+      document.getElementById('stdp-page').innerText = `${stdpCurrentPage}/${totalPages}`;
+      renderTable('stdp-table-body', stdpSchedule, stdpCurrentPage);
+    }
+
+    stdpAmount.addEventListener('input', updateStdp);
+    stdpRate.addEventListener('input', updateStdp);
+    stdpTerm.addEventListener('input', updateStdp);
+    stdpUnit.addEventListener('change', updateStdp);
+    attachUnitConverter(stdpTerm, stdpUnit);
+
+    document.getElementById('stdp-prev').addEventListener('click', () => {
+      if (!stdpSchedule.length) return;
+      const totalPages = Math.ceil(stdpSchedule.length / 20);
+      if (stdpCurrentPage > 1) {
+        stdpCurrentPage--;
+        renderTable('stdp-table-body', stdpSchedule, stdpCurrentPage);
+        document.getElementById('stdp-page').innerText = `${stdpCurrentPage}/${totalPages}`;
+      }
+    });
+    document.getElementById('stdp-next').addEventListener('click', () => {
+      if (!stdpSchedule.length) return;
+      const totalPages = Math.ceil(stdpSchedule.length / 20);
+      if (stdpCurrentPage < totalPages) {
+        stdpCurrentPage++;
+        renderTable('stdp-table-body', stdpSchedule, stdpCurrentPage);
+        document.getElementById('stdp-page').innerText = `${stdpCurrentPage}/${totalPages}`;
+      }
+    });
+
+    // 选项卡切换
+    const tabBtns = document.querySelectorAll('.tab-btn');
     const panels = {
       rateEmi: 'panel-rateEmi',
       rateInterest: 'panel-rateInterest',
       stdEmi: 'panel-stdEmi',
       stdPrincipal: 'panel-stdPrincipal'
     };
-    const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.dataset.panel;
@@ -718,20 +657,20 @@
         document.getElementById(`panel-${target}`).classList.add('active');
         tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        // 可触发对应面板更新
+        // 触发对应面板重绘 (可选)
+        if (target === 'rateEmi') updateRemi();
+        if (target === 'rateInterest') updateRinter();
+        if (target === 'stdEmi') updateStde();
+        if (target === 'stdPrincipal') updateStdp();
       });
     });
 
-    // 其余面板初始化 (略, 可复制第一个面板模式添加。此处为保证代码演示，仅作框架)
-    // 但为了使其他面板不报错，简单填充
-    function stubUpdate() {}
-    ['rinter','stde','stdp'].forEach(id => {
-      const btn = document.getElementById(`${id}-prev`);
-      if(btn) btn.addEventListener('click', ()=>{});
-    });
-
+    // 启动所有面板初始计算
+    updateRemi();
+    updateRinter();
+    updateStde();
+    updateStdp();
   })();
 </script>
-<!-- 本示例完整演示了第一个反推计算器，其余面板结构一致可扩展。实际使用请补全所有计算逻辑。 -->
 </body>
 </html>
