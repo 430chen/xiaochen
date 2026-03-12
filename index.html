@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智融金融计算器 - Soft UI Edition</title>
+    <title>智融金融计算器 - Soft UI Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -121,6 +121,11 @@
         
         .calc-button-clear {
             background: linear-gradient(145deg, #f56565, #e53e3e);
+            color: white;
+        }
+        
+        .calc-button-special {
+            background: linear-gradient(145deg, #ed8936, #dd6b20);
             color: white;
         }
         
@@ -612,8 +617,8 @@
                     <div class="grid grid-cols-4 gap-4">
                         <!-- 第一行 -->
                         <button onclick="clearCalculator()" class="calc-button calc-button-clear py-4">C</button>
-                        <button onclick="appendToCalculator('(')" class="calc-button py-4">(</button>
-                        <button onclick="appendToCalculator(')')" class="calc-button py-4">)</button>
+                        <button onclick="deleteLastChar()" class="calc-button calc-button-special py-4">⌫</button>
+                        <button onclick="appendToCalculator('%')" class="calc-button calc-button-special py-4">%</button>
                         <button onclick="appendToCalculator('/')" class="calc-button calc-button-operator py-4">÷</button>
                         
                         <!-- 第二行 -->
@@ -1243,7 +1248,26 @@
             updateCalculatorDisplay();
         }
 
+        function deleteLastChar() {
+            if (calcCurrent.length > 1) {
+                calcCurrent = calcCurrent.slice(0, -1);
+            } else {
+                calcCurrent = '0';
+                calcNewInput = true;
+            }
+            updateCalculatorDisplay();
+        }
+
         function appendToCalculator(value) {
+            if (value === '%') {
+                // 百分比处理
+                if (calcCurrent !== '0') {
+                    calcCurrent = String(parseFloat(calcCurrent) / 100);
+                }
+                updateCalculatorDisplay();
+                return;
+            }
+            
             if (calcNewInput && !isNaN(value)) {
                 calcCurrent = '';
                 calcNewInput = false;
