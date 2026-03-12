@@ -50,8 +50,9 @@
                         inset -3px -3px 6px #ffffff;
         }
         
+        /* 主按钮颜色修改：紫渐变 → 青蓝渐变 */
         .soft-button-primary {
-            background: linear-gradient(145deg, #667eea, #764ba2);
+            background: linear-gradient(145deg, #38bdf8, #0ea5e9);
             box-shadow:  5px 5px 10px #d1d9e6, 
                         -5px -5px 10px #ffffff;
             border-radius: 12px;
@@ -78,11 +79,13 @@
             outline: none;
             box-shadow: inset 4px 4px 8px #d1d9e6, 
                         inset -4px -4px 8px #ffffff,
-                        0 0 0 3px rgba(102, 126, 234, 0.2);
+                        /* 聚焦高亮色修改：紫 → 青蓝 */
+                        0 0 0 3px rgba(56, 189, 248, 0.2);
         }
         
+        /* 激活标签颜色修改：紫渐变 → 青蓝渐变 */
         .soft-tab-active {
-            background: linear-gradient(145deg, #667eea, #764ba2);
+            background: linear-gradient(145deg, #38bdf8, #0ea5e9);
             box-shadow:  5px 5px 10px #d1d9e6, 
                         -5px -5px 10px #ffffff;
             color: white;
@@ -109,8 +112,9 @@
                         inset -2px -2px 4px #ffffff;
         }
         
+        /* 计算器操作符按钮颜色修改：紫渐变 → 青蓝渐变 */
         .calc-button-operator {
-            background: linear-gradient(145deg, #667eea, #764ba2);
+            background: linear-gradient(145deg, #38bdf8, #0ea5e9);
             color: white;
         }
         
@@ -129,11 +133,17 @@
             color: white;
         }
         
+        /* 文字渐变颜色修改：紫粉渐变 → 青蓝渐变 */
         .dreamy-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 50%, #0284c7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        
+        /* 结果高亮背景色适配新主色 */
+        .result-highlight {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
         }
         
         .animate-float {
@@ -145,10 +155,6 @@
             50% { transform: translateY(-10px); }
         }
         
-        .result-highlight {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        }
-        
         .scrollbar-thin::-webkit-scrollbar {
             width: 6px;
         }
@@ -158,8 +164,9 @@
             border-radius: 3px;
         }
         
+        /* 滚动条滑块颜色修改：紫渐变 → 青蓝渐变 */
         .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
             border-radius: 3px;
         }
     </style>
@@ -400,7 +407,6 @@
                                             <p id="reverse-annual-rate" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
                                         <div class="text-center">
-                                            <!-- 修改1：标签文字添加“（厘）”说明 -->
                                             <p class="text-sm text-gray-500 mb-1">月利率（厘）</p>
                                             <p id="reverse-monthly-rate" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
@@ -462,9 +468,9 @@
                 <h2 class="text-2xl font-bold text-center dreamy-gradient mb-8">贷款方案对比分析</h2>
                 
                 <div class="grid lg:grid-cols-2 gap-8 mb-8">
-                    <!-- 方案A -->
-                    <div class="soft-card p-6 border-2 border-purple-200">
-                        <h3 class="text-xl font-semibold text-center text-purple-600 mb-6">方案 A</h3>
+                    <!-- 方案A（边框色适配新主色） -->
+                    <div class="soft-card p-6 border-2 border-sky-200">
+                        <h3 class="text-xl font-semibold text-center text-sky-600 mb-6">方案 A</h3>
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
@@ -495,7 +501,7 @@
                         </div>
                     </div>
                     
-                    <!-- 方案B -->
+                    <!-- 方案B（边框色适配新主色） -->
                     <div class="soft-card p-6 border-2 border-blue-200">
                         <h3 class="text-xl font-semibold text-center text-blue-600 mb-6">方案 B</h3>
                         <div class="space-y-4">
@@ -538,8 +544,8 @@
                     <h3 class="text-xl font-bold text-center text-gray-700">对比结果</h3>
                     
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div class="soft-card p-6 border-2 border-purple-200">
-                            <h4 class="text-lg font-semibold text-center text-purple-600 mb-4">方案 A</h4>
+                        <div class="soft-card p-6 border-2 border-sky-200">
+                            <h4 class="text-lg font-semibold text-center text-sky-600 mb-4">方案 A</h4>
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center py-2">
                                     <span class="text-gray-600">月供金额</span>
@@ -784,6 +790,12 @@
             let term = parseInt(document.getElementById('loan-term').value);
             const termUnit = document.getElementById('term-unit').value;
             
+            // 校验输入
+            if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(annualRate) || annualRate < 0 || isNaN(term) || term <= 0) {
+                alert('请输入有效的贷款参数！');
+                return;
+            }
+            
             // 转换为月数
             if (termUnit === 'years') {
                 term = term * 12;
@@ -885,7 +897,7 @@
             // 更新还款计划表
             updateScheduleTable();
             
-            // 更新饼图
+            // 更新饼图（适配新主色）
             updatePaymentChart(loanAmount, totalInterest);
         }
 
@@ -908,7 +920,7 @@
             });
         }
 
-        // 更新饼图
+        // 更新饼图（颜色适配新主色）
         function updatePaymentChart(principal, interest) {
             const ctx = document.getElementById('payment-chart').getContext('2d');
             
@@ -924,7 +936,8 @@
                     labels: ['本金', '利息'],
                     datasets: [{
                         data: [principal, interest],
-                        backgroundColor: ['#667eea', '#f56565'],
+                        // 饼图颜色修改：紫 → 青蓝，保持利息红色
+                        backgroundColor: ['#38bdf8', '#f56565'],
                         borderWidth: 0
                     }]
                 },
@@ -974,6 +987,12 @@
             const termUnit = document.getElementById('reverse-term-unit').value;
             const frequency = document.getElementById('reverse-payment-frequency').value;
             
+            // 校验输入
+            if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(term) || term <= 0) {
+                alert('请输入有效的贷款参数！');
+                return;
+            }
+            
             // 转换为月数
             if (termUnit === 'years') {
                 term = term * 12;
@@ -989,6 +1008,10 @@
             
             if (currentReverseMode === 'equal-principal-interest') {
                 const payment = parseFloat(document.getElementById('reverse-payment').value);
+                if (isNaN(payment) || payment <= 0) {
+                    alert('请输入有效的还款金额！');
+                    return;
+                }
                 
                 // 使用二分法反推利率
                 let rateLow = 0;
@@ -1036,6 +1059,10 @@
                 
             } else if (currentReverseMode === 'interest-only') {
                 const interestPayment = parseFloat(document.getElementById('reverse-interest-payment').value);
+                if (isNaN(interestPayment) || interestPayment <= 0) {
+                    alert('请输入有效的利息金额！');
+                    return;
+                }
                 
                 // 先息后本反推利率
                 const periodRate = interestPayment / loanAmount;
@@ -1082,7 +1109,6 @@
 
         // 更新反推结果
         function updateReverseResults(principal, totalInterest, annualRate, monthlyRate) {
-            // 修改2：年化利率保留原百分比显示，月利率转换为厘（1厘=0.1%=1‰，即月利率(厘)=月利率(小数)*1000）
             document.getElementById('reverse-annual-rate').textContent = (annualRate * 100).toFixed(4) + '%';
             document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 1000).toFixed(4) + '‰';
             document.getElementById('reverse-total-principal').textContent = formatCurrency(principal);
@@ -1124,6 +1150,13 @@
             let termB = parseInt(document.getElementById('comp-b-term').value);
             const unitB = document.getElementById('comp-b-unit').value;
             const typeB = document.getElementById('comp-b-type').value;
+            
+            // 校验输入
+            if (isNaN(amountA) || amountA <= 0 || isNaN(rateA) || rateA < 0 || isNaN(termA) || termA <= 0 ||
+                isNaN(amountB) || amountB <= 0 || isNaN(rateB) || rateB < 0 || isNaN(termB) || termB <= 0) {
+                alert('请输入有效的贷款参数！');
+                return;
+            }
             
             // 转换为月数
             if (unitA === 'years') termA = termA * 12;
@@ -1203,6 +1236,10 @@
 
         // 导出CSV功能
         function exportScheduleCSV() {
+            if (standardSchedule.length === 0) {
+                alert('请先完成贷款计算！');
+                return;
+            }
             let csv = '期数,月供,本金,利息,剩余本金\n';
             standardSchedule.forEach(item => {
                 csv += `${item.period},${item.payment.toFixed(2)},${item.principal.toFixed(2)},${item.interest.toFixed(2)},${item.remaining.toFixed(2)}\n`;
@@ -1211,6 +1248,10 @@
         }
 
         function exportReverseScheduleCSV() {
+            if (reverseSchedule.length === 0) {
+                alert('请先完成利率反推计算！');
+                return;
+            }
             let csv = '期数,还款,本金,利息,剩余本金\n';
             reverseSchedule.forEach(item => {
                 csv += `${item.period},${item.payment.toFixed(2)},${item.principal.toFixed(2)},${item.interest.toFixed(2)},${item.remaining.toFixed(2)}\n`;
@@ -1219,7 +1260,10 @@
         }
 
         function exportComparisonCSV() {
-            if (!comparisonResult) return;
+            if (!comparisonResult) {
+                alert('请先完成方案对比！');
+                return;
+            }
             
             let csv = '项目,方案A,方案B,差异\n';
             csv += `月供,${comparisonResult.a.monthlyPayment.toFixed(2)},${comparisonResult.b.monthlyPayment.toFixed(2)},${(comparisonResult.a.monthlyPayment - comparisonResult.b.monthlyPayment).toFixed(2)}\n`;
