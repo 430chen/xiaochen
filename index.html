@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智融金融计算器 - 专业贷款计算与分析</title>
+    <title>智融金融计算器 - Soft UI Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -13,143 +13,211 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        body {
+            background: linear-gradient(135deg, #e0e5ec 0%, #f0f4f8 50%, #e8eef4 100%);
+            min-height: 100vh;
         }
         
-        .card-shadow {
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        .soft-card {
+            background: linear-gradient(145deg, #e6ebf2, #ffffff);
+            box-shadow:  8px 8px 16px #d1d9e6, 
+                        -8px -8px 16px #ffffff;
+            border-radius: 20px;
         }
         
-        .input-focus:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .soft-card-inset {
+            background: linear-gradient(145deg, #e6ebf2, #ffffff);
+            box-shadow: inset 4px 4px 8px #d1d9e6, 
+                        inset -4px -4px 8px #ffffff;
+            border-radius: 12px;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .soft-button {
+            background: linear-gradient(145deg, #e6ebf2, #ffffff);
+            box-shadow:  5px 5px 10px #d1d9e6, 
+                        -5px -5px 10px #ffffff;
+            border-radius: 12px;
             transition: all 0.3s ease;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        .soft-button:hover {
+            box-shadow:  3px 3px 6px #d1d9e6, 
+                        -3px -3px 6px #ffffff;
         }
         
-        .tab-active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .soft-button:active {
+            box-shadow: inset 3px 3px 6px #d1d9e6, 
+                        inset -3px -3px 6px #ffffff;
+        }
+        
+        .soft-button-primary {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            box-shadow:  5px 5px 10px #d1d9e6, 
+                        -5px -5px 10px #ffffff;
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .soft-button-primary:hover {
+            box-shadow:  3px 3px 6px #d1d9e6, 
+                        -3px -3px 6px #ffffff;
+            transform: translateY(-2px);
+        }
+        
+        .soft-input {
+            background: linear-gradient(145deg, #e6ebf2, #ffffff);
+            box-shadow: inset 3px 3px 6px #d1d9e6, 
+                        inset -3px -3px 6px #ffffff;
+            border-radius: 12px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .soft-input:focus {
+            outline: none;
+            box-shadow: inset 4px 4px 8px #d1d9e6, 
+                        inset -4px -4px 8px #ffffff,
+                        0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .soft-tab-active {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            box-shadow:  5px 5px 10px #d1d9e6, 
+                        -5px -5px 10px #ffffff;
             color: white;
         }
         
-        .result-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-        
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .table-row:hover {
-            background-color: #f8fafc;
-        }
-        
-        /* 计算器样式 */
-        .calculator-btn {
+        .calc-button {
+            background: linear-gradient(145deg, #e6ebf2, #ffffff);
+            box-shadow:  4px 4px 8px #d1d9e6, 
+                        -4px -4px 8px #ffffff;
+            border-radius: 12px;
             transition: all 0.15s ease;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4a5568;
         }
         
-        .calculator-btn:active {
-            transform: scale(0.95);
+        .calc-button:hover {
+            box-shadow:  2px 2px 4px #d1d9e6, 
+                        -2px -2px 4px #ffffff;
         }
         
-        .calculator-display {
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        .calc-button:active {
+            box-shadow: inset 2px 2px 4px #d1d9e6, 
+                        inset -2px -2px 4px #ffffff;
+        }
+        
+        .calc-button-operator {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .calc-button-equal {
+            background: linear-gradient(145deg, #48bb78, #38a169);
+            color: white;
+        }
+        
+        .calc-button-clear {
+            background: linear-gradient(145deg, #f56565, #e53e3e);
+            color: white;
+        }
+        
+        .dreamy-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .result-highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 3px;
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- 导航栏 -->
-    <nav class="gradient-bg text-white shadow-lg">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <h1 class="text-xl sm:text-2xl font-bold">智融金融计算器</h1>
-                </div>
-                <div class="flex space-x-2 sm:space-x-4">
-                    <button onclick="showSection('calculator')" class="px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition text-sm sm:text-base">计算器</button>
-                    <button onclick="showSection('comparison')" class="px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition text-sm sm:text-base">方案对比</button>
-                    <button onclick="showSection('virtual-calculator')" class="px-3 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition text-sm sm:text-base">工具</button>
-                </div>
+<body class="py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- 标题区域 -->
+        <div class="text-center mb-8 animate-float">
+            <h1 class="text-4xl md:text-5xl font-bold dreamy-gradient mb-2">智融金融计算器</h1>
+            <p class="text-gray-500 text-lg">专业 · 精准 · 智能</p>
+        </div>
+
+        <!-- 主导航选项卡 -->
+        <div class="soft-card p-4 mb-8">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button onclick="showMainSection('calculator')" id="main-tab-calculator" class="soft-tab-active px-6 py-3 rounded-xl font-medium transition-all">
+                    贷款计算器
+                </button>
+                <button onclick="showMainSection('comparison')" id="main-tab-comparison" class="soft-button px-6 py-3 rounded-xl font-medium transition-all">
+                    方案对比
+                </button>
+                <button onclick="showMainSection('calculator-tool')" id="main-tab-calculator-tool" class="soft-button px-6 py-3 rounded-xl font-medium transition-all">
+                    独立计算器
+                </button>
             </div>
         </div>
-    </nav>
 
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <!-- 计算器部分 -->
-        <div id="calculator-section" class="animate-fade-in">
-            <!-- 功能选项卡 -->
-            <div class="bg-white rounded-2xl card-shadow p-4 sm:p-6 mb-6 sm:mb-8">
-                <div class="flex flex-wrap gap-2 mb-4 sm:mb-6">
-                    <button onclick="switchCalculatorType('standard')" id="tab-standard" class="tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base">
-                        标准贷款计算器
+        <!-- 贷款计算器部分 -->
+        <div id="calculator-section" class="space-y-8">
+            <!-- 计算器类型选项卡 -->
+            <div class="soft-card p-6">
+                <div class="flex flex-wrap gap-3 mb-6 justify-center">
+                    <button onclick="switchCalculatorType('standard')" id="tab-standard" class="soft-tab-active px-6 py-3 rounded-xl font-medium transition-all">
+                        标准贷款计算
                     </button>
-                    <button onclick="switchCalculatorType('reverse')" id="tab-reverse" class="px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium bg-gray-100 hover:bg-gray-200 transition-all text-sm sm:text-base">
-                        反推利率计算器
+                    <button onclick="switchCalculatorType('reverse')" id="tab-reverse" class="soft-button px-6 py-3 rounded-xl font-medium transition-all">
+                        反推利率计算
                     </button>
                 </div>
 
                 <!-- 标准贷款计算器 -->
                 <div id="standard-calculator">
-                    <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
+                    <div class="grid lg:grid-cols-2 gap-8">
                         <!-- 输入区域 -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">贷款参数</h3>
+                        <div class="space-y-6">
+                            <h3 class="text-xl font-semibold text-gray-700 text-center">贷款参数设置</h3>
                             
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">贷款总额 (元)</label>
-                                    <div class="relative">
-                                        <input type="text" id="loan-amount" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入贷款总额" value="1000000">
-                                        <button onclick="openCalculator('loan-amount')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
+                                    <input type="number" id="loan-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额" value="1000000">
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">年化利率 (%)</label>
-                                    <div class="relative">
-                                        <input type="text" id="interest-rate" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入年化利率" value="4.9">
-                                        <button onclick="openCalculator('interest-rate')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">年化利率 (%)</label>
+                                    <input type="number" id="interest-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入年化利率" value="4.9">
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">贷款期限</label>
-                                    <div class="flex gap-2">
-                                        <div class="relative flex-1">
-                                            <input type="text" id="loan-term" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入贷款期限" value="30">
-                                            <button onclick="openCalculator('loan-term')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <select id="term-unit" class="px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
+                                    <div class="flex gap-3">
+                                        <input type="number" id="loan-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限" value="30">
+                                        <select id="term-unit" class="soft-input px-5 py-4 text-lg">
                                             <option value="years">年</option>
                                             <option value="months">月</option>
                                         </select>
@@ -157,70 +225,70 @@
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">还款方式</label>
-                                    <div class="grid grid-cols-3 gap-2">
-                                        <button onclick="setRepaymentType('equal-principal-interest')" id="btn-epi" class="px-3 py-3 border-2 border-purple-500 bg-purple-50 text-purple-700 rounded-xl font-medium transition-all text-sm">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">还款方式</label>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <button onclick="setRepaymentType('equal-principal-interest')" id="btn-epi" class="soft-tab-active px-4 py-4 rounded-xl font-medium transition-all">
                                             等额本息
                                         </button>
-                                        <button onclick="setRepaymentType('equal-principal')" id="btn-ep" class="px-3 py-3 border-2 border-gray-300 rounded-xl font-medium hover:border-purple-300 transition-all text-sm">
+                                        <button onclick="setRepaymentType('equal-principal')" id="btn-ep" class="soft-button px-4 py-4 rounded-xl font-medium transition-all">
                                             等额本金
                                         </button>
-                                        <button onclick="setRepaymentType('interest-only')" id="btn-io" class="px-3 py-3 border-2 border-gray-300 rounded-xl font-medium hover:border-purple-300 transition-all text-sm">
+                                        <button onclick="setRepaymentType('interest-only')" id="btn-io" class="soft-button px-4 py-4 rounded-xl font-medium transition-all">
                                             先息后本
                                         </button>
                                     </div>
                                 </div>
                                 
-                                <div id="standard-payment-frequency" class="hidden">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">还款频率</label>
-                                    <select id="standard-frequency" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                <div id="payment-frequency-section" class="hidden">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">还款频率</label>
+                                    <select id="payment-frequency" class="soft-input w-full px-5 py-4 text-lg">
                                         <option value="monthly">每月还款</option>
                                         <option value="quarterly">每季度还款</option>
                                     </select>
                                 </div>
                                 
-                                <button onclick="calculateStandardLoan()" class="w-full btn-primary text-white py-4 rounded-xl font-semibold text-lg">
+                                <button onclick="calculateStandardLoan()" class="soft-button-primary w-full py-4 rounded-xl font-semibold text-lg">
                                     开始计算
                                 </button>
                             </div>
                         </div>
                         
                         <!-- 结果展示 -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">计算结果</h3>
+                        <div class="space-y-6">
+                            <h3 class="text-xl font-semibold text-gray-700 text-center">计算结果</h3>
                             
                             <div id="standard-results" class="space-y-4">
-                                <div class="result-card rounded-xl p-6">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">月供金额</p>
-                                            <p id="monthly-payment" class="text-2xl sm:text-3xl font-bold text-purple-600">--</p>
+                                <div class="soft-card p-6 result-highlight">
+                                    <div class="grid grid-cols-2 gap-6">
+                                        <div class="text-center">
+                                            <p class="text-sm text-gray-500 mb-1">月供金额</p>
+                                            <p id="monthly-payment" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">首月还款</p>
-                                            <p id="first-payment" class="text-2xl sm:text-3xl font-bold text-purple-600">--</p>
+                                        <div class="text-center">
+                                            <p class="text-sm text-gray-500 mb-1">首月还款</p>
+                                            <p id="first-payment" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-white border border-gray-200 rounded-xl p-4">
-                                        <p class="text-sm text-gray-600">贷款总额</p>
-                                        <p id="total-principal" class="text-lg sm:text-xl font-semibold text-gray-800">--</p>
+                                    <div class="soft-card p-5 text-center">
+                                        <p class="text-sm text-gray-500 mb-1">贷款总额</p>
+                                        <p id="total-principal" class="text-xl font-semibold text-gray-700">--</p>
                                     </div>
-                                    <div class="bg-white border border-gray-200 rounded-xl p-4">
-                                        <p class="text-sm text-gray-600">总利息</p>
-                                        <p id="total-interest" class="text-lg sm:text-xl font-semibold text-red-600">--</p>
+                                    <div class="soft-card p-5 text-center">
+                                        <p class="text-sm text-gray-500 mb-1">总利息</p>
+                                        <p id="total-interest" class="text-xl font-semibold text-red-500">--</p>
                                     </div>
                                 </div>
                                 
-                                <div class="bg-white border border-gray-200 rounded-xl p-4">
-                                    <p class="text-sm text-gray-600">还款总额</p>
-                                    <p id="total-payment" class="text-xl sm:text-2xl font-bold text-gray-800">--</p>
+                                <div class="soft-card p-5 text-center">
+                                    <p class="text-sm text-gray-500 mb-1">还款总额</p>
+                                    <p id="total-payment" class="text-2xl font-bold text-gray-700">--</p>
                                 </div>
                                 
                                 <!-- 饼图 -->
-                                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                                <div class="soft-card p-6">
                                     <canvas id="payment-chart" width="300" height="300"></canvas>
                                 </div>
                             </div>
@@ -228,23 +296,23 @@
                     </div>
                     
                     <!-- 还款计划表 -->
-                    <div class="mt-6 sm:mt-8">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-                            <h3 class="text-lg font-semibold text-gray-800">详细还款计划</h3>
-                            <button onclick="exportScheduleCSV()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm">
-                                导出CSV
+                    <div class="mt-8">
+                        <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
+                            <h3 class="text-xl font-semibold text-gray-700">详细还款计划</h3>
+                            <button onclick="exportScheduleCSV()" class="soft-button px-6 py-3 rounded-xl font-medium text-green-600">
+                                📥 导出CSV
                             </button>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                            <div class="overflow-x-auto">
+                        <div class="soft-card p-6">
+                            <div class="overflow-x-auto scrollbar-thin" style="max-height: 400px; overflow-y: auto;">
                                 <table class="w-full">
-                                    <thead class="bg-gray-50">
+                                    <thead class="bg-gray-50 rounded-lg">
                                         <tr>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">期数</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">月供</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">本金</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">利息</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">剩余本金</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 rounded-tl-lg">期数</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">月供</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">本金</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">利息</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 rounded-tr-lg">剩余本金</th>
                                         </tr>
                                     </thead>
                                     <tbody id="schedule-table" class="divide-y divide-gray-200">
@@ -257,146 +325,119 @@
 
                 <!-- 反推利率计算器 -->
                 <div id="reverse-calculator" class="hidden">
-                    <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
+                    <div class="grid lg:grid-cols-2 gap-8">
                         <!-- 输入区域 -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">已知还款额反推利率</h3>
+                        <div class="space-y-6">
+                            <h3 class="text-xl font-semibold text-gray-700 text-center">已知还款额反推利率</h3>
                             
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">反推模式</label>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <button onclick="setReverseMode('equal-principal-interest')" id="btn-reverse-epi" class="px-4 py-3 border-2 border-purple-500 bg-purple-50 text-purple-700 rounded-xl font-medium transition-all text-sm">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">反推模式</label>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <button onclick="setReverseMode('equal-principal-interest')" id="btn-reverse-epi" class="soft-tab-active px-4 py-4 rounded-xl font-medium transition-all">
                                             等额本息
                                         </button>
-                                        <button onclick="setReverseMode('interest-only')" id="btn-reverse-io" class="px-4 py-3 border-2 border-gray-300 rounded-xl font-medium hover:border-purple-300 transition-all text-sm">
+                                        <button onclick="setReverseMode('interest-only')" id="btn-reverse-io" class="soft-button px-4 py-4 rounded-xl font-medium transition-all">
                                             先息后本
                                         </button>
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">贷款总额 (元)</label>
-                                    <div class="relative">
-                                        <input type="text" id="reverse-loan-amount" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入贷款总额" value="1000000">
-                                        <button onclick="openCalculator('reverse-loan-amount')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
+                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额" value="1000000">
                                 </div>
                                 
                                 <div id="reverse-payment-section">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">每月还款金额 (元)</label>
-                                    <div class="relative">
-                                        <input type="text" id="reverse-payment" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入还款金额" value="5307">
-                                        <button onclick="openCalculator('reverse-payment')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">每月还款金额 (元)</label>
+                                    <input type="number" id="reverse-payment" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入还款金额" value="5307">
                                 </div>
                                 
                                 <div id="reverse-interest-section" class="hidden">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">每月/每季度支付利息金额 (元)</label>
-                                    <div class="relative">
-                                        <input type="text" id="reverse-interest-payment" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入利息金额" value="4083">
-                                        <button onclick="openCalculator('reverse-interest-payment')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">每月/每季度支付利息金额 (元)</label>
+                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入利息金额" value="4083">
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">还款频率</label>
-                                    <select id="reverse-payment-frequency" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">还款频率</label>
+                                    <select id="reverse-payment-frequency" class="soft-input w-full px-5 py-4 text-lg">
                                         <option value="monthly">每月还款</option>
                                         <option value="quarterly">每季度还款</option>
                                     </select>
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">贷款期限</label>
-                                    <div class="flex gap-2">
-                                        <div class="relative flex-1">
-                                            <input type="text" id="reverse-loan-term" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" placeholder="请输入贷款期限" value="30">
-                                            <button onclick="openCalculator('reverse-loan-term')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <select id="reverse-term-unit" class="px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
+                                    <div class="flex gap-3">
+                                        <input type="number" id="reverse-loan-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限" value="30">
+                                        <select id="reverse-term-unit" class="soft-input px-5 py-4 text-lg">
                                             <option value="years">年</option>
                                             <option value="months">月</option>
                                         </select>
                                     </div>
                                 </div>
                                 
-                                <button onclick="calculateReverseRate()" class="w-full btn-primary text-white py-4 rounded-xl font-semibold text-lg">
+                                <button onclick="calculateReverseRate()" class="soft-button-primary w-full py-4 rounded-xl font-semibold text-lg">
                                     计算利率
                                 </button>
                             </div>
                         </div>
                         
                         <!-- 结果展示 -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">计算结果</h3>
+                        <div class="space-y-6">
+                            <h3 class="text-xl font-semibold text-gray-700 text-center">计算结果</h3>
                             
                             <div id="reverse-results" class="space-y-4">
-                                <div class="result-card rounded-xl p-6">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">年化利率</p>
-                                            <p id="reverse-annual-rate" class="text-2xl sm:text-3xl font-bold text-purple-600">--</p>
+                                <div class="soft-card p-6 result-highlight">
+                                    <div class="grid grid-cols-2 gap-6">
+                                        <div class="text-center">
+                                            <p class="text-sm text-gray-500 mb-1">年化利率</p>
+                                            <p id="reverse-annual-rate" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">月利率</p>
-                                            <p id="reverse-monthly-rate" class="text-2xl sm:text-3xl font-bold text-purple-600">--</p>
+                                        <div class="text-center">
+                                            <p class="text-sm text-gray-500 mb-1">月利率</p>
+                                            <p id="reverse-monthly-rate" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div class="bg-white border border-gray-200 rounded-xl p-4">
-                                    <p class="text-sm text-gray-600">贷款总额</p>
-                                    <p id="reverse-total-principal" class="text-lg sm:text-xl font-semibold text-gray-800">--</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="soft-card p-5 text-center">
+                                        <p class="text-sm text-gray-500 mb-1">贷款总额</p>
+                                        <p id="reverse-total-principal" class="text-xl font-semibold text-gray-700">--</p>
+                                    </div>
+                                    <div class="soft-card p-5 text-center">
+                                        <p class="text-sm text-gray-500 mb-1">总利息</p>
+                                        <p id="reverse-total-interest" class="text-xl font-semibold text-red-500">--</p>
+                                    </div>
                                 </div>
                                 
-                                <div class="bg-white border border-gray-200 rounded-xl p-4">
-                                    <p class="text-sm text-gray-600">总利息</p>
-                                    <p id="reverse-total-interest" class="text-lg sm:text-xl font-semibold text-red-600">--</p>
-                                </div>
-                                
-                                <div class="bg-white border border-gray-200 rounded-xl p-4">
-                                    <p class="text-sm text-gray-600">还款总额</p>
-                                    <p id="reverse-total-payment" class="text-xl sm:text-2xl font-bold text-gray-800">--</p>
+                                <div class="soft-card p-5 text-center">
+                                    <p class="text-sm text-gray-500 mb-1">还款总额</p>
+                                    <p id="reverse-total-payment" class="text-2xl font-bold text-gray-700">--</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- 还款计划表 -->
-                    <div class="mt-6 sm:mt-8">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-                            <h3 class="text-lg font-semibold text-gray-800">详细还款计划</h3>
-                            <button onclick="exportReverseScheduleCSV()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm">
-                                导出CSV
+                    <div class="mt-8">
+                        <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
+                            <h3 class="text-xl font-semibold text-gray-700">详细还款计划</h3>
+                            <button onclick="exportReverseScheduleCSV()" class="soft-button px-6 py-3 rounded-xl font-medium text-green-600">
+                                📥 导出CSV
                             </button>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                            <div class="overflow-x-auto">
+                        <div class="soft-card p-6">
+                            <div class="overflow-x-auto scrollbar-thin" style="max-height: 400px; overflow-y: auto;">
                                 <table class="w-full">
-                                    <thead class="bg-gray-50">
+                                    <thead class="bg-gray-50 rounded-lg">
                                         <tr>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">期数</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">还款</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">本金</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">利息</th>
-                                            <th class="px-3 py-3 text-left text-sm font-medium text-gray-700">剩余本金</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 rounded-tl-lg">期数</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">还款</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">本金</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">利息</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 rounded-tr-lg">剩余本金</th>
                                         </tr>
                                     </thead>
                                     <tbody id="reverse-schedule-table" class="divide-y divide-gray-200">
@@ -410,57 +451,36 @@
         </div>
 
         <!-- 方案对比部分 -->
-        <div id="comparison-section" class="hidden animate-fade-in">
-            <div class="bg-white rounded-2xl card-shadow p-4 sm:p-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">贷款方案对比</h2>
+        <div id="comparison-section" class="hidden space-y-8">
+            <div class="soft-card p-8">
+                <h2 class="text-2xl font-bold text-center dreamy-gradient mb-8">贷款方案对比分析</h2>
                 
-                <div class="grid md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
+                <div class="grid lg:grid-cols-2 gap-8 mb-8">
                     <!-- 方案A -->
-                    <div class="border-2 border-purple-200 rounded-xl p-4 sm:p-6">
-                        <h3 class="text-lg font-semibold text-purple-600 mb-4">方案 A</h3>
+                    <div class="soft-card p-6 border-2 border-purple-200">
+                        <h3 class="text-xl font-semibold text-center text-purple-600 mb-6">方案 A</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">贷款总额 (元)</label>
-                                <div class="relative">
-                                    <input type="text" id="comp-a-amount" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" value="1000000">
-                                    <button onclick="openCalculator('comp-a-amount')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
+                                <input type="number" id="comp-a-amount" class="soft-input w-full px-5 py-4 text-lg" value="1000000">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">年化利率 (%)</label>
-                                <div class="relative">
-                                    <input type="text" id="comp-a-rate" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" value="4.9">
-                                    <button onclick="openCalculator('comp-a-rate')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">年化利率 (%)</label>
+                                <input type="number" id="comp-a-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" value="4.9">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">贷款期限</label>
-                                <div class="flex gap-2">
-                                    <div class="relative flex-1">
-                                        <input type="text" id="comp-a-term" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" value="30">
-                                        <button onclick="openCalculator('comp-a-term')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <select id="comp-a-unit" class="px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
+                                <div class="flex gap-3">
+                                    <input type="number" id="comp-a-term" class="soft-input flex-1 px-5 py-4 text-lg" value="30">
+                                    <select id="comp-a-unit" class="soft-input px-5 py-4 text-lg">
                                         <option value="years">年</option>
                                         <option value="months">月</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">还款方式</label>
-                                <select id="comp-a-type" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">还款方式</label>
+                                <select id="comp-a-type" class="soft-input w-full px-5 py-4 text-lg">
                                     <option value="equal-principal-interest">等额本息</option>
                                     <option value="equal-principal">等额本金</option>
                                     <option value="interest-only">先息后本</option>
@@ -470,51 +490,30 @@
                     </div>
                     
                     <!-- 方案B -->
-                    <div class="border-2 border-blue-200 rounded-xl p-4 sm:p-6">
-                        <h3 class="text-lg font-semibold text-blue-600 mb-4">方案 B</h3>
+                    <div class="soft-card p-6 border-2 border-blue-200">
+                        <h3 class="text-xl font-semibold text-center text-blue-600 mb-6">方案 B</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">贷款总额 (元)</label>
-                                <div class="relative">
-                                    <input type="text" id="comp-b-amount" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" value="1000000">
-                                    <button onclick="openCalculator('comp-b-amount')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
+                                <input type="number" id="comp-b-amount" class="soft-input w-full px-5 py-4 text-lg" value="1000000">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">年化利率 (%)</label>
-                                <div class="relative">
-                                    <input type="text" id="comp-b-rate" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" value="4.5">
-                                    <button onclick="openCalculator('comp-b-rate')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">年化利率 (%)</label>
+                                <input type="number" id="comp-b-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" value="4.5">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">贷款期限</label>
-                                <div class="flex gap-2">
-                                    <div class="relative flex-1">
-                                        <input type="text" id="comp-b-term" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none pr-12" value="20">
-                                        <button onclick="openCalculator('comp-b-term')" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-purple-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <select id="comp-b-unit" class="px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
+                                <div class="flex gap-3">
+                                    <input type="number" id="comp-b-term" class="soft-input flex-1 px-5 py-4 text-lg" value="20">
+                                    <select id="comp-b-unit" class="soft-input px-5 py-4 text-lg">
                                         <option value="years">年</option>
                                         <option value="months">月</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">还款方式</label>
-                                <select id="comp-b-type" class="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus focus:outline-none">
+                                <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">还款方式</label>
+                                <select id="comp-b-type" class="soft-input w-full px-5 py-4 text-lg">
                                     <option value="equal-principal-interest">等额本息</option>
                                     <option value="equal-principal">等额本金</option>
                                     <option value="interest-only">先息后本</option>
@@ -524,195 +523,123 @@
                     </div>
                 </div>
                 
-                <button onclick="compareLoans()" class="w-full btn-primary text-white py-4 rounded-xl font-semibold text-lg mb-6 sm:mb-8">
-                    对比方案
+                <button onclick="compareLoans()" class="soft-button-primary w-full py-4 rounded-xl font-semibold text-lg mb-8">
+                    开始对比分析
                 </button>
                 
                 <!-- 对比结果 -->
-                <div id="comparison-results" class="hidden">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">对比结果</h3>
+                <div id="comparison-results" class="hidden space-y-6">
+                    <h3 class="text-xl font-bold text-center text-gray-700">对比结果</h3>
                     
-                    <div class="grid md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
-                        <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-4 sm:p-6">
-                            <h4 class="text-lg font-semibold text-purple-600 mb-4">方案 A</h4>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="soft-card p-6 border-2 border-purple-200">
+                            <h4 class="text-lg font-semibold text-center text-purple-600 mb-4">方案 A</h4>
                             <div class="space-y-3">
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 text-sm">月供金额</span>
-                                    <span id="comp-a-monthly" class="font-semibold">--</span>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">月供金额</span>
+                                    <span id="comp-a-monthly" class="font-semibold text-lg">--</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 text-sm">总利息</span>
-                                    <span id="comp-a-interest" class="font-semibold text-red-600">--</span>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">总利息</span>
+                                    <span id="comp-a-interest" class="font-semibold text-lg text-red-500">--</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 text-sm">还款总额</span>
-                                    <span id="comp-a-total" class="font-semibold">--</span>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">还款总额</span>
+                                    <span id="comp-a-total" class="font-semibold text-lg">--</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-6">
-                            <h4 class="text-lg font-semibold text-blue-600 mb-4">方案 B</h4>
+                        <div class="soft-card p-6 border-2 border-blue-200">
+                            <h4 class="text-lg font-semibold text-center text-blue-600 mb-4">方案 B</h4>
                             <div class="space-y-3">
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 text-sm">月供金额</span>
-                                    <span id="comp-b-monthly" class="font-semibold">--</span>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">月供金额</span>
+                                    <span id="comp-b-monthly" class="font-semibold text-lg">--</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 text-sm">总利息</span>
-                                    <span id="comp-b-interest" class="font-semibold text-red-600">--</span>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">总利息</span>
+                                    <span id="comp-b-interest" class="font-semibold text-lg text-red-500">--</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600 text-sm">还款总额</span>
-                                    <span id="comp-b-total" class="font-semibold">--</span>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">还款总额</span>
+                                    <span id="comp-b-total" class="font-semibold text-lg">--</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="bg-gray-50 rounded-xl p-4 sm:p-6">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">差异分析</h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600 text-sm">月供差异</span>
-                                <span id="diff-monthly" class="font-semibold text-lg">--</span>
+                    <div class="soft-card p-6">
+                        <h4 class="text-lg font-semibold text-center text-gray-700 mb-4">差异分析</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center py-3 px-4 soft-card-inset">
+                                <span class="text-gray-600 font-medium">月供差异</span>
+                                <span id="diff-monthly" class="font-bold text-xl">--</span>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600 text-sm">总利息差异</span>
-                                <span id="diff-interest" class="font-semibold text-lg text-red-600">--</span>
+                            <div class="flex justify-between items-center py-3 px-4 soft-card-inset">
+                                <span class="text-gray-600 font-medium">总利息差异</span>
+                                <span id="diff-interest" class="font-bold text-xl text-red-500">--</span>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600 text-sm">还款总额差异</span>
-                                <span id="diff-total" class="font-semibold text-lg">--</span>
+                            <div class="flex justify-between items-center py-3 px-4 soft-card-inset">
+                                <span class="text-gray-600 font-medium">还款总额差异</span>
+                                <span id="diff-total" class="font-bold text-xl">--</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-4 sm:mt-6 text-right">
-                        <button onclick="exportComparisonCSV()" class="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm">
-                            导出对比结果
+                    <div class="text-center">
+                        <button onclick="exportComparisonCSV()" class="soft-button px-8 py-4 rounded-xl font-medium text-green-600">
+                            📥 导出对比结果
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 虚拟计算器部分 -->
-        <div id="virtual-calculator-section" class="hidden animate-fade-in">
-            <div class="bg-white rounded-2xl card-shadow p-4 sm:p-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">虚拟计算器</h2>
-                
-                <div class="max-w-sm mx-auto">
-                    <!-- 计算器显示 -->
-                    <div class="bg-gray-800 rounded-t-2xl p-4 sm:p-6">
-                        <div class="text-right">
-                            <div id="calc-expression" class="text-gray-400 text-sm h-6 overflow-hidden"></div>
-                            <div id="calc-display" class="calculator-display text-white text-3xl sm:text-4xl font-bold overflow-hidden">0</div>
-                        </div>
+        <!-- 独立计算器部分 -->
+        <div id="calculator-tool-section" class="hidden">
+            <div class="max-w-md mx-auto">
+                <div class="soft-card p-8">
+                    <h2 class="text-2xl font-bold text-center dreamy-gradient mb-6">独立计算器</h2>
+                    
+                    <!-- 计算器显示区域 -->
+                    <div class="soft-card-inset p-6 mb-6">
+                        <div id="calc-expression" class="text-right text-gray-500 text-lg h-8 overflow-hidden"></div>
+                        <div id="calc-display" class="text-right text-4xl font-bold text-gray-700 overflow-hidden">0</div>
                     </div>
                     
-                    <!-- 计算器按键 -->
-                    <div class="bg-gray-100 rounded-b-2xl p-3 sm:p-4">
-                        <div class="grid grid-cols-4 gap-2 sm:gap-3">
-                            <!-- 第一行 -->
-                            <button onclick="clearCalculator()" class="calculator-btn bg-red-400 hover:bg-red-500 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">C</button>
-                            <button onclick="toggleSign()" class="calculator-btn bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 sm:py-4 rounded-xl font-semibold text-lg">±</button>
-                            <button onclick="inputPercent()" class="calculator-btn bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 sm:py-4 rounded-xl font-semibold text-lg">%</button>
-                            <button onclick="inputOperator('/')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">÷</button>
-                            
-                            <!-- 第二行 -->
-                            <button onclick="inputNumber('7')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">7</button>
-                            <button onclick="inputNumber('8')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">8</button>
-                            <button onclick="inputNumber('9')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">9</button>
-                            <button onclick="inputOperator('*')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">×</button>
-                            
-                            <!-- 第三行 -->
-                            <button onclick="inputNumber('4')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">4</button>
-                            <button onclick="inputNumber('5')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">5</button>
-                            <button onclick="inputNumber('6')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">6</button>
-                            <button onclick="inputOperator('-')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">−</button>
-                            
-                            <!-- 第四行 -->
-                            <button onclick="inputNumber('1')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">1</button>
-                            <button onclick="inputNumber('2')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">2</button>
-                            <button onclick="inputNumber('3')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">3</button>
-                            <button onclick="inputOperator('+')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">+</button>
-                            
-                            <!-- 第五行 -->
-                            <button onclick="inputNumber('00')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">00</button>
-                            <button onclick="inputNumber('0')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">0</button>
-                            <button onclick="inputDecimal()" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">.</button>
-                            <button onclick="calculateResult()" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">=</button>
-                        </div>
+                    <!-- 计算器按钮 -->
+                    <div class="grid grid-cols-4 gap-4">
+                        <!-- 第一行 -->
+                        <button onclick="clearCalculator()" class="calc-button calc-button-clear py-4">C</button>
+                        <button onclick="appendToCalculator('(')" class="calc-button py-4">(</button>
+                        <button onclick="appendToCalculator(')')" class="calc-button py-4">)</button>
+                        <button onclick="appendToCalculator('/')" class="calc-button calc-button-operator py-4">÷</button>
+                        
+                        <!-- 第二行 -->
+                        <button onclick="appendToCalculator('7')" class="calc-button py-4">7</button>
+                        <button onclick="appendToCalculator('8')" class="calc-button py-4">8</button>
+                        <button onclick="appendToCalculator('9')" class="calc-button py-4">9</button>
+                        <button onclick="appendToCalculator('*')" class="calc-button calc-button-operator py-4">×</button>
+                        
+                        <!-- 第三行 -->
+                        <button onclick="appendToCalculator('4')" class="calc-button py-4">4</button>
+                        <button onclick="appendToCalculator('5')" class="calc-button py-4">5</button>
+                        <button onclick="appendToCalculator('6')" class="calc-button py-4">6</button>
+                        <button onclick="appendToCalculator('-')" class="calc-button calc-button-operator py-4">−</button>
+                        
+                        <!-- 第四行 -->
+                        <button onclick="appendToCalculator('1')" class="calc-button py-4">1</button>
+                        <button onclick="appendToCalculator('2')" class="calc-button py-4">2</button>
+                        <button onclick="appendToCalculator('3')" class="calc-button py-4">3</button>
+                        <button onclick="appendToCalculator('+')" class="calc-button calc-button-operator py-4">+</button>
+                        
+                        <!-- 第五行 -->
+                        <button onclick="appendToCalculator('0')" class="calc-button py-4">0</button>
+                        <button onclick="appendToCalculator('00')" class="calc-button py-4">00</button>
+                        <button onclick="appendToCalculator('.')" class="calc-button py-4">.</button>
+                        <button onclick="calculateResult()" class="calc-button calc-button-equal py-4">=</button>
                     </div>
-                </div>
-                
-                <!-- 计算器使用说明 -->
-                <div class="mt-6 sm:mt-8 bg-gray-50 rounded-xl p-4 sm:p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3">使用说明</h3>
-                    <ul class="text-sm text-gray-600 space-y-2">
-                        <li>• 点击输入框旁边的计算器图标可快速打开虚拟计算器</li>
-                        <li>• 计算完成后结果会自动填入对应的输入框</li>
-                        <li>• "00"按钮可快速输入两个零，方便大额数值计算</li>
-                        <li>• 支持基本的加减乘除运算和百分比计算</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 计算器弹窗 -->
-    <div id="calculator-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full overflow-hidden animate-fade-in">
-            <div class="flex justify-between items-center p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800">计算器</h3>
-                <button onclick="closeCalculator()" class="text-gray-500 hover:text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- 计算器显示 -->
-            <div class="bg-gray-800 p-4 sm:p-6">
-                <div class="text-right">
-                    <div id="modal-calc-expression" class="text-gray-400 text-sm h-6 overflow-hidden"></div>
-                    <div id="modal-calc-display" class="calculator-display text-white text-3xl sm:text-4xl font-bold overflow-hidden">0</div>
-                </div>
-            </div>
-            
-            <!-- 计算器按键 -->
-            <div class="bg-gray-100 p-3 sm:p-4">
-                <div class="grid grid-cols-4 gap-2 sm:gap-3">
-                    <!-- 第一行 -->
-                    <button onclick="modalClearCalculator()" class="calculator-btn bg-red-400 hover:bg-red-500 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">C</button>
-                    <button onclick="modalToggleSign()" class="calculator-btn bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 sm:py-4 rounded-xl font-semibold text-lg">±</button>
-                    <button onclick="modalInputPercent()" class="calculator-btn bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 sm:py-4 rounded-xl font-semibold text-lg">%</button>
-                    <button onclick="modalInputOperator('/')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">÷</button>
-                    
-                    <!-- 第二行 -->
-                    <button onclick="modalInputNumber('7')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">7</button>
-                    <button onclick="modalInputNumber('8')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">8</button>
-                    <button onclick="modalInputNumber('9')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">9</button>
-                    <button onclick="modalInputOperator('*')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">×</button>
-                    
-                    <!-- 第三行 -->
-                    <button onclick="modalInputNumber('4')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">4</button>
-                    <button onclick="modalInputNumber('5')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">5</button>
-                    <button onclick="modalInputNumber('6')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">6</button>
-                    <button onclick="modalInputOperator('-')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">−</button>
-                    
-                    <!-- 第四行 -->
-                    <button onclick="modalInputNumber('1')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">1</button>
-                    <button onclick="modalInputNumber('2')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">2</button>
-                    <button onclick="modalInputNumber('3')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">3</button>
-                    <button onclick="modalInputOperator('+')" class="calculator-btn bg-purple-500 hover:bg-purple-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">+</button>
-                    
-                    <!-- 第五行 -->
-                    <button onclick="modalInputNumber('00')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">00</button>
-                    <button onclick="modalInputNumber('0')" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">0</button>
-                    <button onclick="modalInputDecimal()" class="calculator-btn bg-white hover:bg-gray-50 text-gray-800 py-3 sm:py-4 rounded-xl font-semibold text-lg shadow-sm">.</button>
-                    <button onclick="modalCalculateAndFill()" class="calculator-btn bg-green-500 hover:bg-green-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-lg">✓</button>
                 </div>
             </div>
         </div>
@@ -720,6 +647,7 @@
 
     <script>
         // 全局变量
+        let currentMainSection = 'calculator';
         let currentCalculatorType = 'standard';
         let currentRepaymentType = 'equal-principal-interest';
         let currentReverseMode = 'equal-principal-interest';
@@ -727,34 +655,38 @@
         let reverseSchedule = [];
         let comparisonResult = null;
         let paymentChart = null;
-        let activeInputField = null;
         
-        // 计算器状态
-        let calcDisplay = '0';
+        // 计算器变量
         let calcExpression = '';
-        let calcOperator = null;
-        let calcPrevValue = null;
-        let calcWaitingForOperand = false;
-        
-        // 弹窗计算器状态
-        let modalCalcDisplay = '0';
-        let modalCalcExpression = '';
-        let modalCalcOperator = null;
-        let modalCalcPrevValue = null;
-        let modalCalcWaitingForOperand = false;
+        let calcCurrent = '0';
+        let calcNewInput = true;
 
-        // 页面切换
-        function showSection(section) {
+        // 主页面切换
+        function showMainSection(section) {
+            currentMainSection = section;
+            
+            // 更新选项卡样式
+            document.getElementById('main-tab-calculator').classList.remove('soft-tab-active');
+            document.getElementById('main-tab-calculator').classList.add('soft-button');
+            document.getElementById('main-tab-comparison').classList.remove('soft-tab-active');
+            document.getElementById('main-tab-comparison').classList.add('soft-button');
+            document.getElementById('main-tab-calculator-tool').classList.remove('soft-tab-active');
+            document.getElementById('main-tab-calculator-tool').classList.add('soft-button');
+            
+            document.getElementById('main-tab-' + (section === 'calculator' ? 'calculator' : section === 'comparison' ? 'comparison' : 'calculator-tool')).classList.add('soft-tab-active');
+            document.getElementById('main-tab-' + (section === 'calculator' ? 'calculator' : section === 'comparison' ? 'comparison' : 'calculator-tool')).classList.remove('soft-button');
+            
+            // 显示对应部分
             document.getElementById('calculator-section').classList.add('hidden');
             document.getElementById('comparison-section').classList.add('hidden');
-            document.getElementById('virtual-calculator-section').classList.add('hidden');
+            document.getElementById('calculator-tool-section').classList.add('hidden');
             
             if (section === 'calculator') {
                 document.getElementById('calculator-section').classList.remove('hidden');
             } else if (section === 'comparison') {
                 document.getElementById('comparison-section').classList.remove('hidden');
             } else {
-                document.getElementById('virtual-calculator-section').classList.remove('hidden');
+                document.getElementById('calculator-tool-section').classList.remove('hidden');
             }
         }
 
@@ -763,13 +695,13 @@
             currentCalculatorType = type;
             
             // 更新选项卡样式
-            document.getElementById('tab-standard').classList.remove('tab-active');
-            document.getElementById('tab-standard').classList.add('bg-gray-100', 'hover:bg-gray-200');
-            document.getElementById('tab-reverse').classList.remove('tab-active');
-            document.getElementById('tab-reverse').classList.add('bg-gray-100', 'hover:bg-gray-200');
+            document.getElementById('tab-standard').classList.remove('soft-tab-active');
+            document.getElementById('tab-standard').classList.add('soft-button');
+            document.getElementById('tab-reverse').classList.remove('soft-tab-active');
+            document.getElementById('tab-reverse').classList.add('soft-button');
             
-            document.getElementById('tab-' + type).classList.add('tab-active');
-            document.getElementById('tab-' + type).classList.remove('bg-gray-100', 'hover:bg-gray-200');
+            document.getElementById('tab-' + type).classList.add('soft-tab-active');
+            document.getElementById('tab-' + type).classList.remove('soft-button');
             
             // 显示对应计算器
             document.getElementById('standard-calculator').classList.add('hidden');
@@ -787,21 +719,21 @@
             currentRepaymentType = type;
             
             // 更新按钮样式
-            document.getElementById('btn-epi').classList.remove('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-epi').classList.add('border-gray-300');
-            document.getElementById('btn-ep').classList.remove('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-ep').classList.add('border-gray-300');
-            document.getElementById('btn-io').classList.remove('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-io').classList.add('border-gray-300');
+            document.getElementById('btn-epi').classList.remove('soft-tab-active');
+            document.getElementById('btn-epi').classList.add('soft-button');
+            document.getElementById('btn-ep').classList.remove('soft-tab-active');
+            document.getElementById('btn-ep').classList.add('soft-button');
+            document.getElementById('btn-io').classList.remove('soft-tab-active');
+            document.getElementById('btn-io').classList.add('soft-button');
             
-            document.getElementById('btn-' + (type === 'equal-principal-interest' ? 'epi' : type === 'equal-principal' ? 'ep' : 'io')).classList.add('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-' + (type === 'equal-principal-interest' ? 'epi' : type === 'equal-principal' ? 'ep' : 'io')).classList.remove('border-gray-300');
+            document.getElementById('btn-' + (type === 'equal-principal-interest' ? 'epi' : type === 'equal-principal' ? 'ep' : 'io')).classList.add('soft-tab-active');
+            document.getElementById('btn-' + (type === 'equal-principal-interest' ? 'epi' : type === 'equal-principal' ? 'ep' : 'io')).classList.remove('soft-button');
             
-            // 显示/隐藏还款频率选项
+            // 先息后本显示还款频率
             if (type === 'interest-only') {
-                document.getElementById('standard-payment-frequency').classList.remove('hidden');
+                document.getElementById('payment-frequency-section').classList.remove('hidden');
             } else {
-                document.getElementById('standard-payment-frequency').classList.add('hidden');
+                document.getElementById('payment-frequency-section').classList.add('hidden');
             }
         }
 
@@ -810,13 +742,13 @@
             currentReverseMode = mode;
             
             // 更新按钮样式
-            document.getElementById('btn-reverse-epi').classList.remove('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-reverse-epi').classList.add('border-gray-300');
-            document.getElementById('btn-reverse-io').classList.remove('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-reverse-io').classList.add('border-gray-300');
+            document.getElementById('btn-reverse-epi').classList.remove('soft-tab-active');
+            document.getElementById('btn-reverse-epi').classList.add('soft-button');
+            document.getElementById('btn-reverse-io').classList.remove('soft-tab-active');
+            document.getElementById('btn-reverse-io').classList.add('soft-button');
             
-            document.getElementById('btn-reverse-' + (mode === 'equal-principal-interest' ? 'epi' : 'io')).classList.add('border-purple-500', 'bg-purple-50', 'text-purple-700');
-            document.getElementById('btn-reverse-' + (mode === 'equal-principal-interest' ? 'epi' : 'io')).classList.remove('border-gray-300');
+            document.getElementById('btn-reverse-' + (mode === 'equal-principal-interest' ? 'epi' : 'io')).classList.add('soft-tab-active');
+            document.getElementById('btn-reverse-' + (mode === 'equal-principal-interest' ? 'epi' : 'io')).classList.remove('soft-button');
             
             // 显示对应输入区域
             document.getElementById('reverse-payment-section').classList.add('hidden');
@@ -841,9 +773,9 @@
 
         // 标准贷款计算
         function calculateStandardLoan() {
-            const loanAmount = parseFloat(document.getElementById('loan-amount').value.replace(/,/g, ''));
-            const annualRate = parseFloat(document.getElementById('interest-rate').value.replace(/,/g, '')) / 100;
-            let term = parseInt(document.getElementById('loan-term').value.replace(/,/g, ''));
+            const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+            const annualRate = parseFloat(document.getElementById('interest-rate').value) / 100;
+            let term = parseInt(document.getElementById('loan-term').value);
             const termUnit = document.getElementById('term-unit').value;
             
             // 转换为月数
@@ -892,7 +824,7 @@
                     
                     if (i === 1) {
                         firstPayment = payment;
-                        monthlyPayment = payment; // 显示首月还款
+                        monthlyPayment = payment;
                     }
                     
                     standardSchedule.push({
@@ -905,11 +837,12 @@
                 }
             } else if (currentRepaymentType === 'interest-only') {
                 // 先息后本
-                const frequency = document.getElementById('standard-frequency').value;
+                const frequency = document.getElementById('payment-frequency').value;
                 const periodsPerYear = frequency === 'monthly' ? 12 : 4;
                 const totalPeriods = frequency === 'monthly' ? term : Math.ceil(term / 3);
                 const periodRate = annualRate / periodsPerYear;
                 const periodInterest = loanAmount * periodRate;
+                
                 monthlyPayment = periodInterest;
                 firstPayment = periodInterest;
                 
@@ -917,7 +850,6 @@
                     totalInterest += periodInterest;
                     
                     if (i === totalPeriods) {
-                        // 最后一期
                         standardSchedule.push({
                             period: i,
                             payment: periodInterest + loanAmount,
@@ -958,13 +890,13 @@
             
             standardSchedule.forEach((item, index) => {
                 const row = document.createElement('tr');
-                row.className = 'table-row';
+                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
                 row.innerHTML = `
-                    <td class="px-3 py-3 text-sm">第${item.period}期</td>
-                    <td class="px-3 py-3 text-sm">${formatCurrency(item.payment)}</td>
-                    <td class="px-3 py-3 text-sm text-green-600">${formatCurrency(item.principal)}</td>
-                    <td class="px-3 py-3 text-sm text-red-600">${formatCurrency(item.interest)}</td>
-                    <td class="px-3 py-3 text-sm">${formatCurrency(item.remaining)}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">第${item.period}期</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${formatCurrency(item.payment)}</td>
+                    <td class="px-4 py-3 text-sm text-green-600">${formatCurrency(item.principal)}</td>
+                    <td class="px-4 py-3 text-sm text-red-500">${formatCurrency(item.interest)}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${formatCurrency(item.remaining)}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1031,8 +963,8 @@
 
         // 反推利率计算
         function calculateReverseRate() {
-            const loanAmount = parseFloat(document.getElementById('reverse-loan-amount').value.replace(/,/g, ''));
-            let term = parseInt(document.getElementById('reverse-loan-term').value.replace(/,/g, ''));
+            const loanAmount = parseFloat(document.getElementById('reverse-loan-amount').value);
+            let term = parseInt(document.getElementById('reverse-loan-term').value);
             const termUnit = document.getElementById('reverse-term-unit').value;
             const frequency = document.getElementById('reverse-payment-frequency').value;
             
@@ -1050,11 +982,11 @@
             let monthlyRate = 0;
             
             if (currentReverseMode === 'equal-principal-interest') {
-                const payment = parseFloat(document.getElementById('reverse-payment').value.replace(/,/g, ''));
+                const payment = parseFloat(document.getElementById('reverse-payment').value);
                 
                 // 使用二分法反推利率
                 let rateLow = 0;
-                let rateHigh = 1; // 100%
+                let rateHigh = 1;
                 let rateMid = 0;
                 
                 for (let i = 0; i < 100; i++) {
@@ -1097,7 +1029,7 @@
                 updateReverseResults(loanAmount, totalInterest, annualRate, monthlyRate);
                 
             } else if (currentReverseMode === 'interest-only') {
-                const interestPayment = parseFloat(document.getElementById('reverse-interest-payment').value.replace(/,/g, ''));
+                const interestPayment = parseFloat(document.getElementById('reverse-interest-payment').value);
                 
                 // 先息后本反推利率
                 const periodRate = interestPayment / loanAmount;
@@ -1156,15 +1088,15 @@
             const tbody = document.getElementById('reverse-schedule-table');
             tbody.innerHTML = '';
             
-            reverseSchedule.forEach((item) => {
+            reverseSchedule.forEach((item, index) => {
                 const row = document.createElement('tr');
-                row.className = 'table-row';
+                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
                 row.innerHTML = `
-                    <td class="px-3 py-3 text-sm">第${item.period}期</td>
-                    <td class="px-3 py-3 text-sm">${formatCurrency(item.payment)}</td>
-                    <td class="px-3 py-3 text-sm text-green-600">${formatCurrency(item.principal)}</td>
-                    <td class="px-3 py-3 text-sm text-red-600">${formatCurrency(item.interest)}</td>
-                    <td class="px-3 py-3 text-sm">${formatCurrency(item.remaining)}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">第${item.period}期</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${formatCurrency(item.payment)}</td>
+                    <td class="px-4 py-3 text-sm text-green-600">${formatCurrency(item.principal)}</td>
+                    <td class="px-4 py-3 text-sm text-red-500">${formatCurrency(item.interest)}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${formatCurrency(item.remaining)}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1173,16 +1105,16 @@
         // 贷款方案对比
         function compareLoans() {
             // 获取方案A参数
-            const amountA = parseFloat(document.getElementById('comp-a-amount').value.replace(/,/g, ''));
-            const rateA = parseFloat(document.getElementById('comp-a-rate').value.replace(/,/g, '')) / 100;
-            let termA = parseInt(document.getElementById('comp-a-term').value.replace(/,/g, ''));
+            const amountA = parseFloat(document.getElementById('comp-a-amount').value);
+            const rateA = parseFloat(document.getElementById('comp-a-rate').value) / 100;
+            let termA = parseInt(document.getElementById('comp-a-term').value);
             const unitA = document.getElementById('comp-a-unit').value;
             const typeA = document.getElementById('comp-a-type').value;
             
             // 获取方案B参数
-            const amountB = parseFloat(document.getElementById('comp-b-amount').value.replace(/,/g, ''));
-            const rateB = parseFloat(document.getElementById('comp-b-rate').value.replace(/,/g, '')) / 100;
-            let termB = parseInt(document.getElementById('comp-b-term').value.replace(/,/g, ''));
+            const amountB = parseFloat(document.getElementById('comp-b-amount').value);
+            const rateB = parseFloat(document.getElementById('comp-b-rate').value) / 100;
+            let termB = parseInt(document.getElementById('comp-b-term').value);
             const unitB = document.getElementById('comp-b-unit').value;
             const typeB = document.getElementById('comp-b-type').value;
             
@@ -1219,9 +1151,9 @@
             document.getElementById('diff-total').textContent = (diffTotal > 0 ? '+' : '') + formatCurrency(diffTotal);
             
             // 设置颜色
-            document.getElementById('diff-monthly').className = 'font-semibold text-lg ' + (diffMonthly > 0 ? 'text-red-600' : 'text-green-600');
-            document.getElementById('diff-interest').className = 'font-semibold text-lg ' + (diffInterest > 0 ? 'text-red-600' : 'text-green-600');
-            document.getElementById('diff-total').className = 'font-semibold text-lg ' + (diffTotal > 0 ? 'text-red-600' : 'text-green-600');
+            document.getElementById('diff-monthly').className = 'font-bold text-xl ' + (diffMonthly > 0 ? 'text-red-500' : 'text-green-500');
+            document.getElementById('diff-interest').className = 'font-bold text-xl ' + (diffInterest > 0 ? 'text-red-500' : 'text-green-500');
+            document.getElementById('diff-total').className = 'font-bold text-xl ' + (diffTotal > 0 ? 'text-red-500' : 'text-green-500');
             
             // 显示结果
             document.getElementById('comparison-results').classList.remove('hidden');
@@ -1234,11 +1166,9 @@
             let totalInterest = 0;
             
             if (type === 'equal-principal-interest') {
-                // 等额本息
                 monthlyPayment = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
                 totalInterest = monthlyPayment * months - principal;
             } else if (type === 'equal-principal') {
-                // 等额本金
                 const monthlyPrincipal = principal / months;
                 let remaining = principal;
                 let firstPayment = 0;
@@ -1251,9 +1181,8 @@
                     }
                     remaining -= monthlyPrincipal;
                 }
-                monthlyPayment = firstPayment; // 显示首月还款
+                monthlyPayment = firstPayment;
             } else if (type === 'interest-only') {
-                // 先息后本
                 monthlyPayment = principal * monthlyRate;
                 totalInterest = monthlyPayment * months;
             }
@@ -1306,233 +1235,73 @@
             document.body.removeChild(link);
         }
 
-        // 虚拟计算器功能
-        function openCalculator(inputId) {
-            activeInputField = inputId;
-            // 重置弹窗计算器状态
-            modalCalcDisplay = '0';
-            modalCalcExpression = '';
-            modalCalcOperator = null;
-            modalCalcPrevValue = null;
-            modalCalcWaitingForOperand = false;
-            updateModalCalcDisplay();
-            document.getElementById('calculator-modal').classList.remove('hidden');
+        // 独立计算器功能
+        function clearCalculator() {
+            calcExpression = '';
+            calcCurrent = '0';
+            calcNewInput = true;
+            updateCalculatorDisplay();
         }
 
-        function closeCalculator() {
-            document.getElementById('calculator-modal').classList.add('hidden');
-            activeInputField = null;
-        }
-
-        // 主页面计算器
-        function inputNumber(num) {
-            if (calcWaitingForOperand) {
-                calcDisplay = num;
-                calcWaitingForOperand = false;
+        function appendToCalculator(value) {
+            if (calcNewInput && !isNaN(value)) {
+                calcCurrent = '';
+                calcNewInput = false;
+            }
+            
+            if (value === '00') {
+                if (calcCurrent !== '0') {
+                    calcCurrent += '00';
+                }
+            } else if (value === '.') {
+                if (!calcCurrent.includes('.')) {
+                    calcCurrent += '.';
+                }
+            } else if (['+', '-', '*', '/', '(', ')'].includes(value)) {
+                if (calcExpression === '' && calcCurrent !== '0') {
+                    calcExpression = calcCurrent + ' ' + value + ' ';
+                } else {
+                    calcExpression += calcCurrent + ' ' + value + ' ';
+                }
+                calcNewInput = true;
+                calcCurrent = '0';
             } else {
-                calcDisplay = calcDisplay === '0' ? num : calcDisplay + num;
-            }
-            updateCalcDisplay();
-        }
-
-        function inputDecimal() {
-            if (calcWaitingForOperand) {
-                calcDisplay = '0.';
-                calcWaitingForOperand = false;
-            } else if (!calcDisplay.includes('.')) {
-                calcDisplay += '.';
-            }
-            updateCalcDisplay();
-        }
-
-        function inputOperator(op) {
-            const value = parseFloat(calcDisplay);
-            
-            if (calcPrevValue === null) {
-                calcPrevValue = value;
-            } else if (calcOperator) {
-                const result = calculate(calcPrevValue, value, calcOperator);
-                calcDisplay = String(result);
-                calcPrevValue = result;
-                updateCalcDisplay();
+                if (calcCurrent === '0' && value !== '.') {
+                    calcCurrent = value;
+                } else {
+                    calcCurrent += value;
+                }
             }
             
-            calcWaitingForOperand = true;
-            calcOperator = op;
-            calcExpression = `${calcPrevValue} ${getOperatorSymbol(op)}`;
-            updateCalcExpression();
+            updateCalculatorDisplay();
         }
 
         function calculateResult() {
-            if (calcOperator && calcPrevValue !== null) {
-                const value = parseFloat(calcDisplay);
-                const result = calculate(calcPrevValue, value, calcOperator);
+            try {
+                const fullExpression = calcExpression + calcCurrent;
+                const result = eval(fullExpression);
                 
-                calcExpression = `${calcPrevValue} ${getOperatorSymbol(calcOperator)} ${value} =`;
-                calcDisplay = String(result);
-                calcPrevValue = result;
-                calcOperator = null;
-                calcWaitingForOperand = true;
+                calcExpression = '';
+                calcCurrent = String(result);
+                calcNewInput = true;
                 
-                updateCalcDisplay();
-                updateCalcExpression();
+                updateCalculatorDisplay();
+            } catch (error) {
+                calcCurrent = '错误';
+                calcNewInput = true;
+                updateCalculatorDisplay();
             }
         }
 
-        function clearCalculator() {
-            calcDisplay = '0';
-            calcExpression = '';
-            calcOperator = null;
-            calcPrevValue = null;
-            calcWaitingForOperand = false;
-            updateCalcDisplay();
-            updateCalcExpression();
-        }
-
-        function toggleSign() {
-            calcDisplay = String(-parseFloat(calcDisplay));
-            updateCalcDisplay();
-        }
-
-        function inputPercent() {
-            calcDisplay = String(parseFloat(calcDisplay) / 100);
-            updateCalcDisplay();
-        }
-
-        function calculate(a, b, op) {
-            switch (op) {
-                case '+': return a + b;
-                case '-': return a - b;
-                case '*': return a * b;
-                case '/': return b !== 0 ? a / b : 0;
-                default: return b;
-            }
-        }
-
-        function getOperatorSymbol(op) {
-            switch (op) {
-                case '+': return '+';
-                case '-': return '−';
-                case '*': return '×';
-                case '/': return '÷';
-                default: return '';
-            }
-        }
-
-        function updateCalcDisplay() {
-            document.getElementById('calc-display').textContent = calcDisplay;
-        }
-
-        function updateCalcExpression() {
+        function updateCalculatorDisplay() {
             document.getElementById('calc-expression').textContent = calcExpression;
+            document.getElementById('calc-display').textContent = calcCurrent;
         }
-
-        // 弹窗计算器
-        function modalInputNumber(num) {
-            if (modalCalcWaitingForOperand) {
-                modalCalcDisplay = num;
-                modalCalcWaitingForOperand = false;
-            } else {
-                modalCalcDisplay = modalCalcDisplay === '0' ? num : modalCalcDisplay + num;
-            }
-            updateModalCalcDisplay();
-        }
-
-        function modalInputDecimal() {
-            if (modalCalcWaitingForOperand) {
-                modalCalcDisplay = '0.';
-                modalCalcWaitingForOperand = false;
-            } else if (!modalCalcDisplay.includes('.')) {
-                modalCalcDisplay += '.';
-            }
-            updateModalCalcDisplay();
-        }
-
-        function modalInputOperator(op) {
-            const value = parseFloat(modalCalcDisplay);
-            
-            if (modalCalcPrevValue === null) {
-                modalCalcPrevValue = value;
-            } else if (modalCalcOperator) {
-                const result = calculate(modalCalcPrevValue, value, modalCalcOperator);
-                modalCalcDisplay = String(result);
-                modalCalcPrevValue = result;
-                updateModalCalcDisplay();
-            }
-            
-            modalCalcWaitingForOperand = true;
-            modalCalcOperator = op;
-            modalCalcExpression = `${modalCalcPrevValue} ${getOperatorSymbol(op)}`;
-            updateModalCalcExpression();
-        }
-
-        function modalCalculateResult() {
-            if (modalCalcOperator && modalCalcPrevValue !== null) {
-                const value = parseFloat(modalCalcDisplay);
-                const result = calculate(modalCalcPrevValue, value, modalCalcOperator);
-                
-                modalCalcExpression = `${modalCalcPrevValue} ${getOperatorSymbol(modalCalcOperator)} ${value} =`;
-                modalCalcDisplay = String(result);
-                modalCalcPrevValue = result;
-                modalCalcOperator = null;
-                modalCalcWaitingForOperand = true;
-                
-                updateModalCalcDisplay();
-                updateModalCalcExpression();
-            }
-        }
-
-        function modalClearCalculator() {
-            modalCalcDisplay = '0';
-            modalCalcExpression = '';
-            modalCalcOperator = null;
-            modalCalcPrevValue = null;
-            modalCalcWaitingForOperand = false;
-            updateModalCalcDisplay();
-            updateModalCalcExpression();
-        }
-
-        function modalToggleSign() {
-            modalCalcDisplay = String(-parseFloat(modalCalcDisplay));
-            updateModalCalcDisplay();
-        }
-
-        function modalInputPercent() {
-            modalCalcDisplay = String(parseFloat(modalCalcDisplay) / 100);
-            updateModalCalcDisplay();
-        }
-
-        function modalCalculateAndFill() {
-            // 先计算结果
-            modalCalculateResult();
-            
-            // 填入输入框
-            if (activeInputField) {
-                document.getElementById(activeInputField).value = modalCalcDisplay;
-            }
-            
-            // 关闭弹窗
-            closeCalculator();
-        }
-
-        function updateModalCalcDisplay() {
-            document.getElementById('modal-calc-display').textContent = modalCalcDisplay;
-        }
-
-        function updateModalCalcExpression() {
-            document.getElementById('modal-calc-expression').textContent = modalCalcExpression;
-        }
-
-        // 点击弹窗外部关闭
-        document.getElementById('calculator-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCalculator();
-            }
-        });
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 可以在这里添加初始化代码
+            // 初始化计算器显示
+            updateCalculatorDisplay();
         });
     </script>
 </body>
