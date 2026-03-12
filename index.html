@@ -168,7 +168,7 @@
     <div class="max-w-6xl mx-auto">
         <!-- 标题区域 -->
         <div class="text-center mb-8 animate-float">
-            <h1 class="text-4xl md:text-5xl font-bold dreamy-gradient mb-2">融•金融计算器</h1>
+            <h1 class="text-4xl md:text-5xl font-bold dreamy-gradient mb-2">融•金融计算器-XIAOCHEN</h1>
             <p class="text-gray-500 text-lg">专业 · 精准 · 智能</p>
         </div>
 
@@ -210,18 +210,18 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
-                                    <input type="number" id="loan-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额" value="1000000">
+                                    <input type="number" id="loan-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额">
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">年化利率 (%)</label>
-                                    <input type="number" id="interest-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入年化利率" value="4.9">
+                                    <input type="number" id="interest-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入年化利率">
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
                                     <div class="flex gap-3">
-                                        <input type="number" id="loan-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限" value="30">
+                                        <input type="number" id="loan-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限">
                                         <select id="term-unit" class="soft-input px-5 py-4 text-lg">
                                             <option value="years">年</option>
                                             <option value="months">月</option>
@@ -350,17 +350,17 @@
                                 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
-                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额" value="1000000">
+                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额">
                                 </div>
                                 
                                 <div id="reverse-payment-section">
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">每月还款金额 (元)</label>
-                                    <input type="number" id="reverse-payment" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入还款金额" value="5307">
+                                    <input type="number" id="reverse-payment" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入还款金额">
                                 </div>
                                 
                                 <div id="reverse-interest-section" class="hidden">
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">每月/每季度支付利息金额 (元)</label>
-                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入利息金额" value="4083">
+                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入利息金额">
                                 </div>
                                 
                                 <div>
@@ -374,7 +374,7 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
                                     <div class="flex gap-3">
-                                        <input type="number" id="reverse-loan-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限" value="30">
+                                        <input type="number" id="reverse-loan-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限">
                                         <select id="reverse-term-unit" class="soft-input px-5 py-4 text-lg">
                                             <option value="years">年</option>
                                             <option value="months">月</option>
@@ -400,7 +400,8 @@
                                             <p id="reverse-annual-rate" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
                                         <div class="text-center">
-                                            <p class="text-sm text-gray-500 mb-1">月利率</p>
+                                            <!-- 修改1：标签文字添加“（厘）”说明 -->
+                                            <p class="text-sm text-gray-500 mb-1">月利率（厘）</p>
                                             <p id="reverse-monthly-rate" class="text-3xl font-bold dreamy-gradient">--</p>
                                         </div>
                                     </div>
@@ -467,16 +468,16 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
-                                <input type="number" id="comp-a-amount" class="soft-input w-full px-5 py-4 text-lg" value="1000000">
+                                <input type="number" id="comp-a-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">年化利率 (%)</label>
-                                <input type="number" id="comp-a-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" value="4.9">
+                                <input type="number" id="comp-a-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入年化利率">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
                                 <div class="flex gap-3">
-                                    <input type="number" id="comp-a-term" class="soft-input flex-1 px-5 py-4 text-lg" value="30">
+                                    <input type="number" id="comp-a-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限">
                                     <select id="comp-a-unit" class="soft-input px-5 py-4 text-lg">
                                         <option value="years">年</option>
                                         <option value="months">月</option>
@@ -500,16 +501,16 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款总额 (元)</label>
-                                <input type="number" id="comp-b-amount" class="soft-input w-full px-5 py-4 text-lg" value="1000000">
+                                <input type="number" id="comp-b-amount" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入贷款总额">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">年化利率 (%)</label>
-                                <input type="number" id="comp-b-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" value="4.5">
+                                <input type="number" id="comp-b-rate" step="0.01" class="soft-input w-full px-5 py-4 text-lg" placeholder="请输入年化利率">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-2 ml-1">贷款期限</label>
                                 <div class="flex gap-3">
-                                    <input type="number" id="comp-b-term" class="soft-input flex-1 px-5 py-4 text-lg" value="20">
+                                    <input type="number" id="comp-b-term" class="soft-input flex-1 px-5 py-4 text-lg" placeholder="请输入贷款期限">
                                     <select id="comp-b-unit" class="soft-input px-5 py-4 text-lg">
                                         <option value="years">年</option>
                                         <option value="months">月</option>
@@ -1081,8 +1082,9 @@
 
         // 更新反推结果
         function updateReverseResults(principal, totalInterest, annualRate, monthlyRate) {
+            // 修改2：年化利率保留原百分比显示，月利率转换为厘（1厘=0.1%=1‰，即月利率(厘)=月利率(小数)*1000）
             document.getElementById('reverse-annual-rate').textContent = (annualRate * 100).toFixed(4) + '%';
-            document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 100).toFixed(4) + '%';
+            document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 1000).toFixed(4) + '‰';
             document.getElementById('reverse-total-principal').textContent = formatCurrency(principal);
             document.getElementById('reverse-total-interest').textContent = formatCurrency(totalInterest);
             document.getElementById('reverse-total-payment').textContent = formatCurrency(principal + totalInterest);
