@@ -286,8 +286,11 @@
         .scrollbar-thin::-webkit-scrollbar-track { background: var(--border-light); border-radius: 3px; }
         .scrollbar-thin::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--button-primary-start), var(--button-primary-end)); border-radius: 3px; }
 
-        /* 确保表格标题背景适配深色 */
-        thead.bg-gray-50 { background-color: color-mix(in srgb, var(--card-bg-start) 70%, black); }
+        /* 确保表格标题背景适配深色（增加回退背景色，兼容不支持color-mix的浏览器） */
+        thead.bg-gray-50 {
+            background-color: #2d3748; /* 深色后备 */
+            background-color: color-mix(in srgb, var(--card-bg-start) 70%, black);
+        }
         
         @media (max-width: 640px) {
             .soft-input { padding: 0.75rem 1rem !important; font-size: 1rem !important; }
@@ -329,6 +332,12 @@
             .rate-input-field, .rate-unit-field {
                 flex-basis: 100% !important;
             }
+        }
+        /* 方案对比提示文字 */
+        .note-text {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            margin-top: 0.25rem;
         }
     </style>
 </head>
@@ -586,6 +595,8 @@
         <div id="comparison-section" class="hidden space-y-6 sm:space-y-8">
             <div class="soft-card p-4 sm:p-8">
                 <h2 class="text-xl sm:text-2xl font-bold text-center dreamy-gradient mb-6 sm:mb-8">贷款方案对比分析</h2>
+                <!-- 添加提示：先息后本默认按月还款 -->
+                <p class="text-center note-text mb-2">注：先息后本方案默认按每月还款计算，暂不支持季度频率。</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
                     <div class="soft-card p-4 sm:p-6 border-2" style="border-color: color-mix(in srgb, var(--button-primary-start) 50%, transparent);">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-primary-start);">方案 A</h3>
@@ -809,7 +820,7 @@
                 return map[type] || type;
             };
 
-            // 生成标准贷款导出文件名
+            // 生成标准贷款导出文件名（修复科学计数法问题）
             function generateStandardFileName() {
                 const amount = document.getElementById('loan-amount').value;
                 const term = document.getElementById('loan-term').value;
@@ -833,7 +844,9 @@
                     rateStr = `月息${rateInput.toFixed(2)}厘`;
                 }
 
-                let fileName = `${typeChinese} ${amount} ${totalPeriods}期 ${rateStr}.xlsx`;
+                // 金额转为纯数字字符串（避免科学计数法）
+                const amountStr = String(parseFloat(amount));
+                let fileName = `${typeChinese} ${amountStr} ${totalPeriods}期 ${rateStr}.xlsx`;
                 fileName = fileName.replace(/[\\/:*?"<>|]/g, '-');
                 return fileName;
             }
@@ -853,7 +866,8 @@
                 let annualRateText = annualRateElem.textContent;
                 let annualRate = parseFloat(annualRateText) || 0;
 
-                let fileName = `反推-${typeChinese} ${amount} ${totalPeriods}期 年化${annualRate.toFixed(2)}%.xlsx`;
+                const amountStr = String(parseFloat(amount));
+                let fileName = `反推-${typeChinese} ${amountStr} ${totalPeriods}期 年化${annualRate.toFixed(2)}%.xlsx`;
                 fileName = fileName.replace(/[\\/:*?"<>|]/g, '-');
                 return fileName;
             }
@@ -879,7 +893,9 @@
                 let rateStrA = rateUnitA === 'percent' ? `年化${rateInputA.toFixed(2)}%` : `月息${rateInputA.toFixed(2)}厘`;
                 let rateStrB = rateUnitB === 'percent' ? `年化${rateInputB.toFixed(2)}%` : `月息${rateInputB.toFixed(2)}厘`;
 
-                let fileName = `方案对比-A${typeAChinese}${amountA}期-${rateStrA}-B${typeBChinese}${amountB}期-${rateStrB}.xlsx`;
+                const amountAStr = String(parseFloat(amountA));
+                const amountBStr = String(parseFloat(amountB));
+                let fileName = `方案对比-A${typeAChinese}${amountAStr}期-${rateStrA}-B${typeBChinese}${amountBStr}期-${rateStrB}.xlsx`;
                 fileName = fileName.replace(/[\\/:*?"<>|]/g, '-');
                 return fileName;
             }
@@ -1063,6 +1079,14 @@
                     const months = termUnit === 'years' ? term * 12 : term;
                     const frequency = document.getElementById('payment-frequency').value;
 
+                    // 修复：先息后本季度频率时，要求 months 是3的倍数，否则提示
+                    if (currentRepaymentType === 'interest-only' && frequency === 'quarterly') {
+                        if (months % 3 !== 0) {
+                            alert('当选择先息后本且每季度还款时，贷款月数必须是3的倍数，请调整期限或还款频率。');
+                            return;
+                        }
+                    }
+
                     const result = computeLoanDetails(loanAmount, annualRate, months, currentRepaymentType, frequency);
                     standardSchedule = result.schedule;
 
@@ -1229,6 +1253,11 @@
                     testHigh = Math.min(testHigh * 2, 1.0);
                 }
 
+                // 修复：极低利率直接返回0
+                if (high < 1e-10) {
+                    return { periodRate: 0, annualRate: 0 };
+                }
+
                 let mid;
                 let found = false;
                 for (let i = 0; i < MAX_ITERATIONS; i++) {
@@ -1281,6 +1310,21 @@
                     const frequency = document.getElementById('reverse-payment-frequency').value;
                     const periodsPerYear = frequency === 'monthly' ? 12 : 4;
                     const totalPeriods = frequency === 'monthly' ? months : Math.ceil(months / 3);
+
+                    // 先息后本季度频率校验
+                    if (currentReverseMode === 'interest-only' && frequency === 'quarterly') {
+                        if (months % 3 !== 0) {
+                            alert('当选择先息后本且每季度还款时，贷款月数必须是3的倍数，请调整期限或还款频率。');
+                            return;
+                        }
+                    }
+                    // 等额本息季度频率校验（同样要求整倍数）
+                    if (currentReverseMode === 'equal-principal-interest' && frequency === 'quarterly') {
+                        if (months % 3 !== 0) {
+                            alert('当选择等额本息且每季度还款时，贷款月数必须是3的倍数，请调整期限或还款频率。');
+                            return;
+                        }
+                    }
 
                     // 获取计算依据
                     const basisElem = document.querySelector('input[name="reverse-basis"]:checked');
@@ -1435,6 +1479,7 @@
                     termB = document.getElementById('comp-b-unit').value === 'years' ? termB * 12 : termB;
                     const typeB = document.getElementById('comp-b-type').value;
 
+                    // 对比模块仅支持月还款（先息后本默认按月）
                     const resA = computeLoanDetails(amountA, annualRateA, termA, typeA, 'monthly');
                     const resB = computeLoanDetails(amountB, annualRateB, termB, typeB, 'monthly');
 
@@ -1626,10 +1671,25 @@
                         calcNewInput = true;
                     }
                 } else {
-                    if (calcNewInput && !isNaN(value)) { calcCurrent = ''; calcNewInput = false; }
-                    if (value === '00') { if (calcCurrent !== '0') calcCurrent += '00'; }
-                    else if (value === '.') { if (!calcCurrent.includes('.')) calcCurrent += '.'; }
-                    else { if (calcCurrent === '0') calcCurrent = value; else calcCurrent += value; }
+                    // 修复：00 输入逻辑
+                    if (value === '00') {
+                        if (calcCurrent !== '0') {
+                            calcCurrent += '00';
+                        } else {
+                            // 如果当前是0，保持0（或者可改为'00'，但后续输入会覆盖，这里保持0更符合直觉）
+                            // 不做改变
+                        }
+                    } else if (value === '.') {
+                        if (!calcCurrent.includes('.')) calcCurrent += '.';
+                    } else {
+                        if (calcNewInput) {
+                            calcCurrent = value;
+                            calcNewInput = false;
+                        } else {
+                            if (calcCurrent === '0') calcCurrent = value;
+                            else calcCurrent += value;
+                        }
+                    }
                 }
                 document.getElementById('calc-expression').textContent = calcExpression;
                 document.getElementById('calc-display').textContent = calcCurrent;
@@ -1801,7 +1861,12 @@
                     if (term !== undefined && unit !== undefined) {
                         document.getElementById('loan-term').value = term;
                         document.getElementById('term-unit').value = unit;
-                        calculateStandardLoan();
+                        // 仅当贷款金额和利率都不为空时自动计算，否则仅填充
+                        const amount = document.getElementById('loan-amount').value;
+                        const rate = document.getElementById('interest-rate').value;
+                        if (amount && rate) {
+                            calculateStandardLoan();
+                        }
                     }
                 });
 
@@ -1813,7 +1878,11 @@
                     if (term !== undefined && unit !== undefined) {
                         document.getElementById('reverse-loan-term').value = term;
                         document.getElementById('reverse-term-unit').value = unit;
-                        calculateReverseRate();
+                        // 仅当贷款金额不为空时自动计算
+                        const amount = document.getElementById('reverse-loan-amount').value;
+                        if (amount) {
+                            calculateReverseRate();
+                        }
                     }
                 });
 
