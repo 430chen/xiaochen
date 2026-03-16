@@ -54,4 +54,4 @@
 
 1. 克隆本仓库：
    ```bash
-   git clone https://github.com/您的用户名/您的仓库名.git
+   git clone https://github.com/430chen/xiaochen.git
