@@ -395,8 +395,9 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">还款方式</label>
-                                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                                         <button id="btn-epi" class="soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">等额本息</button>
+                                        <button id="btn-epe" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">等本等息</button>
                                         <button id="btn-ep" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">等额本金</button>
                                         <button id="btn-io" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">先息后本</button>
                                     </div>
@@ -615,7 +616,7 @@
                             </div>
 
                             <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款期限</label><div class="flex flex-col sm:flex-row gap-2"><input type="number" id="comp-a-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"><select id="comp-a-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="years">年</option><option value="months">月</option></select></div></div>
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label><select id="comp-a-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="equal-principal-interest">等额本息</option><option value="equal-principal">等额本金</option><option value="interest-only">先息后本</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label><select id="comp-a-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="equal-principal-interest">等额本息</option><option value="equal-principal-equal-interest">等本等息</option><option value="equal-principal">等额本金</option><option value="interest-only">先息后本</option></select></div>
                         </div>
                     </div>
                     <div class="soft-card p-4 sm:p-6 border-2" style="border-color: color-mix(in srgb, var(--button-operator-start) 50%, transparent);">
@@ -635,7 +636,7 @@
                             </div>
 
                             <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款期限</label><div class="flex flex-col sm:flex-row gap-2"><input type="number" id="comp-b-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"><select id="comp-b-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="years">年</option><option value="months">月</option></select></div></div>
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label><select id="comp-b-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="equal-principal-interest">等额本息</option><option value="equal-principal">等额本金</option><option value="interest-only">先息后本</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label><select id="comp-b-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="equal-principal-interest">等额本息</option><option value="equal-principal-equal-interest">等本等息</option><option value="equal-principal">等额本金</option><option value="interest-only">先息后本</option></select></div>
                         </div>
                     </div>
                 </div>
@@ -701,7 +702,7 @@
 
             let currentMainSection = 'calculator';
             let currentCalculatorType = 'standard';
-            let currentRepaymentType = 'equal-principal-interest';
+            let currentRepaymentType = 'equal-principal-interest'; // 默认等额本息
             let currentReverseMode = 'equal-principal-interest';
             let standardSchedule = [];
             let reverseSchedule = [];
@@ -814,6 +815,7 @@
             const repaymentTypeToChinese = (type) => {
                 const map = {
                     'equal-principal-interest': '等额本息',
+                    'equal-principal-equal-interest': '等本等息',
                     'equal-principal': '等额本金',
                     'interest-only': '先息后本'
                 };
@@ -835,6 +837,8 @@
                 let totalPeriods = termUnit === 'years' ? term * 12 : term;
                 if (repaymentType === 'interest-only' && frequency === 'quarterly') {
                     totalPeriods = Math.ceil(totalPeriods / 3);
+                } else {
+                    totalPeriods = termUnit === 'years' ? term * 12 : term;
                 }
                 
                 let rateStr = '';
@@ -926,6 +930,7 @@
                             schedule
                         };
                     } else {
+                        // 等额本息、等额本金、等本等息在利率0时都等价于每月还相同本金
                         const monthlyPrincipal = P.div(n_months).toNumber();
                         const schedule = [];
                         let remaining = P;
@@ -1026,6 +1031,31 @@
                             });
                         }
                     }
+                } else if (type === 'equal-principal-equal-interest') {
+                    // 等本等息：每月还款额固定，每月偿还相同本金，利息按未还本金计算（但等本等息通常指每月偿还相同本金和相同利息，即总利息均摊到各期）
+                    // 这里采用标准的等本等息：每期偿还本金 = 本金/总期数，每期利息 = 剩余本金 * 月利率，但这样每期还款额会递减。
+                    // 但根据常见定义，“等本等息”通常指每期偿还相同本金和相同利息（即手续费），总利息 = 本金 * 月利率 * 期数，每期还款额 = 本金/期数 + 本金*月利率。
+                    // 我们采用后者，即每期偿还固定本金和固定利息，这样每期还款额相等。
+                    const totalPeriods = months; // 按月还款
+                    const principalPerPeriod = P.div(totalPeriods);
+                    const interestPerPeriod = P.times(monthlyRate);
+                    const paymentPerPeriod = principalPerPeriod.plus(interestPerPeriod);
+                    monthlyPayment = paymentPerPeriod.toNumber();
+                    firstPayment = monthlyPayment;
+                    let remaining = P;
+                    for (let i = 1; i <= totalPeriods; i++) {
+                        const principalPart = principalPerPeriod;
+                        const interestPart = interestPerPeriod;
+                        remaining = remaining.minus(principalPart);
+                        totalInterest = totalInterest.plus(interestPart);
+                        schedule.push({
+                            period: i,
+                            payment: paymentPerPeriod.toNumber(),
+                            principal: principalPart.toNumber(),
+                            interest: interestPart.toNumber(),
+                            remaining: remaining.isNegative() ? 0 : remaining.toNumber()
+                        });
+                    }
                 }
                 return {
                     monthlyPayment,
@@ -1039,11 +1069,15 @@
             function updateStandardLabels() {
                 const freq = document.getElementById('payment-frequency').value;
                 const isIO = currentRepaymentType === 'interest-only';
+                const isEPE = currentRepaymentType === 'equal-principal-equal-interest';
                 const paymentLabel = document.getElementById('std-payment-label');
                 const firstLabel = document.getElementById('std-first-payment-label');
                 if (isIO) {
                     paymentLabel.textContent = (freq === 'monthly' ? '月供金额' : '季供金额');
                     firstLabel.textContent = (freq === 'monthly' ? '首月利息' : '首季利息');
+                } else if (isEPE) {
+                    paymentLabel.textContent = '月供金额';
+                    firstLabel.textContent = '首月还款';
                 } else {
                     paymentLabel.textContent = '月供金额';
                     firstLabel.textContent = '首月还款';
@@ -1077,14 +1111,18 @@
                     if (isNaN(term) || term <= 0) { alert('贷款期限必须为正整数'); return; }
                     const termUnit = document.getElementById('term-unit').value;
                     const months = termUnit === 'years' ? term * 12 : term;
-                    const frequency = document.getElementById('payment-frequency').value;
-
-                    // 修复：先息后本季度频率时，要求 months 是3的倍数，否则提示
-                    if (currentRepaymentType === 'interest-only' && frequency === 'quarterly') {
-                        if (months % 3 !== 0) {
+                    
+                    // 根据还款类型决定频率：只有先息后本才使用下拉框值，其他强制为每月
+                    let frequency = 'monthly';
+                    if (currentRepaymentType === 'interest-only') {
+                        frequency = document.getElementById('payment-frequency').value;
+                        // 检查季度频率时月数是否为3的倍数
+                        if (frequency === 'quarterly' && months % 3 !== 0) {
                             alert('当选择先息后本且每季度还款时，贷款月数必须是3的倍数，请调整期限或还款频率。');
                             return;
                         }
+                    } else {
+                        frequency = 'monthly';
                     }
 
                     const result = computeLoanDetails(loanAmount, annualRate, months, currentRepaymentType, frequency);
@@ -1517,7 +1555,7 @@
                 const rateUnit = document.getElementById('interest-rate-unit').value === 'percent' ? '%' : '厘';
                 const term = document.getElementById('loan-term').value;
                 const termUnit = document.getElementById('term-unit').value === 'years' ? '年' : '月';
-                const type = currentRepaymentType === 'equal-principal-interest' ? '等额本息' : (currentRepaymentType === 'equal-principal' ? '等额本金' : '先息后本');
+                const type = repaymentTypeToChinese(currentRepaymentType);
                 worksheet.addRow(['贷款总额', loanAmount, '利率', rate + rateUnit, '期限', term + termUnit, '还款方式', type]);
                 worksheet.addRow([]);
 
@@ -1754,15 +1792,28 @@
 
             function setRepaymentType(type) {
                 currentRepaymentType = type;
-                ['btn-epi','btn-ep','btn-io'].forEach(id => {
+                // 更新四个按钮
+                const btnMap = {
+                    'equal-principal-interest': 'btn-epi',
+                    'equal-principal-equal-interest': 'btn-epe',
+                    'equal-principal': 'btn-ep',
+                    'interest-only': 'btn-io'
+                };
+                Object.keys(btnMap).forEach(key => {
+                    const id = btnMap[key];
                     const el = document.getElementById(id);
-                    el.className = 'px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all ' + (id === `btn-${type==='equal-principal-interest'?'epi':type==='equal-principal'?'ep':'io'}` ? 'soft-tab-active' : 'soft-button');
+                    if (el) {
+                        el.className = 'px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all ' + (key === type ? 'soft-tab-active' : 'soft-button');
+                    }
                 });
                 const freqSection = document.getElementById('payment-frequency-section');
+                const freqSelect = document.getElementById('payment-frequency');
+                // 只有先息后本才显示频率选择，并允许修改；其他类型隐藏频率选择，并强制设为 monthly
                 if (type === 'interest-only') {
                     freqSection.classList.remove('hidden');
                 } else {
                     freqSection.classList.add('hidden');
+                    freqSelect.value = 'monthly'; // 强制为每月
                 }
                 updateStandardLabels();
             }
@@ -1824,6 +1875,7 @@
                 document.getElementById('tab-reverse').addEventListener('click', () => switchCalculatorType('reverse'));
 
                 document.getElementById('btn-epi').addEventListener('click', () => setRepaymentType('equal-principal-interest'));
+                document.getElementById('btn-epe').addEventListener('click', () => setRepaymentType('equal-principal-equal-interest'));
                 document.getElementById('btn-ep').addEventListener('click', () => setRepaymentType('equal-principal'));
                 document.getElementById('btn-io').addEventListener('click', () => setRepaymentType('interest-only'));
 
