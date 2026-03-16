@@ -467,7 +467,7 @@
                 <div id="reverse-calculator" class="hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                         <div class="space-y-4 sm:space-y-6">
-                            <h3 class="text-lg sm:text-xl font-semibold text-center" style="color: var(--text-secondary);">已知还款额反推利率</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold text-center" style="color: var(--text-secondary);">已知还款额/总利息反推利率</h3>
                             <div class="space-y-3 sm:space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">反推模式</label>
@@ -476,13 +476,26 @@
                                         <button id="btn-reverse-io" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base">先息后本</button>
                                     </div>
                                 </div>
+                                <!-- 新增：计算依据选择（还款额 或 总利息） -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">计算依据</label>
+                                    <div class="flex gap-3">
+                                        <label class="flex items-center gap-1"><input type="radio" name="reverse-basis" id="basis-payment" value="payment" checked> <span>每期还款额</span></label>
+                                        <label class="flex items-center gap-1"><input type="radio" name="reverse-basis" id="basis-total-interest" value="totalInterest"> <span>总利息</span></label>
+                                    </div>
+                                </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label>
                                     <input type="number" id="reverse-loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="1" step="1">
                                 </div>
+                                <!-- 动态区域：根据依据显示不同输入框 -->
                                 <div id="reverse-payment-section">
                                     <label id="reverse-payment-label" class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">每月还款金额 (元)</label>
                                     <input type="number" id="reverse-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入还款金额" min="1" step="1">
+                                </div>
+                                <div id="reverse-total-interest-section" class="hidden">
+                                    <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">总利息 (元)</label>
+                                    <input type="number" id="reverse-total-interest-input" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入总利息" min="0" step="1">
                                 </div>
                                 <div id="reverse-interest-section" class="hidden">
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">每期支付利息金额 (元)</label>
@@ -1166,6 +1179,91 @@
                 }
             }
 
+            // 根据总利息反推利率 (等额本息)
+            function reverseRateFromTotalInterest(loanAmount, totalInterest, totalPeriods, periodsPerYear) {
+                // 总还款额 = 本金 + 总利息
+                const totalPayment = loanAmount + totalInterest;
+                // 每期还款额 = 总还款额 / 总期数
+                const paymentPerPeriod = totalPayment / totalPeriods;
+                // 现在转化为已知每期还款额反推利率
+                return reverseRateFromPayment(loanAmount, paymentPerPeriod, totalPeriods, periodsPerYear);
+            }
+
+            // 根据每期还款额反推利率 (等额本息)
+            function reverseRateFromPayment(loanAmount, payment, totalPeriods, periodsPerYear) {
+                const P_dec = new Decimal(loanAmount);
+                const minPayment = loanAmount / totalPeriods;
+                if (Math.abs(payment - minPayment) < 1e-4) {
+                    return { periodRate: 0, annualRate: 0 };
+                }
+                const maxPeriodRate = MAX_ANNUAL_RATE / periodsPerYear;
+                const maxPeriodRate_dec = new Decimal(maxPeriodRate);
+                let maxPayment;
+                if (maxPeriodRate_dec.equals(0)) {
+                    maxPayment = minPayment;
+                } else {
+                    const one_plus_r = Decimal(1).plus(maxPeriodRate_dec);
+                    const pow_n = one_plus_r.pow(totalPeriods);
+                    const numerator = P_dec.times(maxPeriodRate_dec).times(pow_n);
+                    const denominator = pow_n.minus(1);
+                    maxPayment = numerator.div(denominator).toNumber();
+                }
+                if (payment > maxPayment + 1e-6) {
+                    alert(`每期还款额不能超过 ${formatCurrency(maxPayment)}，否则年利率将超过100%`);
+                    return null;
+                }
+
+                let low = 0;
+                let high = maxPeriodRate;
+                let testHigh = high;
+                while (testHigh <= 1.0) {
+                    const one_plus_r = Decimal(1).plus(testHigh);
+                    const pow_n = one_plus_r.pow(totalPeriods);
+                    const numerator = P_dec.times(testHigh).times(pow_n);
+                    const denominator = pow_n.minus(1);
+                    const testPayment = numerator.div(denominator).toNumber();
+                    if (testPayment >= payment) {
+                        high = testHigh;
+                        break;
+                    }
+                    testHigh = Math.min(testHigh * 2, 1.0);
+                }
+
+                let mid;
+                let found = false;
+                for (let i = 0; i < MAX_ITERATIONS; i++) {
+                    mid = (low + high) / 2;
+                    if (mid === 0) {
+                        if (Math.abs(loanAmount / totalPeriods - payment) / payment < REL_EPSILON) {
+                            found = true;
+                            break;
+                        } else {
+                            low = mid;
+                            continue;
+                        }
+                    }
+                    const one_plus_r = Decimal(1).plus(mid);
+                    const pow_n = one_plus_r.pow(totalPeriods);
+                    const numerator = P_dec.times(mid).times(pow_n);
+                    const denominator = pow_n.minus(1);
+                    const calculated = numerator.div(denominator).toNumber();
+                    if (Math.abs(calculated - payment) / payment < REL_EPSILON) {
+                        found = true;
+                        break;
+                    }
+                    if (calculated > payment) {
+                        high = mid;
+                    } else {
+                        low = mid;
+                    }
+                }
+                if (!found) {
+                    alert('无法收敛到足够精度，请检查输入是否合理');
+                    return null;
+                }
+                return { periodRate: mid, annualRate: mid * periodsPerYear };
+            }
+
             function calculateReverseRate() {
                 if (isCalculating) return;
                 isCalculating = true;
@@ -1184,115 +1282,47 @@
                     const periodsPerYear = frequency === 'monthly' ? 12 : 4;
                     const totalPeriods = frequency === 'monthly' ? months : Math.ceil(months / 3);
 
+                    // 获取计算依据
+                    const basisElem = document.querySelector('input[name="reverse-basis"]:checked');
+                    const basis = basisElem ? basisElem.value : 'payment';
+
                     if (currentReverseMode === 'equal-principal-interest') {
-                        const payment = validatePositive(document.getElementById('reverse-payment').value, '每期还款金额');
-                        if (!payment) return;
+                        let payment, totalInterest;
+                        if (basis === 'payment') {
+                            payment = validatePositive(document.getElementById('reverse-payment').value, '每期还款金额');
+                            if (!payment) return;
+                            totalInterest = payment * totalPeriods - loanAmount;
+                            if (totalInterest < 0) {
+                                alert('每期还款额过低，无法覆盖本金');
+                                return;
+                            }
+                        } else { // basis === 'totalInterest'
+                            totalInterest = validatePositive(document.getElementById('reverse-total-interest-input').value, '总利息');
+                            if (!totalInterest) return;
+                            payment = (loanAmount + totalInterest) / totalPeriods;
+                        }
 
                         const minPayment = loanAmount / totalPeriods;
                         if (payment < minPayment - 1e-6) {
                             alert(`每期还款额必须至少为 ${formatCurrency(minPayment)}，否则无法覆盖本金`);
                             return;
                         }
-                        const maxPeriodRate = MAX_ANNUAL_RATE / periodsPerYear;
-                        const P_dec = new Decimal(loanAmount);
-                        const maxPeriodRate_dec = new Decimal(maxPeriodRate);
-                        let maxPayment;
-                        if (maxPeriodRate_dec.equals(0)) {
-                            maxPayment = minPayment;
-                        } else {
-                            const one_plus_r = Decimal(1).plus(maxPeriodRate_dec);
-                            const pow_n = one_plus_r.pow(totalPeriods);
-                            const numerator = P_dec.times(maxPeriodRate_dec).times(pow_n);
-                            const denominator = pow_n.minus(1);
-                            maxPayment = numerator.div(denominator).toNumber();
-                        }
-                        if (payment > maxPayment + 1e-6) {
-                            alert(`每期还款额不能超过 ${formatCurrency(maxPayment)}，否则年利率将超过100%`);
-                            return;
-                        }
 
-                        if (Math.abs(payment - minPayment) < 1e-4) {
-                            const annualRate = 0;
-                            const monthlyRate = 0;
-                            let totalInterest = 0;
-                            reverseSchedule = [];
-                            const principalPerPeriod = loanAmount / totalPeriods;
-                            let remaining = loanAmount;
-                            for (let i = 1; i <= totalPeriods; i++) {
-                                const principalPart = principalPerPeriod;
-                                remaining -= principalPart;
-                                reverseSchedule.push({ period: i, payment: principalPart, principal: principalPart, interest: 0, remaining: Math.max(0, remaining) });
-                            }
-                            document.getElementById('reverse-annual-rate').textContent = '0.00%';
-                            document.getElementById('reverse-monthly-rate').textContent = '0.00厘';
-                            document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
-                            document.getElementById('reverse-total-interest').textContent = formatCurrency(0);
-                            document.getElementById('reverse-total-payment').textContent = formatCurrency(loanAmount);
-                            reverseSchedulePage = 1;
-                            renderReverseScheduleTable();
-                            return;
-                        }
+                        const result = reverseRateFromPayment(loanAmount, payment, totalPeriods, periodsPerYear);
+                        if (!result) return; // 已经alert
 
-                        let low = 0;
-                        let high = maxPeriodRate;
-                        let testHigh = high;
-                        while (testHigh <= 1.0) {
-                            const one_plus_r = Decimal(1).plus(testHigh);
-                            const pow_n = one_plus_r.pow(totalPeriods);
-                            const numerator = P_dec.times(testHigh).times(pow_n);
-                            const denominator = pow_n.minus(1);
-                            const testPayment = numerator.div(denominator).toNumber();
-                            if (testPayment >= payment) {
-                                high = testHigh;
-                                break;
-                            }
-                            testHigh = Math.min(testHigh * 2, 1.0);
-                        }
-
-                        let mid;
-                        let found = false;
-                        for (let i = 0; i < MAX_ITERATIONS; i++) {
-                            mid = (low + high) / 2;
-                            if (mid === 0) {
-                                if (Math.abs(loanAmount / totalPeriods - payment) / payment < REL_EPSILON) {
-                                    found = true;
-                                    break;
-                                } else {
-                                    low = mid;
-                                    continue;
-                                }
-                            }
-                            const one_plus_r = Decimal(1).plus(mid);
-                            const pow_n = one_plus_r.pow(totalPeriods);
-                            const numerator = P_dec.times(mid).times(pow_n);
-                            const denominator = pow_n.minus(1);
-                            const calculated = numerator.div(denominator).toNumber();
-                            if (Math.abs(calculated - payment) / payment < REL_EPSILON) {
-                                found = true;
-                                break;
-                            }
-                            if (calculated > payment) {
-                                high = mid;
-                            } else {
-                                low = mid;
-                            }
-                        }
-                        if (!found) {
-                            alert('无法收敛到足够精度，请检查输入是否合理');
-                            return;
-                        }
-                        const periodRate = mid;
-                        const annualRate = periodRate * periodsPerYear;
+                        const periodRate = result.periodRate;
+                        const annualRate = result.annualRate;
                         const monthlyRate = annualRate / 12;
 
                         let remaining = new Decimal(loanAmount);
-                        let totalInterest = new Decimal(0);
+                        let totalInterestCalc = new Decimal(0);
                         reverseSchedule = [];
                         for (let i = 1; i <= totalPeriods; i++) {
                             const interest = remaining.times(periodRate);
                             const principalPart = new Decimal(payment).minus(interest);
                             remaining = remaining.minus(principalPart);
-                            totalInterest = totalInterest.plus(interest);
+                            totalInterestCalc = totalInterestCalc.plus(interest);
                             reverseSchedule.push({
                                 period: i,
                                 payment: payment,
@@ -1305,9 +1335,9 @@
                         document.getElementById('reverse-annual-rate').textContent = (annualRate * 100).toFixed(2) + '%';
                         document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 1000).toFixed(2) + '厘';
                         document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
-                        document.getElementById('reverse-total-interest').textContent = formatCurrency(totalInterest.toNumber());
-                        document.getElementById('reverse-total-payment').textContent = formatCurrency(loanAmount + totalInterest.toNumber());
-                    } else {
+                        document.getElementById('reverse-total-interest').textContent = formatCurrency(totalInterestCalc.toNumber());
+                        document.getElementById('reverse-total-payment').textContent = formatCurrency(loanAmount + totalInterestCalc.toNumber());
+                    } else { // 先息后本模式
                         const interestPayment = validateNonNegative(document.getElementById('reverse-interest-payment').value, '每期利息金额');
                         if (!interestPayment) return;
 
@@ -1683,14 +1713,46 @@
                 document.getElementById('btn-reverse-io').className = mode==='interest-only' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
                 const paymentSection = document.getElementById('reverse-payment-section');
                 const interestSection = document.getElementById('reverse-interest-section');
-                if (mode === 'equal-principal-interest') {
-                    paymentSection.classList.remove('hidden');
-                    interestSection.classList.add('hidden');
-                    updateReversePaymentLabel();
-                } else {
+                const totalInterestSection = document.getElementById('reverse-total-interest-section');
+                // 先息后本模式隐藏 payment/totalInterest 相关，显示每期利息
+                if (mode === 'interest-only') {
                     paymentSection.classList.add('hidden');
+                    totalInterestSection.classList.add('hidden');
                     interestSection.classList.remove('hidden');
+                } else {
+                    // 等额本息模式下，根据计算依据显示对应输入框
+                    const basis = document.querySelector('input[name="reverse-basis"]:checked').value;
+                    if (basis === 'payment') {
+                        paymentSection.classList.remove('hidden');
+                        totalInterestSection.classList.add('hidden');
+                    } else {
+                        paymentSection.classList.add('hidden');
+                        totalInterestSection.classList.remove('hidden');
+                    }
+                    interestSection.classList.add('hidden');
                 }
+                updateReversePaymentLabel();
+            }
+
+            // 切换计算依据时更新显示
+            function setupBasisToggle() {
+                const radios = document.querySelectorAll('input[name="reverse-basis"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        if (currentReverseMode !== 'interest-only') {
+                            const basis = e.target.value;
+                            const paymentSection = document.getElementById('reverse-payment-section');
+                            const totalInterestSection = document.getElementById('reverse-total-interest-section');
+                            if (basis === 'payment') {
+                                paymentSection.classList.remove('hidden');
+                                totalInterestSection.classList.add('hidden');
+                            } else {
+                                paymentSection.classList.add('hidden');
+                                totalInterestSection.classList.remove('hidden');
+                            }
+                        }
+                    });
+                });
             }
 
             function init() {
@@ -1768,7 +1830,7 @@
                     }
                 });
 
-                ['interest-rate', 'reverse-payment', 'reverse-interest-payment', 'comp-a-rate', 'comp-b-rate'].forEach(id => {
+                ['interest-rate', 'reverse-payment', 'reverse-total-interest-input', 'reverse-interest-payment', 'comp-a-rate', 'comp-b-rate'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         el.addEventListener('blur', limitRateDecimal);
@@ -1780,6 +1842,7 @@
                 setReverseMode('equal-principal-interest');
                 updateReversePaymentLabel();
                 setRepaymentType('equal-principal-interest');
+                setupBasisToggle();
             }
 
             init();
