@@ -126,6 +126,26 @@
             }
         }
 
+        /* 后备颜色类（用于兼容不支持 color-mix 的浏览器） */
+        .border-primary-mix {
+            border-color: #667eea; /* 亮色后备 */
+            border-color: color-mix(in srgb, var(--button-primary-start) 50%, transparent);
+        }
+        .border-operator-mix {
+            border-color: #5a67d8; /* 亮色后备 */
+            border-color: color-mix(in srgb, var(--button-operator-start) 50%, transparent);
+        }
+        @media (prefers-color-scheme: dark) {
+            .border-primary-mix {
+                border-color: #5a67d8; /* 深色后备 */
+                border-color: color-mix(in srgb, var(--button-primary-start) 50%, transparent);
+            }
+            .border-operator-mix {
+                border-color: #5a67d8; /* 深色后备 */
+                border-color: color-mix(in srgb, var(--button-operator-start) 50%, transparent);
+            }
+        }
+
         body {
             background: linear-gradient(135deg, var(--bg-body-start), var(--bg-body-mid), var(--bg-body-end));
             min-height: 100vh;
@@ -599,7 +619,8 @@
                 <!-- 添加提示：先息后本默认按月还款 -->
                 <p class="text-center note-text mb-2">注：先息后本方案默认按每月还款计算，暂不支持季度频率。</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
-                    <div class="soft-card p-4 sm:p-6 border-2" style="border-color: color-mix(in srgb, var(--button-primary-start) 50%, transparent);">
+                    <!-- 方案A卡片：使用后备颜色类 border-primary-mix -->
+                    <div class="soft-card p-4 sm:p-6 border-2 border-primary-mix">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-primary-start);">方案 A</h3>
                         <div class="space-y-3 sm:space-y-4">
                             <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-a-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"></div>
@@ -619,7 +640,8 @@
                             <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label><select id="comp-a-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="equal-principal-interest">等额本息</option><option value="equal-principal-equal-interest">等本等息</option><option value="equal-principal">等额本金</option><option value="interest-only">先息后本</option></select></div>
                         </div>
                     </div>
-                    <div class="soft-card p-4 sm:p-6 border-2" style="border-color: color-mix(in srgb, var(--button-operator-start) 50%, transparent);">
+                    <!-- 方案B卡片：使用后备颜色类 border-operator-mix -->
+                    <div class="soft-card p-4 sm:p-6 border-2 border-operator-mix">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-operator-start);">方案 B</h3>
                         <div class="space-y-3 sm:space-y-4">
                             <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-b-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"></div>
@@ -644,8 +666,9 @@
                 <div id="comparison-results" class="hidden space-y-4 sm:space-y-6">
                     <h3 class="text-lg sm:text-xl font-bold text-center" style="color: var(--text-secondary);">对比结果</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        <div class="soft-card p-4 sm:p-6 border-2" style="border-color: color-mix(in srgb, var(--button-primary-start) 50%, transparent);"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-primary-start);">方案 A</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">月供金额</span><span id="comp-a-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-a-interest" class="font-semibold text-sm sm:text-lg text-red-500">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-a-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div></div></div>
-                        <div class="soft-card p-4 sm:p-6 border-2" style="border-color: color-mix(in srgb, var(--button-operator-start) 50%, transparent);"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-operator-start);">方案 B</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">月供金额</span><span id="comp-b-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-b-interest" class="font-semibold text-sm sm:text-lg text-red-500">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-b-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div></div></div>
+                        <!-- 结果卡片边框也使用后备颜色类 -->
+                        <div class="soft-card p-4 sm:p-6 border-2 border-primary-mix"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-primary-start);">方案 A</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">月供金额</span><span id="comp-a-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-a-interest" class="font-semibold text-sm sm:text-lg text-red-500">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-a-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div></div></div>
+                        <div class="soft-card p-4 sm:p-6 border-2 border-operator-mix"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-operator-start);">方案 B</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">月供金额</span><span id="comp-b-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-b-interest" class="font-semibold text-sm sm:text-lg text-red-500">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-b-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div></div></div>
                     </div>
                     <div class="soft-card p-4 sm:p-6"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--text-secondary);">差异分析</h4><div class="space-y-3 sm:space-y-4"><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">月供差异</span><span id="diff-monthly" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">总利息差异</span><span id="diff-interest" class="font-bold text-base sm:text-xl text-red-500">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">还款总额差异</span><span id="diff-total" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);">--</span></div></div></div>
                     <div class="text-center">
@@ -787,6 +810,7 @@
                 input.value = forceInteger(input.value);
             };
 
+            // 优化：不再强制四舍五入到4位，仅做负数检查和去零
             const limitRateDecimal = (e) => {
                 const input = e.target;
                 let val = input.value;
@@ -797,8 +821,7 @@
                         alert('利率不能为负数');
                         return;
                     }
-                    let rounded = Math.round(num * 10000) / 10000;
-                    input.value = rounded;
+                    // 保留原精度，不做截断
                 }
             };
 
@@ -820,6 +843,18 @@
                     'interest-only': '先息后本'
                 };
                 return map[type] || type;
+            };
+
+            // 截断过长文件名（保留扩展名）
+            const truncateFileName = (name, maxLen = 100) => {
+                if (name.length <= maxLen) return name;
+                const extIndex = name.lastIndexOf('.');
+                if (extIndex === -1) return name.slice(0, maxLen - 3) + '...';
+                const ext = name.slice(extIndex);
+                const base = name.slice(0, extIndex);
+                const available = maxLen - ext.length - 3;
+                if (available <= 0) return name.slice(0, maxLen - 3) + '...' + ext;
+                return base.slice(0, available) + '...' + ext;
             };
 
             // 生成标准贷款导出文件名（修复科学计数法问题）
@@ -852,7 +887,7 @@
                 const amountStr = String(parseFloat(amount));
                 let fileName = `${typeChinese} ${amountStr} ${totalPeriods}期 ${rateStr}.xlsx`;
                 fileName = fileName.replace(/[\\/:*?"<>|]/g, '-');
-                return fileName;
+                return truncateFileName(fileName, 100);
             }
 
             function generateReverseFileName() {
@@ -873,7 +908,7 @@
                 const amountStr = String(parseFloat(amount));
                 let fileName = `反推-${typeChinese} ${amountStr} ${totalPeriods}期 年化${annualRate.toFixed(2)}%.xlsx`;
                 fileName = fileName.replace(/[\\/:*?"<>|]/g, '-');
-                return fileName;
+                return truncateFileName(fileName, 100);
             }
 
             function generateComparisonFileName() {
@@ -901,7 +936,7 @@
                 const amountBStr = String(parseFloat(amountB));
                 let fileName = `方案对比-A${typeAChinese}${amountAStr}期-${rateStrA}-B${typeBChinese}${amountBStr}期-${rateStrB}.xlsx`;
                 fileName = fileName.replace(/[\\/:*?"<>|]/g, '-');
-                return fileName;
+                return truncateFileName(fileName, 100);
             }
 
             // ----- 高精度计算函数 (使用 decimal.js) -----
@@ -1385,8 +1420,9 @@
                         }
 
                         const minPayment = loanAmount / totalPeriods;
+                        // 增加检查：payment 不能小于最小还款额（零利率时的每期本金）
                         if (payment < minPayment - 1e-6) {
-                            alert(`每期还款额必须至少为 ${formatCurrency(minPayment)}，否则无法覆盖本金`);
+                            alert(`根据输入反推的每期还款额 ${formatCurrency(payment)} 低于最低还款额 ${formatCurrency(minPayment)}，请检查总利息是否过小或还款额是否合理`);
                             return;
                         }
 
@@ -1709,16 +1745,18 @@
                         calcNewInput = true;
                     }
                 } else {
-                    // 修复：00 输入逻辑
+                    // 处理数字和点号
                     if (value === '00') {
-                        if (calcCurrent !== '0') {
-                            calcCurrent += '00';
+                        // 如果当前是0且新输入，保持0；否则追加00
+                        if (calcCurrent === '0' && calcNewInput) {
+                            // 保持0
                         } else {
-                            // 如果当前是0，保持0（或者可改为'00'，但后续输入会覆盖，这里保持0更符合直觉）
-                            // 不做改变
+                            calcCurrent += '00';
                         }
+                        calcNewInput = false;
                     } else if (value === '.') {
                         if (!calcCurrent.includes('.')) calcCurrent += '.';
+                        calcNewInput = false;
                     } else {
                         if (calcNewInput) {
                             calcCurrent = value;
