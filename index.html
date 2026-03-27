@@ -706,7 +706,7 @@
                 input.value = forceInteger(input.value);
             };
 
-            // 利率输入防抖验证（优化版）
+            // 利率输入防抖验证
             const debounceValidate = (fn, delay = 500) => {
                 return function(...args) {
                     if (validationTimer) clearTimeout(validationTimer);
@@ -744,7 +744,15 @@
                 }
             };
 
-            // 为输入框添加防抖验证
+            // 单位切换后主动重新校验当前输入
+            const revalidateRateOnUnitChange = (inputId, errorId, unitSelectId, noteId) => {
+                const input = document.getElementById(inputId);
+                if (input && input.value !== '') {
+                    const fakeEvent = { target: input };
+                    validateRateInput(fakeEvent, errorId, unitSelectId, noteId);
+                }
+            };
+
             const attachDebounceValidation = () => {
                 const rateInputs = [
                     { input: 'interest-rate', error: 'error-interest-rate', unit: 'interest-rate-unit', note: 'rate-note-standard' },
@@ -794,9 +802,12 @@
                 return base.slice(0, available) + '...' + ext;
             };
 
-            const buildExcelFileName = (prefix, typeChinese, amount, totalPeriods, rateStr) => {
-                let fileName = `${prefix}-${typeChinese} ${amount}元 ${totalPeriods}期 ${rateStr}.xls`;
-                fileName = fileName.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '_');
+            // 新文件名格式：还款方式_金额元_期数_利率数值.xls
+            const buildExcelFileName = (typeChinese, amount, totalPeriods, rateValue) => {
+                const amountInt = Math.round(amount);
+                const rateFormatted = rateValue.toFixed(2);
+                let fileName = `${typeChinese}_${amountInt}元_${totalPeriods}期_${rateFormatted}.xls`;
+                fileName = fileName.replace(/[\\/:*?"<>|%]/g, '-').replace(/\s+/g, '_');
                 return truncateFileName(fileName, 100);
             };
 
@@ -805,8 +816,9 @@
                 if (payment * periods <= principal) return 0;
                 let low = new Decimal(0);
                 let high = new Decimal(1);
+                let mid;
                 for (let i = 0; i < 100; i++) {
-                    const mid = low.plus(high).div(2);
+                    mid = low.plus(high).div(2);
                     if (mid.equals(0)) {
                         low = mid;
                         continue;
@@ -819,7 +831,8 @@
                     if (npv.greaterThan(0)) low = mid;
                     else high = mid;
                 }
-                return low.plus(high).div(2).times(12).toNumber();
+                // 未完全收敛时返回当前 mid
+                return mid.times(12).toNumber();
             }
 
             // ==================== 核心计算函数 ====================
@@ -970,6 +983,10 @@
                         });
                     }
                 }
+                // 最后剩余本金归零（避免 -0.00）
+                if (schedule.length && schedule[schedule.length-1].remaining < 0.01) {
+                    schedule[schedule.length-1].remaining = 0;
+                }
                 return {
                     monthlyPayment,
                     firstPayment,
@@ -979,14 +996,14 @@
                 };
             }
 
-            // 根据每期还款额反推利率（优化版：使用Decimal，双重收敛条件）
+            // 根据每期还款额反推利率（增加零利率快速分支）
             function reverseRateFromPayment(loanAmount, payment, totalPeriods, periodsPerYear) {
                 const P_dec = new Decimal(loanAmount);
                 const payment_dec = new Decimal(payment);
                 const totalPeriods_dec = new Decimal(totalPeriods);
                 const minPayment_dec = P_dec.div(totalPeriods_dec);
                 
-                // 零利率容差
+                // 零利率分支
                 if (payment_dec.minus(minPayment_dec).abs().lessThan(1e-8)) {
                     return { periodRate: 0, annualRate: 0 };
                 }
@@ -1033,7 +1050,6 @@
                 for (let i = 0; i < CONFIG.MAX_ITERATIONS; i++) {
                     mid = (low + high) / 2;
                     if (mid < 1e-12) {
-                        // 接近零利率
                         const testPayment = P_dec.div(totalPeriods_dec).toNumber();
                         if (Math.abs(testPayment - payment) < CONFIG.ABS_EPSILON) {
                             found = true;
@@ -1049,7 +1065,6 @@
                     const denominator = pow_n.minus(1);
                     const calculated = numerator.div(denominator).toNumber();
                     
-                    // 双重收敛条件：绝对误差或相对误差
                     const absDiff = Math.abs(calculated - payment);
                     const relDiff = absDiff / payment;
                     if (absDiff < CONFIG.ABS_EPSILON || relDiff < CONFIG.REL_EPSILON) {
@@ -1070,7 +1085,7 @@
             }
 
             // ==================== 图表销毁（安全版） ====================
-            function destroyCharts() {
+            function destroyAllCharts() {
                 if (paymentChart) { paymentChart.destroy(); paymentChart = null; }
                 if (reversePaymentChart) { reversePaymentChart.destroy(); reversePaymentChart = null; }
                 if (comparisonChart) { comparisonChart.destroy(); comparisonChart = null; }
@@ -1101,7 +1116,7 @@
                 btn.disabled = true;
 
                 try {
-                    destroyCharts(); // 仅销毁图表，不影响后续
+                    destroyAllCharts();
 
                     const loanAmountInput = document.getElementById('loan-amount');
                     const loanAmount = validatePositive(loanAmountInput.value, '贷款总额', 'error-loan-amount');
@@ -1364,7 +1379,7 @@
                 btn.disabled = true;
 
                 try {
-                    destroyCharts();
+                    destroyAllCharts();
 
                     const loanAmountInput = document.getElementById('reverse-loan-amount');
                     const loanAmount = validatePositive(loanAmountInput.value, '贷款总额', 'error-reverse-loan-amount');
@@ -1413,7 +1428,6 @@
                             const paymentInput = document.getElementById('reverse-payment');
                             payment = validatePositive(paymentInput.value, '每期还款金额', 'error-reverse-payment');
                             if (!payment) return;
-                            // 使用Decimal计算总利息，避免浮点误差
                             const paymentDec = new Decimal(payment);
                             const loanDec = new Decimal(loanAmount);
                             const totalInterestDec = paymentDec.times(totalPeriods).minus(loanDec);
@@ -1444,7 +1458,6 @@
                         window.lastReverseTotalPeriods = totalPeriods;
                         const monthlyRate = annualRate / 12;
 
-                        // 生成计划表（使用Decimal保持精度）
                         let remaining = new Decimal(loanAmount);
                         let totalInterestCalc = new Decimal(0);
                         reverseSchedule = [];
@@ -1618,7 +1631,16 @@
             function updateComparisonChart(scheduleA, scheduleB) {
                 const ctx = document.getElementById('comparison-chart').getContext('2d');
                 const maxLen = Math.max(scheduleA.length, scheduleB.length);
-                const labels = Array.from({ length: maxLen }, (_, i) => `第${i+1}期`);
+                // 对标签抽样：如果期数超过 60，每 12 期显示一个标签
+                let labels = [];
+                const step = maxLen > 60 ? Math.ceil(maxLen / 12) : 1;
+                for (let i = 0; i < maxLen; i++) {
+                    if (i % step === 0 || i === maxLen-1) {
+                        labels.push(`第${i+1}期`);
+                    } else {
+                        labels.push('');
+                    }
+                }
                 const dataA = scheduleA.map(item => item.payment);
                 const dataB = scheduleB.map(item => item.payment);
                 while (dataA.length < maxLen) dataA.push(null);
@@ -1660,12 +1682,11 @@
                 if (!standardSchedule.length) { alert('请先计算标准贷款'); return; }
 
                 const loanAmount = window.lastStandardPrincipal;
-                const termVal = document.getElementById('loan-term').value;
-                const termDisplay = termVal;
-                const rateVal = parseFloat(document.getElementById('interest-rate').value) || 0;
-                const rateUnit = document.getElementById('interest-rate-unit').value;
-                const annualRatePercent = (window.lastStandardAnnualRate * 100).toFixed(2) + '%';
+                const totalPeriods = standardSchedule.length;
+                const annualRatePercent = window.lastStandardAnnualRate * 100; // 数值
                 const repaymentTypeChinese = repaymentTypeToChinese(currentRepaymentType);
+
+                const fileName = buildExcelFileName(repaymentTypeChinese, loanAmount, totalPeriods, annualRatePercent);
 
                 let html = `
                 <html>
@@ -1680,10 +1701,10 @@
                             <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款额度￥${loanAmount.toFixed(2)}</td>
                         </tr>
                         <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款月数 ${termDisplay}</td>
+                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款月数 ${totalPeriods}</td>
                         </tr>
                         <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款利率 年化${annualRatePercent}</td>
+                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款利率 年化${annualRatePercent.toFixed(2)}%</td>
                         </tr>
                         <tr style="height:25px;">
                             <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">总利息 ￥${window.lastStandardTotalInterest.toFixed(2)}</td>
@@ -1728,8 +1749,7 @@
                 const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                const rateDisplay = rateUnit === 'percent' ? (rateVal + '%') : (rateVal + '厘');
-                link.download = buildExcelFileName('标准', repaymentTypeChinese, loanAmount, window.lastStandardTotalPeriods, rateDisplay);
+                link.download = fileName;
                 link.click();
             }
 
@@ -1737,10 +1757,11 @@
                 if (!reverseSchedule.length) { alert('请先反推利率'); return; }
 
                 const loanAmount = window.lastReversePrincipal;
-                const termVal = document.getElementById('reverse-loan-term').value;
-                const termDisplay = termVal;
-                const annualRatePercent = (window.lastReverseAnnualRate * 100).toFixed(2) + '%';
+                const totalPeriods = reverseSchedule.length;
+                const annualRatePercent = window.lastReverseAnnualRate * 100;
                 const repaymentTypeChinese = currentReverseMode === 'equal-principal-interest' ? '等额本息' : '先息后本';
+
+                const fileName = buildExcelFileName(repaymentTypeChinese, loanAmount, totalPeriods, annualRatePercent);
 
                 let html = `
                 <html>
@@ -1755,10 +1776,10 @@
                             <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款额度￥${loanAmount.toFixed(2)}</td>
                         </tr>
                         <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款月数 ${termDisplay}</td>
+                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款月数 ${totalPeriods}</td>
                         </tr>
                         <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">反推年化利率 ${annualRatePercent}</td>
+                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">反推年化利率 ${annualRatePercent.toFixed(2)}%</td>
                         </tr>
                         <tr style="height:25px;">
                             <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">总利息 ￥${window.lastReverseTotalInterest.toFixed(2)}</td>
@@ -1803,7 +1824,7 @@
                 const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = buildExcelFileName('反推', repaymentTypeChinese, loanAmount, window.lastReverseTotalPeriods, annualRatePercent);
+                link.download = fileName;
                 link.click();
             }
 
@@ -1866,8 +1887,13 @@
                     }
                 } else {
                     if (value === '00') {
-                        if (calcNewInput) { calcCurrent = '00'; calcNewInput = false; }
-                        else { calcCurrent += '00'; }
+                        // 修复：如果当前显示为 "0" 或 "00"，则替换为 "0"
+                        if (calcNewInput || calcCurrent === '0' || calcCurrent === '00') {
+                            calcCurrent = '0';
+                            calcNewInput = false;
+                        } else {
+                            calcCurrent += '00';
+                        }
                     } else if (value === '.') {
                         if (!calcCurrent.includes('.')) calcCurrent += '.';
                         calcNewInput = false;
@@ -1887,7 +1913,6 @@
                 }
                 if (currentMainSection !== 'calculator-tool') return;
                 const key = e.key;
-                // 阻止方向键等默认滚动行为
                 if (key.startsWith('Arrow') || key === 'PageUp' || key === 'PageDown' || key === 'Home' || key === 'End') {
                     e.preventDefault();
                 }
@@ -1937,7 +1962,6 @@
                         document.getElementById('interest-rate-unit').value = 'percent';
                         showToast('已填充默认年利率4.5%');
                     }
-                    // 清除相关错误信息
                     clearError('error-loan-amount');
                     clearError('error-interest-rate');
                     clearError('error-loan-term');
@@ -1968,7 +1992,7 @@
             // ==================== 标签页切换 ====================
             function showMainSection(section) {
                 currentMainSection = section;
-                destroyCharts();
+                destroyAllCharts();
                 ['calculator','comparison','calculator-tool'].forEach(s => {
                     const btn = document.getElementById(`main-tab-${s}`);
                     const sec = document.getElementById(`${s}-section`);
@@ -1984,7 +2008,7 @@
 
             function switchCalculatorType(type) {
                 currentCalculatorType = type;
-                destroyCharts();
+                destroyAllCharts();
                 document.getElementById('tab-standard').className = type==='standard' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
                 document.getElementById('tab-reverse').className = type==='reverse' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
                 document.getElementById('standard-calculator').classList.toggle('hidden', type!=='standard');
@@ -2069,16 +2093,16 @@
 
             function setupRateNoteListeners() {
                 const unitSelects = [
-                    { select: 'interest-rate-unit', note: 'rate-note-standard' },
-                    { select: 'comp-a-rate-unit', note: 'rate-note-comp-a' },
-                    { select: 'comp-b-rate-unit', note: 'rate-note-comp-b' }
+                    { select: 'interest-rate-unit', note: 'rate-note-standard', inputId: 'interest-rate', errorId: 'error-interest-rate' },
+                    { select: 'comp-a-rate-unit', note: 'rate-note-comp-a', inputId: 'comp-a-rate', errorId: 'error-comp-a-rate' },
+                    { select: 'comp-b-rate-unit', note: 'rate-note-comp-b', inputId: 'comp-b-rate', errorId: 'error-comp-b-rate' }
                 ];
                 unitSelects.forEach(item => {
                     const select = document.getElementById(item.select);
-                    const note = document.getElementById(item.note);
-                    if (select && note) {
+                    if (select) {
                         select.addEventListener('change', () => {
                             updateRateNote(item.select, item.note);
+                            revalidateRateOnUnitChange(item.inputId, item.errorId, item.select, item.note);
                         });
                         updateRateNote(item.select, item.note);
                     }
