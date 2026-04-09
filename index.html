@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>融•金融计算器</title>
+    <!-- 添加网页图标 favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23667eea'/%3E%3Ctext x='50' y='72' font-size='50' text-anchor='middle' fill='white' font-family='Arial'%3E💰%3C/text%3E%3C/svg%3E">
+    <link rel="alternate icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGZm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/zwAAAAAAAAAAZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PAAAAAAAAAABmZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/88AAAAAAAAAAGZm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/zwAAAAAAAAAAZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PAAAAAAAAAABmZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/88AAAAAAAAAAGZm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/zwAAAAAAAAAAZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PAAAAAAAAAABmZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/88AAAAAAAAAAGZm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/zwAAAAAAAAAAZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PAAAAAAAAAABmZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/88AAAAAAAAAAGZm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/zwAAAAAAAAAAZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PAAAAAAAAAABmZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/88AAAAAAAAAAGZm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/z2Zm/89mZv/PZmb/zwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAA==">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
@@ -50,6 +53,8 @@
             --toast-bg: #1f2937;
             --toast-text: #f9fafb;
             --tfoot-bg: #e5e7eb;
+            /* 兼容 color-mix 的回退方案 */
+            --thead-bg: #d0d7de;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -88,6 +93,7 @@
                 --toast-bg: #2d3748;
                 --toast-text: #f3f4f6;
                 --tfoot-bg: #374151;
+                --thead-bg: #2d3748;
             }
             select.soft-input option { background-color: #2d3748; color: #f3f4f6; }
         }
@@ -101,10 +107,15 @@
         .soft-card { background: linear-gradient(145deg, var(--card-bg-start), var(--card-bg-end)); box-shadow: 8px 8px 16px var(--card-shadow-light), -8px -8px 16px var(--card-shadow-dark); border-radius: 20px; }
         .soft-card-inset { background: linear-gradient(145deg, var(--card-bg-start), var(--card-bg-end)); box-shadow: inset 4px 4px 8px var(--inset-shadow-light), inset -4px -4px 8px var(--inset-shadow-dark); border-radius: 12px; }
         .soft-button { background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end)); box-shadow: 5px 5px 10px var(--card-shadow-light), -5px -5px 10px var(--card-shadow-dark); border-radius: 12px; transition: all 0.3s ease; color: var(--text-primary); }
-        .soft-button:hover { box-shadow: 3px 3px 6px var(--card-shadow-light), -3px -3px 6px var(--card-shadow-dark); }
+        @media (hover: hover) {
+            .soft-button:hover { box-shadow: 3px 3px 6px var(--card-shadow-light), -3px -3px 6px var(--card-shadow-dark); }
+            .term-quick-btn:hover { box-shadow: 1px 1px 3px var(--card-shadow-light), -1px -1px 3px var(--card-shadow-dark); transform: translateY(-1px); }
+        }
         .soft-button:active { box-shadow: inset 3px 3px 6px var(--inset-shadow-light), inset -3px -3px 6px var(--inset-shadow-dark); }
         .soft-button-primary { background: linear-gradient(145deg, var(--button-primary-start), var(--button-primary-end)); box-shadow: 5px 5px 10px var(--card-shadow-light), -5px -5px 10px var(--card-shadow-dark); border-radius: 12px; color: white; transition: all 0.3s ease; }
-        .soft-button-primary:hover { box-shadow: 3px 3px 6px var(--card-shadow-light), -3px -3px 6px var(--card-shadow-dark); transform: translateY(-2px); }
+        @media (hover: hover) {
+            .soft-button-primary:hover { box-shadow: 3px 3px 6px var(--card-shadow-light), -3px -3px 6px var(--card-shadow-dark); transform: translateY(-2px); }
+        }
         .soft-button-primary:active { transform: translateY(0); box-shadow: inset 3px 3px 6px var(--inset-shadow-light), inset -3px -3px 6px var(--inset-shadow-dark); }
         .soft-input { background: linear-gradient(145deg, var(--input-bg-start), var(--input-bg-end)); box-shadow: inset 3px 3px 6px var(--inset-shadow-light), inset -3px -3px 6px var(--inset-shadow-dark); border-radius: 12px; border: none; transition: all 0.3s ease; color: var(--text-primary); }
         .soft-input:focus { outline: none; box-shadow: inset 4px 4px 8px var(--inset-shadow-light), inset -4px -4px 8px var(--inset-shadow-dark), 0 0 0 3px rgba(102, 126, 234, 0.3); }
@@ -112,16 +123,17 @@
         .error-message { color: var(--error-text); font-size: 0.75rem; margin-top: 0.2rem; margin-left: 0.5rem; min-height: 1.2rem; }
         .soft-tab-active { background: linear-gradient(145deg, var(--button-primary-start), var(--button-primary-end)); box-shadow: 5px 5px 10px var(--card-shadow-light), -5px -5px 10px var(--card-shadow-dark); color: white; }
         .calc-button { background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end)); box-shadow: 4px 4px 8px var(--card-shadow-light), -4px -4px 8px var(--card-shadow-dark); border-radius: 12px; transition: all 0.15s ease; font-weight: 600; color: var(--text-primary); }
-        .calc-button:hover { box-shadow: 2px 2px 4px var(--card-shadow-light), -2px -2px 4px var(--card-shadow-dark); }
+        @media (hover: hover) {
+            .calc-button:hover { box-shadow: 2px 2px 4px var(--card-shadow-light), -2px -2px 4px var(--card-shadow-dark); }
+        }
         .calc-button:active { box-shadow: inset 2px 2px 4px var(--inset-shadow-light), inset -2px -2px 4px var(--inset-shadow-dark); }
         .calc-button-operator { background: linear-gradient(145deg, var(--button-operator-start), var(--button-operator-end)); color: white; }
         .calc-button-equal { background: linear-gradient(145deg, var(--button-equal-start), var(--button-equal-end)); color: white; }
         .calc-button-clear { background: linear-gradient(145deg, var(--button-clear-start), var(--button-clear-end)); color: white; }
         .calc-button-special { background: linear-gradient(145deg, var(--button-special-start), var(--button-special-end)); color: white; }
         .dreamy-gradient { background: var(--dreamy-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .result-highlight { background: linear-gradient(135deg, color-mix(in srgb, var(--button-primary-start) 10%, transparent), color-mix(in srgb, var(--button-primary-end) 10%, transparent)); }
+        .result-highlight { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); }
         .term-quick-btn { background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end)); box-shadow: 3px 3px 6px var(--card-shadow-light), -3px -3px 6px var(--card-shadow-dark); border-radius: 20px; padding: 0.4rem 1rem; font-size: 0.9rem; transition: all 0.2s; white-space: nowrap; color: var(--text-primary); }
-        .term-quick-btn:hover { box-shadow: 1px 1px 3px var(--card-shadow-light), -1px -1px 3px var(--card-shadow-dark); transform: translateY(-1px); }
         .term-quick-btn:active { box-shadow: inset 2px 2px 4px var(--inset-shadow-light), inset -2px -2px 4px var(--inset-shadow-dark); }
         .pagination button { background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end)); color: var(--text-primary); box-shadow: 2px 2px 4px var(--card-shadow-light), -2px -2px 4px var(--card-shadow-dark); }
         .pagination button.active { background: linear-gradient(145deg, var(--button-primary-start), var(--button-primary-end)); color: white; }
@@ -135,6 +147,8 @@
         .table-row-even { background-color: var(--table-stripe-even); }
         .table-row-odd { background-color: var(--table-stripe-odd); }
         .tfoot-total { background-color: var(--tfoot-bg); font-weight: 700; }
+        /* 表格头背景兼容方案 */
+        .thead-bg { background-color: var(--thead-bg); }
         .toast {
             position: fixed;
             bottom: 20px;
@@ -156,6 +170,8 @@
             text-overflow: ellipsis;
         }
         .toast.show { opacity: 1; }
+        /* 修复canvas尺寸警告：移除内联宽高，用CSS控制 */
+        canvas { display: block; max-width: 100%; height: auto; }
     </style>
 </head>
 <body class="py-4 sm:py-8 px-2 sm:px-4">
@@ -194,7 +210,7 @@
                             <div class="space-y-3 sm:space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label>
-                                    <input type="number" id="loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="1" step="1">
+                                    <input type="number" id="loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="0.01" step="0.01">
                                     <div id="error-loan-amount" class="error-message"></div>
                                 </div>
                                 <div>
@@ -275,7 +291,7 @@
                                     <p id="irr-value" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--button-primary-start);">--</p>
                                 </div>
                                 <div class="soft-card p-4 sm:p-6">
-                                    <canvas id="payment-chart" width="300" height="300" class="w-full h-auto max-w-xs mx-auto"></canvas>
+                                    <canvas id="payment-chart" class="w-full h-auto max-w-xs mx-auto"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -291,7 +307,7 @@
                         <div class="soft-card p-4 sm:p-6">
                             <div class="overflow-x-auto scrollbar-thin" style="max-height: 400px; overflow-y: auto;">
                                 <table class="w-full min-w-[500px] sm:min-w-full">
-                                    <thead class="rounded-lg font-bold" style="background-color: color-mix(in srgb, var(--card-bg-start) 60%, black);">
+                                    <thead class="rounded-lg font-bold thead-bg">
                                         <tr>
                                             <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold rounded-tl-lg" style="color: var(--text-secondary);">期数</th>
                                             <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold" style="color: var(--text-secondary);">月供</th>
@@ -330,22 +346,22 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label>
-                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="1" step="1">
+                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="0.01" step="0.01">
                                     <div id="error-reverse-loan-amount" class="error-message"></div>
                                 </div>
                                 <div id="reverse-payment-section">
                                     <label id="reverse-payment-label" class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">每月还款金额 (元)</label>
-                                    <input type="number" id="reverse-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入还款金额" min="1" step="1">
+                                    <input type="number" id="reverse-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入还款金额" min="0.01" step="0.01">
                                     <div id="error-reverse-payment" class="error-message"></div>
                                 </div>
                                 <div id="reverse-total-interest-section" class="hidden">
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">总利息 (元)</label>
-                                    <input type="number" id="reverse-total-interest-input" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入总利息" min="0" step="1">
+                                    <input type="number" id="reverse-total-interest-input" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入总利息" min="0" step="0.01">
                                     <div id="error-reverse-total-interest" class="error-message"></div>
                                 </div>
                                 <div id="reverse-interest-section" class="hidden">
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">每期支付利息金额 (元)</label>
-                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入利息金额" min="0" step="1">
+                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入利息金额" min="0" step="0.01">
                                     <div id="error-reverse-interest" class="error-message"></div>
                                 </div>
                                 <div>
@@ -400,7 +416,7 @@
                                     <p id="reverse-total-payment" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--text-primary);">--</p>
                                 </div>
                                 <div class="soft-card p-4 sm:p-6">
-                                    <canvas id="reverse-payment-chart" width="300" height="300" class="w-full h-auto max-w-xs mx-auto"></canvas>
+                                    <canvas id="reverse-payment-chart" class="w-full h-auto max-w-xs mx-auto"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -415,7 +431,7 @@
                         <div class="soft-card p-4 sm:p-6">
                             <div class="overflow-x-auto scrollbar-thin" style="max-height: 400px; overflow-y: auto;">
                                 <table class="w-full min-w-[500px] sm:min-w-full">
-                                    <thead class="rounded-lg font-bold" style="background-color: color-mix(in srgb, var(--card-bg-start) 60%, black);">
+                                    <thead class="rounded-lg font-bold thead-bg">
                                         <tr>
                                             <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold rounded-tl-lg" style="color: var(--text-secondary);">期数</th>
                                             <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold" style="color: var(--text-secondary);">还款</th>
@@ -443,12 +459,12 @@
                     <div class="soft-card p-4 sm:p-6 border-2 border-primary-mix">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-primary-start);">方案 A</h3>
                         <div class="space-y-3 sm:space-y-4">
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-a-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"><div id="error-comp-a-amount" class="error-message"></div></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-a-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0.01" step="0.01"><div id="error-comp-a-amount" class="error-message"></div></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">利率</label>
-                                <div class="rate-row">
-                                    <input type="number" id="comp-a-rate" step="any" class="soft-input rate-input-field px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率">
-                                    <select id="comp-a-rate-unit" class="soft-input rate-unit-field px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                <div class="rate-row flex flex-col sm:flex-row gap-2">
+                                    <input type="number" id="comp-a-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率">
+                                    <select id="comp-a-rate-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
                                         <option value="percent">年 (%)</option>
                                         <option value="permill">月 (厘)</option>
                                     </select>
@@ -479,12 +495,12 @@
                     <div class="soft-card p-4 sm:p-6 border-2 border-operator-mix">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-operator-start);">方案 B</h3>
                         <div class="space-y-3 sm:space-y-4">
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-b-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"><div id="error-comp-b-amount" class="error-message"></div></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-b-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0.01" step="0.01"><div id="error-comp-b-amount" class="error-message"></div></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">利率</label>
-                                <div class="rate-row">
-                                    <input type="number" id="comp-b-rate" step="any" class="soft-input rate-input-field px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率">
-                                    <select id="comp-b-rate-unit" class="soft-input rate-unit-field px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                <div class="rate-row flex flex-col sm:flex-row gap-2">
+                                    <input type="number" id="comp-b-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率">
+                                    <select id="comp-b-rate-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
                                         <option value="percent">年 (%)</option>
                                         <option value="permill">月 (厘)</option>
                                     </select>
@@ -521,7 +537,7 @@
                     </div>
                     <div class="soft-card p-4 sm:p-6"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--text-secondary);">差异分析</h4><div class="space-y-3 sm:space-y-4"><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">每期还款差异</span><span id="diff-monthly" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">总利息差异</span><span id="diff-interest" class="font-bold text-base sm:text-xl text-red-500">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">还款总额差异</span><span id="diff-total" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);">--</span></div></div></div>
                     <div class="soft-card p-4 sm:p-6">
-                        <canvas id="comparison-chart" width="400" height="200" class="w-full h-auto"></canvas>
+                        <canvas id="comparison-chart" class="w-full h-auto"></canvas>
                     </div>
                     <div class="text-center">
                         <div class="export-group flex gap-2 justify-center">
@@ -584,38 +600,41 @@
                 MONTH_LABELS: ['6月','12月','24月','36月','48月','60月','84月','120月','240月','360月']
             };
 
-            // ==================== 全局状态 ====================
-            let currentMainSection = 'calculator';
-            let currentCalculatorType = 'standard';
-            let currentRepaymentType = 'equal-principal-interest';
-            let currentReverseMode = 'equal-principal-interest';
-            let standardSchedule = [];
-            let reverseSchedule = [];
-            let paymentChart = null;
-            let reversePaymentChart = null;
-            let comparisonChart = null;
-            let schedulePage = 1;
-            let reverseSchedulePage = 1;
-            let calcExpression = '';
-            let calcCurrent = '0';
-            let calcNewInput = true;
-            let isCalculating = false;
-
-            // 存储最后一次计算的汇总数据
-            window.lastStandardPrincipal = 0;
-            window.lastStandardTotalInterest = 0;
-            window.lastStandardTotalPayment = 0;
-            window.lastStandardAnnualRate = 0;
-            window.lastStandardTotalPeriods = 0;
-
-            window.lastReversePrincipal = 0;
-            window.lastReverseTotalInterest = 0;
-            window.lastReverseTotalPayment = 0;
-            window.lastReverseAnnualRate = 0;
-            window.lastReverseTotalPeriods = 0;
-
-            // 防抖定时器
-            let validationTimer = null;
+            // ==================== 全局状态 (集中管理，避免污染 window) ====================
+            const state = {
+                currentMainSection: 'calculator',
+                currentCalculatorType: 'standard',
+                currentRepaymentType: 'equal-principal-interest',
+                currentReverseMode: 'equal-principal-interest',
+                standardSchedule: [],
+                reverseSchedule: [],
+                schedulePage: 1,
+                reverseSchedulePage: 1,
+                calcExpression: '',
+                calcCurrent: '0',
+                calcNewInput: true,
+                isCalculating: false,
+                lastStandard: {
+                    principal: 0,
+                    totalInterest: 0,
+                    totalPayment: 0,
+                    annualRate: 0,
+                    totalPeriods: 0
+                },
+                lastReverse: {
+                    principal: 0,
+                    totalInterest: 0,
+                    totalPayment: 0,
+                    annualRate: 0,
+                    totalPeriods: 0
+                },
+                charts: {
+                    payment: null,
+                    reversePayment: null,
+                    comparison: null
+                },
+                validationTimer: null
+            };
 
             // ==================== 辅助函数 ====================
             const formatCurrency = (amount) => {
@@ -709,8 +728,8 @@
             // 利率输入防抖验证
             const debounceValidate = (fn, delay = 500) => {
                 return function(...args) {
-                    if (validationTimer) clearTimeout(validationTimer);
-                    validationTimer = setTimeout(() => fn.apply(this, args), delay);
+                    if (state.validationTimer) clearTimeout(state.validationTimer);
+                    state.validationTimer = setTimeout(() => fn.apply(this, args), delay);
                 };
             };
 
@@ -744,9 +763,10 @@
                 }
             };
 
-            // 单位切换后主动重新校验当前输入
+            // 单位切换后主动重新校验当前输入，并清空旧错误
             const revalidateRateOnUnitChange = (inputId, errorId, unitSelectId, noteId) => {
                 const input = document.getElementById(inputId);
+                clearError(errorId);
                 if (input && input.value !== '') {
                     const fakeEvent = { target: input };
                     validateRateInput(fakeEvent, errorId, unitSelectId, noteId);
@@ -802,7 +822,6 @@
                 return base.slice(0, available) + '...' + ext;
             };
 
-            // 新文件名格式：还款方式_金额元_期数_利率数值.xls
             const buildExcelFileName = (typeChinese, amount, totalPeriods, rateValue) => {
                 const amountInt = Math.round(amount);
                 const rateFormatted = rateValue.toFixed(2);
@@ -831,7 +850,6 @@
                     if (npv.greaterThan(0)) low = mid;
                     else high = mid;
                 }
-                // 未完全收敛时返回当前 mid
                 return mid.times(12).toNumber();
             }
 
@@ -843,7 +861,6 @@
 
                 if (r_annual.equals(0)) {
                     if (type === 'interest-only') {
-                        const periodsPerYear = frequency === 'monthly' ? 12 : 4;
                         const totalPeriods = frequency === 'monthly' ? months : Math.ceil(months / 3);
                         const schedule = [];
                         for (let i = 1; i <= totalPeriods; i++) {
@@ -983,7 +1000,6 @@
                         });
                     }
                 }
-                // 最后剩余本金归零（避免 -0.00）
                 if (schedule.length && schedule[schedule.length-1].remaining < 0.01) {
                     schedule[schedule.length-1].remaining = 0;
                 }
@@ -996,14 +1012,12 @@
                 };
             }
 
-            // 根据每期还款额反推利率（增加零利率快速分支）
             function reverseRateFromPayment(loanAmount, payment, totalPeriods, periodsPerYear) {
                 const P_dec = new Decimal(loanAmount);
                 const payment_dec = new Decimal(payment);
                 const totalPeriods_dec = new Decimal(totalPeriods);
                 const minPayment_dec = P_dec.div(totalPeriods_dec);
                 
-                // 零利率分支
                 if (payment_dec.minus(minPayment_dec).abs().lessThan(1e-8)) {
                     return { periodRate: 0, annualRate: 0 };
                 }
@@ -1084,23 +1098,182 @@
                 return { periodRate: mid, annualRate: mid * periodsPerYear };
             }
 
-            // ==================== 图表销毁（安全版） ====================
-            function destroyAllCharts() {
-                if (paymentChart) { paymentChart.destroy(); paymentChart = null; }
-                if (reversePaymentChart) { reversePaymentChart.destroy(); reversePaymentChart = null; }
-                if (comparisonChart) { comparisonChart.destroy(); comparisonChart = null; }
+            // ==================== 图表管理 (复用实例) ====================
+            function getChartInstance(ctx, chartType, data, options) {
+                // 如果已有实例且类型匹配，直接更新数据
+                if (ctx.chart && ctx.chart.config.type === chartType) {
+                    ctx.chart.data = data;
+                    ctx.chart.options = options;
+                    ctx.chart.update();
+                    return ctx.chart;
+                }
+                // 否则创建新实例
+                return new Chart(ctx, { type: chartType, data, options });
+            }
+
+            function updatePaymentChart(principal, interest) {
+                const canvas = document.getElementById('payment-chart');
+                const ctx = canvas.getContext('2d');
+                const total = principal + interest;
+                const percent = total > 0 ? (interest / total * 100).toFixed(1) : '0.0';
+                const data = {
+                    labels: ['本金', '利息'],
+                    datasets: [{ data: [principal, interest], backgroundColor: ['#667eea', '#f56565'], borderWidth: 0 }]
+                };
+                const options = {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${formatCurrency(ctx.raw)}` } },
+                        title: { display: true, text: `利息占比: ${percent}%`, font: { size: 14 } }
+                    }
+                };
+                state.charts.payment = getChartInstance(ctx, 'doughnut', data, options);
+            }
+
+            function updateReversePaymentChart(principal, interest) {
+                const canvas = document.getElementById('reverse-payment-chart');
+                const ctx = canvas.getContext('2d');
+                const total = principal + interest;
+                const percent = total > 0 ? (interest / total * 100).toFixed(1) : '0.0';
+                const data = {
+                    labels: ['本金', '利息'],
+                    datasets: [{ data: [principal, interest], backgroundColor: ['#667eea', '#f56565'], borderWidth: 0 }]
+                };
+                const options = {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${formatCurrency(ctx.raw)}` } },
+                        title: { display: true, text: `利息占比: ${percent}%`, font: { size: 14 } }
+                    }
+                };
+                state.charts.reversePayment = getChartInstance(ctx, 'doughnut', data, options);
+            }
+
+            function updateComparisonChart(scheduleA, scheduleB) {
+                const canvas = document.getElementById('comparison-chart');
+                const ctx = canvas.getContext('2d');
+                const maxLen = Math.max(scheduleA.length, scheduleB.length);
+                let labels = [];
+                const step = maxLen > 60 ? Math.ceil(maxLen / 12) : 1;
+                for (let i = 0; i < maxLen; i++) {
+                    if (i % step === 0 || i === maxLen-1) {
+                        labels.push(`第${i+1}期`);
+                    } else {
+                        labels.push('');
+                    }
+                }
+                const dataA = scheduleA.map(item => item.payment);
+                const dataB = scheduleB.map(item => item.payment);
+                while (dataA.length < maxLen) dataA.push(null);
+                while (dataB.length < maxLen) dataB.push(null);
+
+                const allValues = dataA.filter(v => v !== null).concat(dataB.filter(v => v !== null));
+                const minVal = Math.min(...allValues);
+                const yMin = Math.max(0, minVal * 0.9);
+
+                const data = {
+                    labels: labels,
+                    datasets: [
+                        { label: '方案A 每期还款', data: dataA, borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', tension: 0.1, fill: false },
+                        { label: '方案B 每期还款', data: dataB, borderColor: '#f56565', backgroundColor: 'rgba(245,101,101,0.1)', tension: 0.1, fill: false }
+                    ]
+                };
+                const options = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, min: yMin } },
+                    plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}` } } }
+                };
+                state.charts.comparison = getChartInstance(ctx, 'line', data, options);
+            }
+
+            // ==================== 通用表格渲染 ====================
+            function renderTable(schedule, tbodyId, paginationId, summary, currentPage, pageSize = CONFIG.PAGE_SIZE) {
+                const tbody = document.getElementById(tbodyId);
+                tbody.innerHTML = '';
+                const start = (currentPage - 1) * pageSize;
+                const end = Math.min(start + pageSize, schedule.length);
+                for (let i = start; i < end; i++) {
+                    const item = schedule[i];
+                    const row = document.createElement('tr');
+                    row.className = i % 2 === 0 ? 'table-row-even' : 'table-row-odd';
+                    row.innerHTML = `
+                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">第${item.period}期</td>
+                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(item.payment)}</td>
+                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600 font-bold">${formatCurrency(item.principal)}</td>
+                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500 font-bold">${formatCurrency(item.interest)}</td>
+                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(item.remaining)}</td>
+                    `;
+                    tbody.appendChild(row);
+                }
+
+                const table = tbody.closest('table');
+                const oldFoot = table.querySelector('tfoot');
+                if (oldFoot) oldFoot.remove();
+
+                const tfoot = document.createElement('tfoot');
+                tfoot.className = 'tfoot-total font-bold';
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML = `
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" colspan="1">合计</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(summary.totalPayment)}</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600">${formatCurrency(summary.principal)}</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500">${formatCurrency(summary.totalInterest)}</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">0.00</td>
+                `;
+                tfoot.appendChild(totalRow);
+                table.appendChild(tfoot);
+
+                renderPagination(paginationId, schedule.length, currentPage);
+            }
+
+            function renderPagination(containerId, totalItems, currentPage) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                const totalPages = Math.ceil(totalItems / CONFIG.PAGE_SIZE);
+                if (totalPages <= 1) { container.innerHTML = ''; return; }
+                let html = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button class="px-2 sm:px-3 py-1 rounded ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                }
+                container.innerHTML = html;
+            }
+
+            function setupPaginationDelegation() {
+                document.getElementById('schedule-pagination').addEventListener('click', (e) => {
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
+                    const page = parseInt(btn.dataset.page);
+                    if (!isNaN(page)) {
+                        state.schedulePage = page;
+                        renderTable(state.standardSchedule, 'schedule-table', 'schedule-pagination', state.lastStandard, page);
+                    }
+                });
+                document.getElementById('reverse-schedule-pagination').addEventListener('click', (e) => {
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
+                    const page = parseInt(btn.dataset.page);
+                    if (!isNaN(page)) {
+                        state.reverseSchedulePage = page;
+                        renderTable(state.reverseSchedule, 'reverse-schedule-table', 'reverse-schedule-pagination', state.lastReverse, page);
+                    }
+                });
             }
 
             // ==================== UI 更新函数 ====================
             function updateStandardLabels() {
                 const freq = document.getElementById('payment-frequency').value;
-                const isIO = currentRepaymentType === 'interest-only';
+                const isIO = state.currentRepaymentType === 'interest-only';
                 const paymentLabel = document.getElementById('std-payment-label');
                 const firstLabel = document.getElementById('std-first-payment-label');
                 if (isIO) {
                     paymentLabel.textContent = (freq === 'monthly' ? '月供金额' : '季供金额');
                     firstLabel.textContent = (freq === 'monthly' ? '首月利息' : '首季利息');
-                } else if (currentRepaymentType === 'equal-principal') {
+                } else if (state.currentRepaymentType === 'equal-principal') {
                     paymentLabel.textContent = '首月月供';
                     firstLabel.textContent = '首月还款';
                 } else {
@@ -1110,14 +1283,12 @@
             }
 
             function calculateStandardLoan() {
-                if (isCalculating) return;
-                isCalculating = true;
+                if (state.isCalculating) return;
+                state.isCalculating = true;
                 const btn = document.getElementById('btn-calculate-standard');
                 btn.disabled = true;
 
                 try {
-                    destroyAllCharts();
-
                     const loanAmountInput = document.getElementById('loan-amount');
                     const loanAmount = validatePositive(loanAmountInput.value, '贷款总额', 'error-loan-amount');
                     if (!loanAmount) return;
@@ -1147,7 +1318,7 @@
                     let months = termUnit === 'years' ? term * 12 : term;
 
                     let frequency = 'monthly';
-                    if (currentRepaymentType === 'interest-only') {
+                    if (state.currentRepaymentType === 'interest-only') {
                         frequency = document.getElementById('payment-frequency').value;
                         if (frequency === 'quarterly' && months % 3 !== 0) {
                             const newMonths = Math.ceil(months / 3) * 3;
@@ -1164,13 +1335,15 @@
                         frequency = 'monthly';
                     }
 
-                    const result = computeLoanDetails(loanAmount, annualRate, months, currentRepaymentType, frequency);
-                    standardSchedule = result.schedule;
-                    window.lastStandardPrincipal = loanAmount;
-                    window.lastStandardTotalInterest = result.totalInterest;
-                    window.lastStandardTotalPayment = result.totalPayment;
-                    window.lastStandardAnnualRate = annualRate;
-                    window.lastStandardTotalPeriods = standardSchedule.length;
+                    const result = computeLoanDetails(loanAmount, annualRate, months, state.currentRepaymentType, frequency);
+                    state.standardSchedule = result.schedule;
+                    state.lastStandard = {
+                        principal: loanAmount,
+                        totalInterest: result.totalInterest,
+                        totalPayment: result.totalPayment,
+                        annualRate: annualRate,
+                        totalPeriods: state.standardSchedule.length
+                    };
 
                     document.getElementById('monthly-payment').textContent = formatCurrency(result.monthlyPayment || 0);
                     document.getElementById('first-payment').textContent = formatCurrency(result.firstPayment || 0);
@@ -1179,7 +1352,7 @@
                     document.getElementById('total-payment').textContent = formatCurrency(result.totalPayment);
 
                     const irrContainer = document.getElementById('irr-container');
-                    if (currentRepaymentType === 'equal-principal-equal-interest' && result.monthlyPayment > 0) {
+                    if (state.currentRepaymentType === 'equal-principal-equal-interest' && result.monthlyPayment > 0) {
                         const irr = calculateIRR(loanAmount, result.monthlyPayment, months) * 100;
                         document.getElementById('irr-value').textContent = irr.toFixed(2) + '%';
                         irrContainer.classList.remove('hidden');
@@ -1189,183 +1362,16 @@
 
                     updateStandardLabels();
                     updatePaymentChart(loanAmount, result.totalInterest);
-                    schedulePage = 1;
-                    renderScheduleTable();
+                    state.schedulePage = 1;
+                    renderTable(state.standardSchedule, 'schedule-table', 'schedule-pagination', state.lastStandard, 1);
                 } finally {
-                    isCalculating = false;
+                    state.isCalculating = false;
                     btn.disabled = false;
                 }
             }
 
-            function renderScheduleTable() {
-                const tbody = document.getElementById('schedule-table');
-                tbody.innerHTML = '';
-                const start = (schedulePage - 1) * CONFIG.PAGE_SIZE;
-                const end = Math.min(start + CONFIG.PAGE_SIZE, standardSchedule.length);
-                for (let i = start; i < end; i++) {
-                    const item = standardSchedule[i];
-                    const row = document.createElement('tr');
-                    row.className = i % 2 === 0 ? 'table-row-even' : 'table-row-odd';
-                    row.innerHTML = `
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">第${item.period}期</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(item.payment)}</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600 font-bold">${formatCurrency(item.principal)}</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500 font-bold">${formatCurrency(item.interest)}</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(item.remaining)}</td>
-                    `;
-                    tbody.appendChild(row);
-                }
-
-                const table = tbody.closest('table');
-                const oldFoot = table.querySelector('tfoot');
-                if (oldFoot) oldFoot.remove();
-
-                const tfoot = document.createElement('tfoot');
-                tfoot.className = 'tfoot-total font-bold';
-                const totalRow = document.createElement('tr');
-                totalRow.innerHTML = `
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" colspan="1">合计</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(window.lastStandardTotalPayment)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600">${formatCurrency(window.lastStandardPrincipal)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500">${formatCurrency(window.lastStandardTotalInterest)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">0.00</td>
-                `;
-                tfoot.appendChild(totalRow);
-                table.appendChild(tfoot);
-
-                renderPagination('schedule-pagination', standardSchedule.length, schedulePage);
-            }
-
-            function renderReverseScheduleTable() {
-                const tbody = document.getElementById('reverse-schedule-table');
-                tbody.innerHTML = '';
-                const start = (reverseSchedulePage - 1) * CONFIG.PAGE_SIZE;
-                const end = Math.min(start + CONFIG.PAGE_SIZE, reverseSchedule.length);
-                for (let i = start; i < end; i++) {
-                    const item = reverseSchedule[i];
-                    const row = document.createElement('tr');
-                    row.className = i % 2 === 0 ? 'table-row-even' : 'table-row-odd';
-                    row.innerHTML = `
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">第${item.period}期</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(item.payment)}</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600 font-bold">${formatCurrency(item.principal)}</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500 font-bold">${formatCurrency(item.interest)}</td>
-                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(item.remaining)}</td>
-                    `;
-                    tbody.appendChild(row);
-                }
-
-                const table = tbody.closest('table');
-                const oldFoot = table.querySelector('tfoot');
-                if (oldFoot) oldFoot.remove();
-
-                const tfoot = document.createElement('tfoot');
-                tfoot.className = 'tfoot-total font-bold';
-                const totalRow = document.createElement('tr');
-                totalRow.innerHTML = `
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" colspan="1">合计</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(window.lastReverseTotalPayment)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600">${formatCurrency(window.lastReversePrincipal)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500">${formatCurrency(window.lastReverseTotalInterest)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">0.00</td>
-                `;
-                tfoot.appendChild(totalRow);
-                table.appendChild(tfoot);
-
-                renderPagination('reverse-schedule-pagination', reverseSchedule.length, reverseSchedulePage);
-            }
-
-            function renderPagination(containerId, totalItems, currentPage) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                const totalPages = Math.ceil(totalItems / CONFIG.PAGE_SIZE);
-                if (totalPages <= 1) { container.innerHTML = ''; return; }
-                let html = '';
-                for (let i = 1; i <= totalPages; i++) {
-                    html += `<button class="px-2 sm:px-3 py-1 rounded ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
-                }
-                container.innerHTML = html;
-            }
-
-            function setupPaginationDelegation() {
-                document.getElementById('schedule-pagination').addEventListener('click', (e) => {
-                    const btn = e.target.closest('button');
-                    if (!btn) return;
-                    const page = parseInt(btn.dataset.page);
-                    if (!isNaN(page)) {
-                        schedulePage = page;
-                        renderScheduleTable();
-                    }
-                });
-                document.getElementById('reverse-schedule-pagination').addEventListener('click', (e) => {
-                    const btn = e.target.closest('button');
-                    if (!btn) return;
-                    const page = parseInt(btn.dataset.page);
-                    if (!isNaN(page)) {
-                        reverseSchedulePage = page;
-                        renderReverseScheduleTable();
-                    }
-                });
-            }
-
-            function updatePaymentChart(principal, interest) {
-                const ctx = document.getElementById('payment-chart').getContext('2d');
-                const total = principal + interest;
-                const percent = total > 0 ? (interest / total * 100).toFixed(1) : '0.0';
-                if (paymentChart) {
-                    paymentChart.data.datasets[0].data = [principal, interest];
-                    paymentChart.options.plugins.title.text = `利息占比: ${percent}%`;
-                    paymentChart.update();
-                } else {
-                    paymentChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['本金', '利息'],
-                            datasets: [{ data: [principal, interest], backgroundColor: ['#667eea', '#f56565'], borderWidth: 0 }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: true,
-                            plugins: {
-                                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
-                                tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${formatCurrency(ctx.raw)}` } },
-                                title: { display: true, text: `利息占比: ${percent}%`, font: { size: 14 } }
-                            }
-                        }
-                    });
-                }
-            }
-
-            function updateReversePaymentChart(principal, interest) {
-                const ctx = document.getElementById('reverse-payment-chart').getContext('2d');
-                const total = principal + interest;
-                const percent = total > 0 ? (interest / total * 100).toFixed(1) : '0.0';
-                if (reversePaymentChart) {
-                    reversePaymentChart.data.datasets[0].data = [principal, interest];
-                    reversePaymentChart.options.plugins.title.text = `利息占比: ${percent}%`;
-                    reversePaymentChart.update();
-                } else {
-                    reversePaymentChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['本金', '利息'],
-                            datasets: [{ data: [principal, interest], backgroundColor: ['#667eea', '#f56565'], borderWidth: 0 }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: true,
-                            plugins: {
-                                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
-                                tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${formatCurrency(ctx.raw)}` } },
-                                title: { display: true, text: `利息占比: ${percent}%`, font: { size: 14 } }
-                            }
-                        }
-                    });
-                }
-            }
-
             function updateReversePaymentLabel() {
-                if (currentReverseMode === 'equal-principal-interest') {
+                if (state.currentReverseMode === 'equal-principal-interest') {
                     const freq = document.getElementById('reverse-payment-frequency').value;
                     const label = document.getElementById('reverse-payment-label');
                     label.textContent = (freq === 'monthly' ? '每月' : '每季度') + '还款金额 (元)';
@@ -1373,14 +1379,12 @@
             }
 
             function calculateReverseRate() {
-                if (isCalculating) return;
-                isCalculating = true;
+                if (state.isCalculating) return;
+                state.isCalculating = true;
                 const btn = document.getElementById('btn-calculate-reverse');
                 btn.disabled = true;
 
                 try {
-                    destroyAllCharts();
-
                     const loanAmountInput = document.getElementById('reverse-loan-amount');
                     const loanAmount = validatePositive(loanAmountInput.value, '贷款总额', 'error-reverse-loan-amount');
                     if (!loanAmount) return;
@@ -1394,7 +1398,7 @@
                     const periodsPerYear = frequency === 'monthly' ? 12 : 4;
                     let totalPeriods = frequency === 'monthly' ? months : Math.ceil(months / 3);
 
-                    if (currentReverseMode === 'interest-only' && frequency === 'quarterly' && months % 3 !== 0) {
+                    if (state.currentReverseMode === 'interest-only' && frequency === 'quarterly' && months % 3 !== 0) {
                         const newMonths = Math.ceil(months / 3) * 3;
                         if (termUnit === 'years') {
                             term = Math.ceil(newMonths / 12);
@@ -1406,7 +1410,7 @@
                         totalPeriods = frequency === 'monthly' ? months : Math.ceil(months / 3);
                         showToast(`先息后本季度还款要求月数为3的倍数，已自动调整为 ${months} 个月。`);
                     }
-                    if (currentReverseMode === 'equal-principal-interest' && frequency === 'quarterly' && months % 3 !== 0) {
+                    if (state.currentReverseMode === 'equal-principal-interest' && frequency === 'quarterly' && months % 3 !== 0) {
                         const newMonths = Math.ceil(months / 3) * 3;
                         if (termUnit === 'years') {
                             term = Math.ceil(newMonths / 12);
@@ -1422,7 +1426,7 @@
                     const basisElem = document.querySelector('input[name="reverse-basis"]:checked');
                     const basis = basisElem ? basisElem.value : 'payment';
 
-                    if (currentReverseMode === 'equal-principal-interest') {
+                    if (state.currentReverseMode === 'equal-principal-interest') {
                         let payment, totalInterest;
                         if (basis === 'payment') {
                             const paymentInput = document.getElementById('reverse-payment');
@@ -1454,19 +1458,17 @@
 
                         const periodRate = result.periodRate;
                         const annualRate = result.annualRate;
-                        window.lastReverseAnnualRate = annualRate;
-                        window.lastReverseTotalPeriods = totalPeriods;
                         const monthlyRate = annualRate / 12;
 
                         let remaining = new Decimal(loanAmount);
                         let totalInterestCalc = new Decimal(0);
-                        reverseSchedule = [];
+                        state.reverseSchedule = [];
                         for (let i = 1; i <= totalPeriods; i++) {
                             const interest = remaining.times(periodRate);
                             const principalPart = new Decimal(payment).minus(interest);
                             remaining = remaining.minus(principalPart);
                             totalInterestCalc = totalInterestCalc.plus(interest);
-                            reverseSchedule.push({
+                            state.reverseSchedule.push({
                                 period: i,
                                 payment: payment,
                                 principal: principalPart.toNumber(),
@@ -1475,16 +1477,16 @@
                             });
                         }
 
-                        window.lastReversePrincipal = loanAmount;
-                        window.lastReverseTotalInterest = totalInterestCalc.toNumber();
-                        window.lastReverseTotalPayment = loanAmount + window.lastReverseTotalInterest;
+                        state.lastReverse = {
+                            principal: loanAmount,
+                            totalInterest: totalInterestCalc.toNumber(),
+                            totalPayment: loanAmount + totalInterestCalc.toNumber(),
+                            annualRate: annualRate,
+                            totalPeriods: state.reverseSchedule.length
+                        };
 
                         document.getElementById('reverse-annual-rate').textContent = (annualRate * 100).toFixed(2) + '%';
                         document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 1000).toFixed(2) + '厘';
-                        document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
-                        document.getElementById('reverse-total-interest').textContent = formatCurrency(window.lastReverseTotalInterest);
-                        document.getElementById('reverse-total-payment').textContent = formatCurrency(window.lastReverseTotalPayment);
-                        updateReversePaymentChart(loanAmount, window.lastReverseTotalInterest);
                     } else { // 先息后本模式
                         const interestInput = document.getElementById('reverse-interest-payment');
                         const interestPayment = validateNonNegative(interestInput.value, '每期利息金额', 'error-reverse-interest');
@@ -1493,23 +1495,23 @@
                         if (interestPayment === 0) {
                             const annualRate = 0;
                             const monthlyRate = 0;
-                            let totalInterest = 0;
-                            reverseSchedule = [];
+                            state.reverseSchedule = [];
                             for (let i = 1; i <= totalPeriods; i++) {
                                 if (i === totalPeriods) {
-                                    reverseSchedule.push({ period: i, payment: loanAmount, principal: loanAmount, interest: 0, remaining: 0 });
+                                    state.reverseSchedule.push({ period: i, payment: loanAmount, principal: loanAmount, interest: 0, remaining: 0 });
                                 } else {
-                                    reverseSchedule.push({ period: i, payment: 0, principal: 0, interest: 0, remaining: loanAmount });
+                                    state.reverseSchedule.push({ period: i, payment: 0, principal: 0, interest: 0, remaining: loanAmount });
                                 }
                             }
-                            window.lastReversePrincipal = loanAmount;
-                            window.lastReverseTotalInterest = 0;
-                            window.lastReverseTotalPayment = loanAmount;
+                            state.lastReverse = {
+                                principal: loanAmount,
+                                totalInterest: 0,
+                                totalPayment: loanAmount,
+                                annualRate: 0,
+                                totalPeriods: state.reverseSchedule.length
+                            };
                             document.getElementById('reverse-annual-rate').textContent = '0.00%';
                             document.getElementById('reverse-monthly-rate').textContent = '0.00厘';
-                            document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
-                            document.getElementById('reverse-total-interest').textContent = formatCurrency(0);
-                            document.getElementById('reverse-total-payment').textContent = formatCurrency(loanAmount);
                             updateReversePaymentChart(loanAmount, 0);
                         } else {
                             const periodRate = interestPayment / loanAmount;
@@ -1518,47 +1520,48 @@
                                 return;
                             }
                             const annualRate = periodRate * periodsPerYear;
-                            window.lastReverseAnnualRate = annualRate;
-                            window.lastReverseTotalPeriods = totalPeriods;
                             const monthlyRate = annualRate / 12;
                             let totalInterest = 0;
-                            reverseSchedule = [];
+                            state.reverseSchedule = [];
                             for (let i = 1; i <= totalPeriods; i++) {
                                 totalInterest += interestPayment;
                                 if (i === totalPeriods) {
-                                    reverseSchedule.push({ period: i, payment: interestPayment + loanAmount, principal: loanAmount, interest: interestPayment, remaining: 0 });
+                                    state.reverseSchedule.push({ period: i, payment: interestPayment + loanAmount, principal: loanAmount, interest: interestPayment, remaining: 0 });
                                 } else {
-                                    reverseSchedule.push({ period: i, payment: interestPayment, principal: 0, interest: interestPayment, remaining: loanAmount });
+                                    state.reverseSchedule.push({ period: i, payment: interestPayment, principal: 0, interest: interestPayment, remaining: loanAmount });
                                 }
                             }
-                            window.lastReversePrincipal = loanAmount;
-                            window.lastReverseTotalInterest = totalInterest;
-                            window.lastReverseTotalPayment = loanAmount + totalInterest;
+                            state.lastReverse = {
+                                principal: loanAmount,
+                                totalInterest: totalInterest,
+                                totalPayment: loanAmount + totalInterest,
+                                annualRate: annualRate,
+                                totalPeriods: state.reverseSchedule.length
+                            };
                             document.getElementById('reverse-annual-rate').textContent = (annualRate * 100).toFixed(2) + '%';
                             document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 1000).toFixed(2) + '厘';
-                            document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
-                            document.getElementById('reverse-total-interest').textContent = formatCurrency(totalInterest);
-                            document.getElementById('reverse-total-payment').textContent = formatCurrency(loanAmount + totalInterest);
                             updateReversePaymentChart(loanAmount, totalInterest);
                         }
                     }
-                    reverseSchedulePage = 1;
-                    renderReverseScheduleTable();
+                    document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
+                    document.getElementById('reverse-total-interest').textContent = formatCurrency(state.lastReverse.totalInterest);
+                    document.getElementById('reverse-total-payment').textContent = formatCurrency(state.lastReverse.totalPayment);
+                    
+                    state.reverseSchedulePage = 1;
+                    renderTable(state.reverseSchedule, 'reverse-schedule-table', 'reverse-schedule-pagination', state.lastReverse, 1);
                 } finally {
-                    isCalculating = false;
+                    state.isCalculating = false;
                     btn.disabled = false;
                 }
             }
 
             function compareLoans() {
-                if (isCalculating) return;
-                isCalculating = true;
+                if (state.isCalculating) return;
+                state.isCalculating = true;
                 const btn = document.getElementById('btn-compare');
                 btn.disabled = true;
 
                 try {
-                    if (comparisonChart) { comparisonChart.destroy(); comparisonChart = null; }
-
                     const amountAInput = document.getElementById('comp-a-amount');
                     const amountA = validatePositive(amountAInput.value, '方案A贷款总额', 'error-comp-a-amount');
                     if (!amountA) return;
@@ -1623,128 +1626,48 @@
                     updateComparisonChart(resA.schedule, resB.schedule);
                     document.getElementById('comparison-results').classList.remove('hidden');
                 } finally {
-                    isCalculating = false;
+                    state.isCalculating = false;
                     btn.disabled = false;
-                }
-            }
-
-            function updateComparisonChart(scheduleA, scheduleB) {
-                const ctx = document.getElementById('comparison-chart').getContext('2d');
-                const maxLen = Math.max(scheduleA.length, scheduleB.length);
-                // 对标签抽样：如果期数超过 60，每 12 期显示一个标签
-                let labels = [];
-                const step = maxLen > 60 ? Math.ceil(maxLen / 12) : 1;
-                for (let i = 0; i < maxLen; i++) {
-                    if (i % step === 0 || i === maxLen-1) {
-                        labels.push(`第${i+1}期`);
-                    } else {
-                        labels.push('');
-                    }
-                }
-                const dataA = scheduleA.map(item => item.payment);
-                const dataB = scheduleB.map(item => item.payment);
-                while (dataA.length < maxLen) dataA.push(null);
-                while (dataB.length < maxLen) dataB.push(null);
-
-                const allValues = dataA.filter(v => v !== null).concat(dataB.filter(v => v !== null));
-                const minVal = Math.min(...allValues);
-                const maxVal = Math.max(...allValues);
-                const yMin = Math.max(0, minVal * 0.9);
-
-                if (comparisonChart) {
-                    comparisonChart.data.labels = labels;
-                    comparisonChart.data.datasets[0].data = dataA;
-                    comparisonChart.data.datasets[1].data = dataB;
-                    comparisonChart.options.scales.y.min = yMin;
-                    comparisonChart.update();
-                } else {
-                    comparisonChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [
-                                { label: '方案A 每期还款', data: dataA, borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', tension: 0.1, fill: false },
-                                { label: '方案B 每期还款', data: dataB, borderColor: '#f56565', backgroundColor: 'rgba(245,101,101,0.1)', tension: 0.1, fill: false }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: { y: { beginAtZero: false, min: yMin } },
-                            plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}` } } }
-                        }
-                    });
                 }
             }
 
             // ==================== 导出Excel ====================
             function exportScheduleExcel() {
-                if (!standardSchedule.length) { alert('请先计算标准贷款'); return; }
+                if (!state.standardSchedule.length) { alert('请先计算标准贷款'); return; }
 
-                const loanAmount = window.lastStandardPrincipal;
-                const totalPeriods = standardSchedule.length;
-                const annualRatePercent = window.lastStandardAnnualRate * 100; // 数值
-                const repaymentTypeChinese = repaymentTypeToChinese(currentRepaymentType);
+                const loanAmount = state.lastStandard.principal;
+                const totalPeriods = state.standardSchedule.length;
+                const annualRatePercent = state.lastStandard.annualRate * 100;
+                const repaymentTypeChinese = repaymentTypeToChinese(state.currentRepaymentType);
 
                 const fileName = buildExcelFileName(repaymentTypeChinese, loanAmount, totalPeriods, annualRatePercent);
 
                 let html = `
-                <html>
-                <head><meta charset="UTF-8"></head>
-                <body style="font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;">
-                    <table cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-                        <colgroup><col width="108"><col width="108"><col width="108"><col width="108"><col width="108"></colgroup>
-                        <tr style="height:45px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; font-weight:bold; text-align:center;">还款计划表（${repaymentTypeChinese}）</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款额度￥${loanAmount.toFixed(2)}</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款月数 ${totalPeriods}</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款利率 年化${annualRatePercent.toFixed(2)}%</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">总利息 ￥${window.lastStandardTotalInterest.toFixed(2)}</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">还款总额 ￥${window.lastStandardTotalPayment.toFixed(2)}</td>
-                        </tr>
-                        <tr style="height:20px;">
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">期数</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">月供</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">本金</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">利息</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">剩余本金</th>
-                        </tr>
+                <html><head><meta charset="UTF-8"></head><body style="font-family:'微软雅黑',sans-serif;">
+                <table cellpadding="4" cellspacing="0" style="border-collapse:collapse;width:100%;">
+                <colgroup><col width="108"><col width="108"><col width="108"><col width="108"><col width="108"></colgroup>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;font-weight:bold;text-align:center;">还款计划表（${repaymentTypeChinese}）</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">贷款额度￥${loanAmount.toFixed(2)}</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">贷款月数 ${totalPeriods}</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">贷款利率 年化${annualRatePercent.toFixed(2)}%</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">总利息 ￥${state.lastStandard.totalInterest.toFixed(2)}</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">还款总额 ￥${state.lastStandard.totalPayment.toFixed(2)}</td></tr>
+                <tr><th style="border:1px solid #d0d7de;padding:4px;">期数</th><th style="border:1px solid #d0d7de;padding:4px;">月供</th><th style="border:1px solid #d0d7de;padding:4px;">本金</th><th style="border:1px solid #d0d7de;padding:4px;">利息</th><th style="border:1px solid #d0d7de;padding:4px;">剩余本金</th></tr>
                 `;
 
-                standardSchedule.forEach(item => {
-                    html += `
-                        <tr style="height:20px;">
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">第${item.period}期</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">${item.payment.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#22c55e;">${item.principal.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#ef4444;">${item.interest.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">${item.remaining.toFixed(2)}</td>
-                        </tr>
-                    `;
+                state.standardSchedule.forEach(item => {
+                    html += `<tr><td style="border:1px solid #d0d7de;padding:4px;text-align:center;">第${item.period}期</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${item.payment.toFixed(2)}</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#22c55e;">${item.principal.toFixed(2)}</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#ef4444;">${item.interest.toFixed(2)}</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${item.remaining.toFixed(2)}</td></tr>`;
                 });
 
-                html += `
-                        <tr style="height:20px;">
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">合计</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">${window.lastStandardTotalPayment.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#22c55e;">${window.lastStandardPrincipal.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#ef4444;">${window.lastStandardTotalInterest.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">0.00</td>
-                        </tr>
-                    </table>
-                </body>
-                </html>
-                `;
+                html += `<tr><td style="border:1px solid #d0d7de;padding:4px;text-align:center;">合计</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${state.lastStandard.totalPayment.toFixed(2)}</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#22c55e;">${state.lastStandard.principal.toFixed(2)}</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#ef4444;">${state.lastStandard.totalInterest.toFixed(2)}</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">0.00</td></tr></table></body></html>`;
 
                 const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel' });
                 const link = document.createElement('a');
@@ -1754,72 +1677,41 @@
             }
 
             function exportReverseScheduleExcel() {
-                if (!reverseSchedule.length) { alert('请先反推利率'); return; }
+                if (!state.reverseSchedule.length) { alert('请先反推利率'); return; }
 
-                const loanAmount = window.lastReversePrincipal;
-                const totalPeriods = reverseSchedule.length;
-                const annualRatePercent = window.lastReverseAnnualRate * 100;
-                const repaymentTypeChinese = currentReverseMode === 'equal-principal-interest' ? '等额本息' : '先息后本';
+                const loanAmount = state.lastReverse.principal;
+                const totalPeriods = state.reverseSchedule.length;
+                const annualRatePercent = state.lastReverse.annualRate * 100;
+                const repaymentTypeChinese = state.currentReverseMode === 'equal-principal-interest' ? '等额本息' : '先息后本';
 
                 const fileName = buildExcelFileName(repaymentTypeChinese, loanAmount, totalPeriods, annualRatePercent);
 
                 let html = `
-                <html>
-                <head><meta charset="UTF-8"></head>
-                <body style="font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;">
-                    <table cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-                        <colgroup><col width="108"><col width="108"><col width="108"><col width="108"><col width="108"></colgroup>
-                        <tr style="height:45px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; font-weight:bold; text-align:center;">反推利率计划表（${repaymentTypeChinese}）</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款额度￥${loanAmount.toFixed(2)}</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">贷款月数 ${totalPeriods}</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">反推年化利率 ${annualRatePercent.toFixed(2)}%</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">总利息 ￥${window.lastReverseTotalInterest.toFixed(2)}</td>
-                        </tr>
-                        <tr style="height:25px;">
-                            <td colspan="5" style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">还款总额 ￥${window.lastReverseTotalPayment.toFixed(2)}</td>
-                        </tr>
-                        <tr style="height:20px;">
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">期数</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">还款</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">本金</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">利息</th>
-                            <th style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">剩余本金</th>
-                        </tr>
+                <html><head><meta charset="UTF-8"></head><body style="font-family:'微软雅黑',sans-serif;">
+                <table cellpadding="4" cellspacing="0" style="border-collapse:collapse;width:100%;">
+                <colgroup><col width="108"><col width="108"><col width="108"><col width="108"><col width="108"></colgroup>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;font-weight:bold;text-align:center;">反推利率计划表（${repaymentTypeChinese}）</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">贷款额度￥${loanAmount.toFixed(2)}</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">贷款月数 ${totalPeriods}</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">反推年化利率 ${annualRatePercent.toFixed(2)}%</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">总利息 ￥${state.lastReverse.totalInterest.toFixed(2)}</td></tr>
+                <tr><td colspan="5" style="border:1px solid #d0d7de;padding:4px;text-align:center;">还款总额 ￥${state.lastReverse.totalPayment.toFixed(2)}</td></tr>
+                <tr><th style="border:1px solid #d0d7de;padding:4px;">期数</th><th style="border:1px solid #d0d7de;padding:4px;">还款</th><th style="border:1px solid #d0d7de;padding:4px;">本金</th><th style="border:1px solid #d0d7de;padding:4px;">利息</th><th style="border:1px solid #d0d7de;padding:4px;">剩余本金</th></tr>
                 `;
 
-                reverseSchedule.forEach(item => {
-                    html += `
-                        <tr style="height:20px;">
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">第${item.period}期</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">${item.payment.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#22c55e;">${item.principal.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#ef4444;">${item.interest.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">${item.remaining.toFixed(2)}</td>
-                        </tr>
-                    `;
+                state.reverseSchedule.forEach(item => {
+                    html += `<tr><td style="border:1px solid #d0d7de;padding:4px;text-align:center;">第${item.period}期</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${item.payment.toFixed(2)}</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#22c55e;">${item.principal.toFixed(2)}</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#ef4444;">${item.interest.toFixed(2)}</td>
+                    <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${item.remaining.toFixed(2)}</td></tr>`;
                 });
 
-                html += `
-                        <tr style="height:20px;">
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">合计</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">${window.lastReverseTotalPayment.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#22c55e;">${window.lastReversePrincipal.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center; color:#ef4444;">${window.lastReverseTotalInterest.toFixed(2)}</td>
-                            <td style="border:1px solid #d0d7de; padding:4px 8px; text-align:center;">0.00</td>
-                        </tr>
-                    </table>
-                </body>
-                </html>
-                `;
+                html += `<tr><td style="border:1px solid #d0d7de;padding:4px;text-align:center;">合计</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${state.lastReverse.totalPayment.toFixed(2)}</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#22c55e;">${state.lastReverse.principal.toFixed(2)}</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#ef4444;">${state.lastReverse.totalInterest.toFixed(2)}</td>
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">0.00</td></tr></table></body></html>`;
 
                 const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel' });
                 const link = document.createElement('a');
@@ -1832,24 +1724,9 @@
                 const compRes = document.getElementById('comparison-results');
                 if (compRes.classList.contains('hidden')) { alert('请先进行方案对比'); return; }
                 const rows = [['指标', '方案A', '方案B', '差异 (A-B)']];
-                rows.push([
-                    '每期还款',
-                    document.getElementById('comp-a-monthly').textContent,
-                    document.getElementById('comp-b-monthly').textContent,
-                    document.getElementById('diff-monthly').textContent
-                ]);
-                rows.push([
-                    '总利息',
-                    document.getElementById('comp-a-interest').textContent,
-                    document.getElementById('comp-b-interest').textContent,
-                    document.getElementById('diff-interest').textContent
-                ]);
-                rows.push([
-                    '还款总额',
-                    document.getElementById('comp-a-total').textContent,
-                    document.getElementById('comp-b-total').textContent,
-                    document.getElementById('diff-total').textContent
-                ]);
+                rows.push(['每期还款', document.getElementById('comp-a-monthly').textContent, document.getElementById('comp-b-monthly').textContent, document.getElementById('diff-monthly').textContent]);
+                rows.push(['总利息', document.getElementById('comp-a-interest').textContent, document.getElementById('comp-b-interest').textContent, document.getElementById('diff-interest').textContent]);
+                rows.push(['还款总额', document.getElementById('comp-a-total').textContent, document.getElementById('comp-b-total').textContent, document.getElementById('diff-total').textContent]);
                 const csvContent = rows.map(row => row.map(cell => cell.replace(/,/g, '')).join(',')).join('\n');
                 const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement('a');
@@ -1862,48 +1739,47 @@
             const parser = new exprEval.Parser();
 
             function calcAppend(value) {
-                if (value === 'clear') { calcExpression = ''; calcCurrent = '0'; calcNewInput = true; }
+                if (value === 'clear') { state.calcExpression = ''; state.calcCurrent = '0'; state.calcNewInput = true; }
                 else if (value === 'backspace') {
-                    if (calcCurrent.length > 1) calcCurrent = calcCurrent.slice(0,-1);
-                    else { calcCurrent = '0'; calcNewInput = true; }
+                    if (state.calcCurrent.length > 1) state.calcCurrent = state.calcCurrent.slice(0,-1);
+                    else { state.calcCurrent = '0'; state.calcNewInput = true; }
                 } else if (value === '%') {
-                    if (calcCurrent !== '0') calcCurrent = String(parseFloat(calcCurrent) / 100);
+                    if (state.calcCurrent !== '0') state.calcCurrent = String(parseFloat(state.calcCurrent) / 100);
                 } else if (['+','-','*','/'].includes(value)) {
-                    if (calcExpression === '' && calcCurrent !== '0') calcExpression = calcCurrent + ' ' + value + ' ';
-                    else calcExpression += calcCurrent + ' ' + value + ' ';
-                    calcNewInput = true; calcCurrent = '0';
+                    if (state.calcExpression === '' && state.calcCurrent !== '0') state.calcExpression = state.calcCurrent + ' ' + value + ' ';
+                    else state.calcExpression += state.calcCurrent + ' ' + value + ' ';
+                    state.calcNewInput = true; state.calcCurrent = '0';
                 } else if (value === '=') {
                     try {
-                        let expr = (calcExpression + calcCurrent).replace(/[^-()\d/*+.]/g, '');
+                        let expr = (state.calcExpression + state.calcCurrent).replace(/[^-()\d/*+.]/g, '');
                         if (!expr) throw new Error('空表达式');
                         const result = parser.evaluate(expr);
-                        calcCurrent = String(result);
-                        calcExpression = '';
-                        calcNewInput = true;
+                        state.calcCurrent = String(result);
+                        state.calcExpression = '';
+                        state.calcNewInput = true;
                     } catch (e) {
-                        calcCurrent = '表达式错误';
-                        calcExpression = '';
-                        calcNewInput = true;
+                        state.calcCurrent = '表达式错误';
+                        state.calcExpression = '';
+                        state.calcNewInput = true;
                     }
                 } else {
                     if (value === '00') {
-                        // 修复：如果当前显示为 "0" 或 "00"，则替换为 "0"
-                        if (calcNewInput || calcCurrent === '0' || calcCurrent === '00') {
-                            calcCurrent = '0';
-                            calcNewInput = false;
+                        if (state.calcNewInput || state.calcCurrent === '0' || state.calcCurrent === '00') {
+                            state.calcCurrent = '0';
+                            state.calcNewInput = false;
                         } else {
-                            calcCurrent += '00';
+                            state.calcCurrent += '00';
                         }
                     } else if (value === '.') {
-                        if (!calcCurrent.includes('.')) calcCurrent += '.';
-                        calcNewInput = false;
+                        if (!state.calcCurrent.includes('.')) state.calcCurrent += '.';
+                        state.calcNewInput = false;
                     } else {
-                        if (calcNewInput) { calcCurrent = value; calcNewInput = false; }
-                        else { if (calcCurrent === '0') calcCurrent = value; else calcCurrent += value; }
+                        if (state.calcNewInput) { state.calcCurrent = value; state.calcNewInput = false; }
+                        else { if (state.calcCurrent === '0') state.calcCurrent = value; else state.calcCurrent += value; }
                     }
                 }
-                document.getElementById('calc-expression').textContent = calcExpression;
-                document.getElementById('calc-display').textContent = calcCurrent;
+                document.getElementById('calc-expression').textContent = state.calcExpression;
+                document.getElementById('calc-display').textContent = state.calcCurrent;
             }
 
             function handleCalcKey(e) {
@@ -1911,7 +1787,7 @@
                 if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable) {
                     return;
                 }
-                if (currentMainSection !== 'calculator-tool') return;
+                if (state.currentMainSection !== 'calculator-tool') return;
                 const key = e.key;
                 if (key.startsWith('Arrow') || key === 'PageUp' || key === 'PageDown' || key === 'Home' || key === 'End') {
                     e.preventDefault();
@@ -1991,8 +1867,7 @@
 
             // ==================== 标签页切换 ====================
             function showMainSection(section) {
-                currentMainSection = section;
-                destroyAllCharts();
+                state.currentMainSection = section;
                 ['calculator','comparison','calculator-tool'].forEach(s => {
                     const btn = document.getElementById(`main-tab-${s}`);
                     const sec = document.getElementById(`${s}-section`);
@@ -2007,8 +1882,7 @@
             }
 
             function switchCalculatorType(type) {
-                currentCalculatorType = type;
-                destroyAllCharts();
+                state.currentCalculatorType = type;
                 document.getElementById('tab-standard').className = type==='standard' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
                 document.getElementById('tab-reverse').className = type==='reverse' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
                 document.getElementById('standard-calculator').classList.toggle('hidden', type!=='standard');
@@ -2021,7 +1895,7 @@
             }
 
             function setRepaymentType(type) {
-                currentRepaymentType = type;
+                state.currentRepaymentType = type;
                 const btnMap = {
                     'equal-principal-interest': 'btn-epi',
                     'equal-principal-equal-interest': 'btn-epe',
@@ -2047,7 +1921,7 @@
             }
 
             function setReverseMode(mode) {
-                currentReverseMode = mode;
+                state.currentReverseMode = mode;
                 document.getElementById('btn-reverse-epi').className = mode==='equal-principal-interest' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
                 document.getElementById('btn-reverse-io').className = mode==='interest-only' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
                 const paymentSection = document.getElementById('reverse-payment-section');
@@ -2075,7 +1949,7 @@
                 const radios = document.querySelectorAll('input[name="reverse-basis"]');
                 radios.forEach(radio => {
                     radio.addEventListener('change', (e) => {
-                        if (currentReverseMode !== 'interest-only') {
+                        if (state.currentReverseMode !== 'interest-only') {
                             const basis = e.target.value;
                             const paymentSection = document.getElementById('reverse-payment-section');
                             const totalInterestSection = document.getElementById('reverse-total-interest-section');
@@ -2139,12 +2013,8 @@
                 });
                 document.addEventListener('keydown', handleCalcKey);
 
-                document.getElementById('term-unit').addEventListener('change', () => {
-                    renderTermButtons('standard-term-buttons', true);
-                });
-                document.getElementById('reverse-term-unit').addEventListener('change', () => {
-                    renderTermButtons('reverse-term-buttons', false);
-                });
+                document.getElementById('term-unit').addEventListener('change', () => renderTermButtons('standard-term-buttons', true));
+                document.getElementById('reverse-term-unit').addEventListener('change', () => renderTermButtons('reverse-term-buttons', false));
 
                 document.getElementById('payment-frequency').addEventListener('change', updateStandardLabels);
                 document.getElementById('reverse-payment-frequency').addEventListener('change', updateReversePaymentLabel);
