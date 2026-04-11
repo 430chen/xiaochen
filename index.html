@@ -59,6 +59,7 @@
             --toast-text: #f9fafb;
             --tfoot-bg: #e5e7eb;
             --thead-bg: #d0d7de;
+            --info-icon-color: #6b7280;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -75,7 +76,7 @@
                 --text-primary: #f3f4f6;
                 --text-secondary: #d1d5db;
                 --text-tertiary: #9ca3af;
-                --border-light: #374151;
+                --border-light: #4a5568;
                 --table-stripe-even: #1f2937;
                 --table-stripe-odd: #2d3748;
                 --input-bg-start: #2d3748;
@@ -98,6 +99,7 @@
                 --toast-text: #f3f4f6;
                 --tfoot-bg: #374151;
                 --thead-bg: #2d3748;
+                --info-icon-color: #cbd5e0;
             }
             select.soft-input option { background-color: #2d3748; color: #f3f4f6; }
         }
@@ -126,7 +128,7 @@
         .soft-input { background: linear-gradient(145deg, var(--input-bg-start), var(--input-bg-end)); box-shadow: inset 3px 3px 6px var(--inset-shadow-light), inset -3px -3px 6px var(--inset-shadow-dark); border-radius: 12px; border: none; transition: all 0.3s ease; color: var(--text-primary); }
         .soft-input:focus { outline: none; box-shadow: inset 4px 4px 8px var(--inset-shadow-light), inset -4px -4px 8px var(--inset-shadow-dark), 0 0 0 3px rgba(102, 126, 234, 0.3); }
         .soft-input.error { box-shadow: 0 0 0 2px var(--error-border), inset 3px 3px 6px var(--inset-shadow-light), inset -3px -3px 6px var(--inset-shadow-dark); }
-        .error-message { color: var(--error-text); font-size: 0.75rem; margin-top: 0.2rem; margin-left: 0.5rem; min-height: 1.2rem; }
+        .error-message { color: var(--error-text); font-size: 0.75rem; margin-top: 0.2rem; margin-left: 0.5rem; min-height: 1.5rem; }
         .soft-tab-active { background: linear-gradient(145deg, var(--button-primary-start), var(--button-primary-end)); box-shadow: 5px 5px 10px var(--card-shadow-light), -5px -5px 10px var(--card-shadow-dark); color: white; }
         .calc-button { background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end)); box-shadow: 4px 4px 8px var(--card-shadow-light), -4px -4px 8px var(--card-shadow-dark); border-radius: 12px; transition: all 0.15s ease; font-weight: 600; color: var(--text-primary); }
         @media (hover: hover) {
@@ -149,7 +151,7 @@
         .scrollbar-thin::-webkit-scrollbar-track { background: var(--border-light); border-radius: 3px; }
         .scrollbar-thin::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--button-primary-start), var(--button-primary-end)); border-radius: 3px; }
         .rate-note { font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.2rem; }
-        .irr-display { margin-top: 0.5rem; font-size: 0.9rem; color: var(--button-primary-start); }
+        .irr-display { margin-top: 0.5rem; font-size: 0.9rem; color: var(--button-primary-start); display: flex; align-items: center; gap: 0.25rem; }
         .table-row-even { background-color: var(--table-stripe-even); }
         .table-row-odd { background-color: var(--table-stripe-odd); }
         .tfoot-total { background-color: var(--tfoot-bg); font-weight: 700; }
@@ -228,10 +230,71 @@
                 background: rgba(90, 103, 216, 0.9);
             }
         }
+
+        /* 信息图标与tooltip */
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--info-icon-color);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: help;
+            margin-left: 4px;
+        }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            width: 220px;
+            background-color: var(--toast-bg);
+            color: var(--toast-text);
+            text-align: left;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 0.8rem;
+            font-weight: normal;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* 重置按钮 */
+        .reset-button {
+            background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end));
+            box-shadow: 3px 3px 6px var(--card-shadow-light), -3px -3px 6px var(--card-shadow-dark);
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .reset-button:active {
+            box-shadow: inset 2px 2px 4px var(--inset-shadow-light), inset -2px -2px 4px var(--inset-shadow-dark);
+        }
     </style>
 </head>
 <body class="py-4 sm:py-8 px-2 sm:px-4">
-    <div id="toast" class="toast"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <!-- 用于屏幕阅读器朗读结果变化 -->
+    <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    
     <div class="max-w-6xl mx-auto">
         <!-- 头部标题 -->
         <div class="text-center mb-6 sm:mb-8 animate-float">
@@ -240,25 +303,28 @@
         </div>
 
         <!-- 主标签页 -->
-        <div class="soft-card p-3 sm:p-4 mb-6 sm:mb-8">
+        <div class="soft-card p-3 sm:p-4 mb-6 sm:mb-8" role="tablist">
             <div class="flex flex-wrap gap-2 sm:gap-3 justify-center">
-                <button id="main-tab-calculator" class="soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base">贷款计算器</button>
-                <button id="main-tab-comparison" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base">方案对比</button>
-                <button id="main-tab-calculator-tool" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base">计算器</button>
+                <button id="main-tab-calculator" class="soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base" role="tab" aria-selected="true" aria-controls="calculator-section">贷款计算器</button>
+                <button id="main-tab-comparison" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base" role="tab" aria-selected="false" aria-controls="comparison-section">方案对比</button>
+                <button id="main-tab-calculator-tool" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base" role="tab" aria-selected="false" aria-controls="calculator-tool-section">计算器</button>
             </div>
         </div>
 
         <!-- 贷款计算器区域 -->
-        <div id="calculator-section" class="space-y-6 sm:space-y-8">
+        <div id="calculator-section" class="space-y-6 sm:space-y-8" role="tabpanel">
             <div class="soft-card p-4 sm:p-6">
                 <!-- 二级标签：标准 / 反推 -->
-                <div class="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6 justify-center">
-                    <button id="tab-standard" class="soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base">标准贷款计算</button>
-                    <button id="tab-reverse" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base">反推利率计算</button>
+                <div class="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6 justify-center" role="tablist">
+                    <button id="tab-standard" class="soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base" role="tab" aria-selected="true" aria-controls="standard-calculator">标准贷款计算</button>
+                    <button id="tab-reverse" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all text-sm sm:text-base" role="tab" aria-selected="false" aria-controls="reverse-calculator">反推利率计算</button>
                 </div>
 
                 <!-- 标准计算器 -->
-                <div id="standard-calculator">
+                <div id="standard-calculator" role="tabpanel">
+                    <div class="flex justify-end mb-2">
+                        <button id="reset-standard" class="reset-button" aria-label="重置标准贷款参数">↻ 重置</button>
+                    </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                         <!-- 左侧输入 -->
                         <div class="space-y-4 sm:space-y-6">
@@ -266,50 +332,50 @@
                             <div class="space-y-3 sm:space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label>
-                                    <input type="number" id="loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="0.01" step="0.01">
-                                    <div id="error-loan-amount" class="error-message"></div>
+                                    <input type="number" id="loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="0.01" step="0.01" inputmode="decimal" aria-describedby="error-loan-amount">
+                                    <div id="error-loan-amount" class="error-message" role="alert"></div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">利率</label>
                                     <div class="flex flex-col sm:flex-row gap-2">
-                                        <input type="number" id="interest-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入利率" min="0" max="100">
-                                        <select id="interest-rate-unit" class="soft-input unit-select px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                        <input type="number" id="interest-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入利率" min="0" max="100" inputmode="decimal" aria-describedby="rate-note-standard error-interest-rate">
+                                        <select id="interest-rate-unit" class="soft-input unit-select px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="利率单位">
                                             <option value="percent">年 (%)</option>
                                             <option value="permill">月 (厘)</option>
                                         </select>
                                     </div>
                                     <div id="rate-note-standard" class="rate-note">年利率上限100%</div>
-                                    <div id="error-interest-rate" class="error-message"></div>
+                                    <div id="error-interest-rate" class="error-message" role="alert"></div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款期限</label>
                                     <div class="flex flex-col sm:flex-row gap-2">
-                                        <input type="number" id="loan-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款期限" min="1" step="1">
-                                        <select id="term-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                        <input type="number" id="loan-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款期限" min="1" step="1" inputmode="numeric" aria-describedby="error-loan-term">
+                                        <select id="term-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="期限单位">
                                             <option value="years">年</option>
                                             <option value="months">月</option>
                                         </select>
                                     </div>
-                                    <div id="error-loan-term" class="error-message"></div>
-                                    <div id="standard-term-buttons" class="flex flex-wrap gap-2 mt-3"></div>
+                                    <div id="error-loan-term" class="error-message" role="alert"></div>
+                                    <div id="standard-term-buttons" class="flex flex-wrap gap-2 mt-3" role="group" aria-label="快速选择贷款期限"></div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">还款方式</label>
-                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-                                        <button id="btn-epi" class="soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">等额本息</button>
-                                        <button id="btn-epe" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">等本等息</button>
-                                        <button id="btn-ep" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">等额本金</button>
-                                        <button id="btn-io" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap">先息后本</button>
+                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3" role="group" aria-label="还款方式">
+                                        <button id="btn-epi" class="soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap" aria-pressed="true">等额本息</button>
+                                        <button id="btn-epe" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap" aria-pressed="false">等本等息</button>
+                                        <button id="btn-ep" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap" aria-pressed="false">等额本金</button>
+                                        <button id="btn-io" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base whitespace-nowrap" aria-pressed="false">先息后本</button>
                                     </div>
                                 </div>
                                 <div id="payment-frequency-section" class="hidden">
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">还款频率</label>
-                                    <select id="payment-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                    <select id="payment-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="还款频率">
                                         <option value="monthly">每月还款</option>
                                         <option value="quarterly">每季度还款</option>
                                     </select>
                                 </div>
-                                <button id="btn-calculate-standard" class="soft-button-primary w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg">开始计算</button>
+                                <button id="btn-calculate-standard" class="soft-button-primary w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg" aria-label="开始计算贷款">开始计算</button>
                             </div>
                         </div>
                         <!-- 右侧结果 -->
@@ -320,34 +386,40 @@
                                     <div class="grid grid-cols-2 gap-3 sm:gap-6">
                                         <div class="text-center">
                                             <p id="std-payment-label" class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">月供金额</p>
-                                            <p id="monthly-payment" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words">--</p>
+                                            <p id="monthly-payment" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words" aria-live="polite">--</p>
                                         </div>
                                         <div class="text-center">
                                             <p id="std-first-payment-label" class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">首月还款</p>
-                                            <p id="first-payment" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words">--</p>
+                                            <p id="first-payment" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words" aria-live="polite">--</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
                                     <div class="soft-card p-3 sm:p-5 text-center">
                                         <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">贷款总额</p>
-                                        <p id="total-principal" class="text-base sm:text-xl font-semibold break-words" style="color: var(--text-primary);">--</p>
+                                        <p id="total-principal" class="text-base sm:text-xl font-semibold break-words" style="color: var(--text-primary);" aria-live="polite">--</p>
                                     </div>
                                     <div class="soft-card p-3 sm:p-5 text-center">
                                         <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">总利息</p>
-                                        <p id="total-interest" class="text-base sm:text-xl font-semibold text-red-500 break-words">--</p>
+                                        <p id="total-interest" class="text-base sm:text-xl font-semibold text-red-500 break-words" aria-live="polite">--</p>
                                     </div>
                                 </div>
                                 <div class="soft-card p-3 sm:p-5 text-center">
                                     <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">还款总额</p>
-                                    <p id="total-payment" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--text-primary);">--</p>
+                                    <p id="total-payment" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--text-primary);" aria-live="polite">--</p>
                                 </div>
                                 <div id="irr-container" class="soft-card p-3 sm:p-5 text-center hidden">
-                                    <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">实际年化利率 (IRR)</p>
-                                    <p id="irr-value" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--button-primary-start);">--</p>
+                                    <div class="flex items-center justify-center">
+                                        <p class="text-xs sm:text-sm mb-0" style="color: var(--text-tertiary);">实际年化利率 (IRR)</p>
+                                        <div class="tooltip-container">
+                                            <span class="info-icon" aria-label="IRR 说明">i</span>
+                                            <span class="tooltip-text">内部收益率(IRR)是考虑货币时间价值的真实年化利率，等本等息方式下IRR高于名义利率。</span>
+                                        </div>
+                                    </div>
+                                    <p id="irr-value" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--button-primary-start);" aria-live="polite">--</p>
                                 </div>
                                 <div class="soft-card p-4 sm:p-6">
-                                    <canvas id="payment-chart" class="w-full h-auto max-w-xs mx-auto"></canvas>
+                                    <canvas id="payment-chart" class="w-full h-auto max-w-xs mx-auto" role="img" aria-label="贷款本金与利息占比饼图"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -357,8 +429,8 @@
                         <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
                             <h3 class="text-lg sm:text-xl font-semibold" style="color: var(--text-secondary);">详细还款计划</h3>
                             <div class="export-group flex gap-2">
-                                <button id="export-schedule-csv" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base" style="color: var(--button-primary-start);">📊 导出Excel</button>
-                                <button id="expand-table-btn" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base flex items-center gap-1">
+                                <button id="export-schedule-csv" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base" style="color: var(--button-primary-start);" aria-label="导出还款计划为Excel文件">📊 导出Excel</button>
+                                <button id="expand-table-btn" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base flex items-center gap-1" aria-label="全屏展开还款计划表格">
                                     <span>🔍 全屏展开</span>
                                 </button>
                             </div>
@@ -384,48 +456,51 @@
                 </div>
 
                 <!-- 反推计算器 -->
-                <div id="reverse-calculator" class="hidden">
+                <div id="reverse-calculator" class="hidden" role="tabpanel">
+                    <div class="flex justify-end mb-2">
+                        <button id="reset-reverse" class="reset-button" aria-label="重置反推利率参数">↻ 重置</button>
+                    </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                         <div class="space-y-4 sm:space-y-6">
                             <h3 class="text-lg sm:text-xl font-semibold text-center" style="color: var(--text-secondary);">已知还款额/总利息反推利率</h3>
                             <div class="space-y-3 sm:space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">反推模式</label>
-                                    <div class="grid grid-cols-2 gap-2 sm:gap-3">
-                                        <button id="btn-reverse-epi" class="soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base">等额本息</button>
-                                        <button id="btn-reverse-io" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base">先息后本</button>
+                                    <div class="grid grid-cols-2 gap-2 sm:gap-3" role="group" aria-label="反推模式">
+                                        <button id="btn-reverse-epi" class="soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base" aria-pressed="true">等额本息</button>
+                                        <button id="btn-reverse-io" class="soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all text-xs sm:text-base" aria-pressed="false">先息后本</button>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">计算依据</label>
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3" role="radiogroup" aria-label="计算依据">
                                         <label class="flex items-center gap-1"><input type="radio" name="reverse-basis" id="basis-payment" value="payment" checked> <span>每期还款额</span></label>
                                         <label class="flex items-center gap-1"><input type="radio" name="reverse-basis" id="basis-total-interest" value="totalInterest"> <span>总利息</span></label>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label>
-                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="0.01" step="0.01">
-                                    <div id="error-reverse-loan-amount" class="error-message"></div>
+                                    <input type="number" id="reverse-loan-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款总额" min="0.01" step="0.01" inputmode="decimal" aria-describedby="error-reverse-loan-amount">
+                                    <div id="error-reverse-loan-amount" class="error-message" role="alert"></div>
                                 </div>
                                 <div id="reverse-payment-section">
                                     <label id="reverse-payment-label" class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">每月还款金额 (元)</label>
-                                    <input type="number" id="reverse-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入还款金额" min="0.01" step="0.01">
-                                    <div id="error-reverse-payment" class="error-message"></div>
+                                    <input type="number" id="reverse-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入还款金额" min="0.01" step="0.01" inputmode="decimal" aria-describedby="error-reverse-payment">
+                                    <div id="error-reverse-payment" class="error-message" role="alert"></div>
                                 </div>
                                 <div id="reverse-total-interest-section" class="hidden">
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">总利息 (元)</label>
-                                    <input type="number" id="reverse-total-interest-input" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入总利息" min="0" step="0.01">
-                                    <div id="error-reverse-total-interest" class="error-message"></div>
+                                    <input type="number" id="reverse-total-interest-input" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入总利息" min="0" step="0.01" inputmode="decimal" aria-describedby="error-reverse-total-interest">
+                                    <div id="error-reverse-total-interest" class="error-message" role="alert"></div>
                                 </div>
                                 <div id="reverse-interest-section" class="hidden">
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">每期支付利息金额 (元)</label>
-                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入利息金额" min="0" step="0.01">
-                                    <div id="error-reverse-interest" class="error-message"></div>
+                                    <input type="number" id="reverse-interest-payment" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入利息金额" min="0" step="0.01" inputmode="decimal" aria-describedby="error-reverse-interest">
+                                    <div id="error-reverse-interest" class="error-message" role="alert"></div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">还款频率</label>
-                                    <select id="reverse-payment-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                    <select id="reverse-payment-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="还款频率">
                                         <option value="monthly">每月还款</option>
                                         <option value="quarterly">每季度还款</option>
                                     </select>
@@ -433,16 +508,16 @@
                                 <div>
                                     <label class="block text-sm font-medium mb-1 sm:mb-2 ml-1" style="color: var(--text-tertiary);">贷款期限</label>
                                     <div class="flex flex-col sm:flex-row gap-2">
-                                        <input type="number" id="reverse-loan-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款期限" min="1" step="1">
-                                        <select id="reverse-term-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                        <input type="number" id="reverse-loan-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" placeholder="请输入贷款期限" min="1" step="1" inputmode="numeric" aria-describedby="error-reverse-term">
+                                        <select id="reverse-term-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="期限单位">
                                             <option value="years">年</option>
                                             <option value="months">月</option>
                                         </select>
                                     </div>
-                                    <div id="error-reverse-term" class="error-message"></div>
-                                    <div id="reverse-term-buttons" class="flex flex-wrap gap-2 mt-3"></div>
+                                    <div id="error-reverse-term" class="error-message" role="alert"></div>
+                                    <div id="reverse-term-buttons" class="flex flex-wrap gap-2 mt-3" role="group" aria-label="快速选择贷款期限"></div>
                                 </div>
-                                <button id="btn-calculate-reverse" class="soft-button-primary w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg">计算利率</button>
+                                <button id="btn-calculate-reverse" class="soft-button-primary w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg" aria-label="开始反推利率计算">计算利率</button>
                             </div>
                         </div>
                         <div class="space-y-4 sm:space-y-6">
@@ -452,30 +527,30 @@
                                     <div class="grid grid-cols-2 gap-3 sm:gap-6">
                                         <div class="text-center">
                                             <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">年化利率</p>
-                                            <p id="reverse-annual-rate" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words">--</p>
+                                            <p id="reverse-annual-rate" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words" aria-live="polite">--</p>
                                         </div>
                                         <div class="text-center">
                                             <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">月利率 (单利)</p>
-                                            <p id="reverse-monthly-rate" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words">--</p>
+                                            <p id="reverse-monthly-rate" class="text-xl sm:text-3xl font-bold dreamy-gradient break-words" aria-live="polite">--</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
                                     <div class="soft-card p-3 sm:p-5 text-center">
                                         <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">贷款总额</p>
-                                        <p id="reverse-total-principal" class="text-base sm:text-xl font-semibold break-words" style="color: var(--text-primary);">--</p>
+                                        <p id="reverse-total-principal" class="text-base sm:text-xl font-semibold break-words" style="color: var(--text-primary);" aria-live="polite">--</p>
                                     </div>
                                     <div class="soft-card p-3 sm:p-5 text-center">
                                         <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">总利息</p>
-                                        <p id="reverse-total-interest" class="text-base sm:text-xl font-semibold text-red-500 break-words">--</p>
+                                        <p id="reverse-total-interest" class="text-base sm:text-xl font-semibold text-red-500 break-words" aria-live="polite">--</p>
                                     </div>
                                 </div>
                                 <div class="soft-card p-3 sm:p-5 text-center">
                                     <p class="text-xs sm:text-sm mb-1" style="color: var(--text-tertiary);">还款总额</p>
-                                    <p id="reverse-total-payment" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--text-primary);">--</p>
+                                    <p id="reverse-total-payment" class="text-lg sm:text-2xl font-bold break-words" style="color: var(--text-primary);" aria-live="polite">--</p>
                                 </div>
                                 <div class="soft-card p-4 sm:p-6">
-                                    <canvas id="reverse-payment-chart" class="w-full h-auto max-w-xs mx-auto"></canvas>
+                                    <canvas id="reverse-payment-chart" class="w-full h-auto max-w-xs mx-auto" role="img" aria-label="反推贷款本金与利息占比饼图"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -484,8 +559,8 @@
                         <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
                             <h3 class="text-lg sm:text-xl font-semibold" style="color: var(--text-secondary);">详细还款计划</h3>
                             <div class="export-group flex gap-2">
-                                <button id="export-reverse-schedule-csv" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base" style="color: var(--button-primary-start);">📊 导出Excel</button>
-                                <button id="expand-reverse-table-btn" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base flex items-center gap-1">
+                                <button id="export-reverse-schedule-csv" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base" style="color: var(--button-primary-start);" aria-label="导出反推还款计划为Excel文件">📊 导出Excel</button>
+                                <button id="expand-reverse-table-btn" class="soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base flex items-center gap-1" aria-label="全屏展开反推还款计划表格">
                                     <span>🔍 全屏展开</span>
                                 </button>
                             </div>
@@ -513,31 +588,31 @@
         </div>
 
         <!-- 方案对比区域 -->
-        <div id="comparison-section" class="hidden space-y-6 sm:space-y-8">
+        <div id="comparison-section" class="hidden space-y-6 sm:space-y-8" role="tabpanel">
             <div class="soft-card p-4 sm:p-8">
                 <h2 class="text-xl sm:text-2xl font-bold text-center dreamy-gradient mb-6 sm:mb-8">贷款方案对比分析</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
                     <!-- 方案A -->
-                    <div class="soft-card p-4 sm:p-6 border-2 border-primary-mix">
+                    <div class="soft-card p-4 sm:p-6 border-2" style="border-color: var(--button-primary-start);">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-primary-start);">方案 A</h3>
                         <div class="space-y-3 sm:space-y-4">
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-a-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0.01" step="0.01"><div id="error-comp-a-amount" class="error-message"></div></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-a-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0.01" step="0.01" inputmode="decimal" aria-describedby="error-comp-a-amount"><div id="error-comp-a-amount" class="error-message" role="alert"></div></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">利率</label>
                                 <div class="rate-row flex flex-col sm:flex-row gap-2">
-                                    <input type="number" id="comp-a-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率">
-                                    <select id="comp-a-rate-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                    <input type="number" id="comp-a-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率" inputmode="decimal" aria-describedby="rate-note-comp-a error-comp-a-rate">
+                                    <select id="comp-a-rate-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案A利率单位">
                                         <option value="percent">年 (%)</option>
                                         <option value="permill">月 (厘)</option>
                                     </select>
                                 </div>
                                 <div class="rate-note" id="rate-note-comp-a">年利率上限100%</div>
-                                <div id="error-comp-a-rate" class="error-message"></div>
+                                <div id="error-comp-a-rate" class="error-message" role="alert"></div>
                             </div>
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款期限</label><div class="flex flex-col sm:flex-row gap-2"><input type="number" id="comp-a-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"><select id="comp-a-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="years">年</option><option value="months">月</option></select></div><div id="error-comp-a-term" class="error-message"></div></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款期限</label><div class="flex flex-col sm:flex-row gap-2"><input type="number" id="comp-a-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1" inputmode="numeric" aria-describedby="error-comp-a-term"><select id="comp-a-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案A期限单位"><option value="years">年</option><option value="months">月</option></select></div><div id="error-comp-a-term" class="error-message" role="alert"></div></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label>
-                                <select id="comp-a-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                <select id="comp-a-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案A还款方式">
                                     <option value="equal-principal-interest">等额本息</option>
                                     <option value="equal-principal-equal-interest">等本等息</option>
                                     <option value="equal-principal">等额本金</option>
@@ -546,7 +621,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款频率</label>
-                                <select id="comp-a-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                <select id="comp-a-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案A还款频率">
                                     <option value="monthly">每月还款</option>
                                     <option value="quarterly">每季度还款</option>
                                 </select>
@@ -554,26 +629,26 @@
                         </div>
                     </div>
                     <!-- 方案B -->
-                    <div class="soft-card p-4 sm:p-6 border-2 border-operator-mix">
+                    <div class="soft-card p-4 sm:p-6 border-2" style="border-color: var(--button-operator-start);">
                         <h3 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6" style="color: var(--button-operator-start);">方案 B</h3>
                         <div class="space-y-3 sm:space-y-4">
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-b-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0.01" step="0.01"><div id="error-comp-b-amount" class="error-message"></div></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款总额 (元)</label><input type="number" id="comp-b-amount" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0.01" step="0.01" inputmode="decimal" aria-describedby="error-comp-b-amount"><div id="error-comp-b-amount" class="error-message" role="alert"></div></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">利率</label>
                                 <div class="rate-row flex flex-col sm:flex-row gap-2">
-                                    <input type="number" id="comp-b-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率">
-                                    <select id="comp-b-rate-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                    <input type="number" id="comp-b-rate" step="any" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="0" placeholder="利率" inputmode="decimal" aria-describedby="rate-note-comp-b error-comp-b-rate">
+                                    <select id="comp-b-rate-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案B利率单位">
                                         <option value="percent">年 (%)</option>
                                         <option value="permill">月 (厘)</option>
                                     </select>
                                 </div>
                                 <div class="rate-note" id="rate-note-comp-b">年利率上限100%</div>
-                                <div id="error-comp-b-rate" class="error-message"></div>
+                                <div id="error-comp-b-rate" class="error-message" role="alert"></div>
                             </div>
-                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款期限</label><div class="flex flex-col sm:flex-row gap-2"><input type="number" id="comp-b-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1"><select id="comp-b-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg"><option value="years">年</option><option value="months">月</option></select></div><div id="error-comp-b-term" class="error-message"></div></div>
+                            <div><label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">贷款期限</label><div class="flex flex-col sm:flex-row gap-2"><input type="number" id="comp-b-term" class="soft-input flex-1 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" min="1" step="1" inputmode="numeric" aria-describedby="error-comp-b-term"><select id="comp-b-unit" class="soft-input px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案B期限单位"><option value="years">年</option><option value="months">月</option></select></div><div id="error-comp-b-term" class="error-message" role="alert"></div></div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款方式</label>
-                                <select id="comp-b-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                <select id="comp-b-type" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案B还款方式">
                                     <option value="equal-principal-interest">等额本息</option>
                                     <option value="equal-principal-equal-interest">等本等息</option>
                                     <option value="equal-principal">等额本金</option>
@@ -582,7 +657,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-1 ml-1" style="color: var(--text-tertiary);">还款频率</label>
-                                <select id="comp-b-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg">
+                                <select id="comp-b-frequency" class="soft-input w-full px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg" aria-label="方案B还款频率">
                                     <option value="monthly">每月还款</option>
                                     <option value="quarterly">每季度还款</option>
                                 </select>
@@ -590,20 +665,20 @@
                         </div>
                     </div>
                 </div>
-                <button id="btn-compare" class="soft-button-primary w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg mb-6 sm:mb-8">开始对比分析</button>
+                <button id="btn-compare" class="soft-button-primary w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg mb-6 sm:mb-8" aria-label="开始对比分析两个贷款方案">开始对比分析</button>
                 <div id="comparison-results" class="hidden space-y-4 sm:space-y-6">
                     <h3 class="text-lg sm:text-xl font-bold text-center" style="color: var(--text-secondary);">对比结果</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        <div class="soft-card p-4 sm:p-6 border-2 border-primary-mix"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-primary-start);">方案 A</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">每期还款</span><span id="comp-a-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-a-interest" class="font-semibold text-sm sm:text-lg text-red-500">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-a-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div></div></div>
-                        <div class="soft-card p-4 sm:p-6 border-2 border-operator-mix"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-operator-start);">方案 B</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">每期还款</span><span id="comp-b-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-b-interest" class="font-semibold text-sm sm:text-lg text-red-500">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-b-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);">--</span></div></div></div>
+                        <div class="soft-card p-4 sm:p-6 border-2" style="border-color: var(--button-primary-start);"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-primary-start);">方案 A</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">每期还款</span><span id="comp-a-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);" aria-live="polite">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-a-interest" class="font-semibold text-sm sm:text-lg text-red-500" aria-live="polite">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-a-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);" aria-live="polite">--</span></div></div></div>
+                        <div class="soft-card p-4 sm:p-6 border-2" style="border-color: var(--button-operator-start);"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--button-operator-start);">方案 B</h4><div class="space-y-2 sm:space-y-3"><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">每期还款</span><span id="comp-b-monthly" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);" aria-live="polite">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">总利息</span><span id="comp-b-interest" class="font-semibold text-sm sm:text-lg text-red-500" aria-live="polite">--</span></div><div class="flex justify-between items-center py-1 sm:py-2"><span class="text-sm sm:text-base" style="color: var(--text-tertiary);">还款总额</span><span id="comp-b-total" class="font-semibold text-sm sm:text-lg" style="color: var(--text-primary);" aria-live="polite">--</span></div></div></div>
                     </div>
-                    <div class="soft-card p-4 sm:p-6"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--text-secondary);">差异分析</h4><div class="space-y-3 sm:space-y-4"><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">每期还款差异</span><span id="diff-monthly" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">总利息差异</span><span id="diff-interest" class="font-bold text-base sm:text-xl text-red-500">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">还款总额差异</span><span id="diff-total" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);">--</span></div></div></div>
+                    <div class="soft-card p-4 sm:p-6"><h4 class="text-base sm:text-lg font-semibold text-center mb-3 sm:mb-4" style="color: var(--text-secondary);">差异分析</h4><div class="space-y-3 sm:space-y-4"><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">每期还款差异</span><span id="diff-monthly" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);" aria-live="polite">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">总利息差异</span><span id="diff-interest" class="font-bold text-base sm:text-xl text-red-500" aria-live="polite">--</span></div><div class="flex justify-between items-center py-2 sm:py-3 px-3 sm:px-4 soft-card-inset"><span class="text-sm sm:text-base font-medium" style="color: var(--text-tertiary);">还款总额差异</span><span id="diff-total" class="font-bold text-base sm:text-xl" style="color: var(--text-primary);" aria-live="polite">--</span></div></div></div>
                     <div class="soft-card p-4 sm:p-6">
-                        <canvas id="comparison-chart" class="w-full h-auto"></canvas>
+                        <canvas id="comparison-chart" class="w-full h-auto" role="img" aria-label="方案对比折线图"></canvas>
                     </div>
                     <div class="text-center">
                         <div class="export-group flex gap-2 justify-center">
-                            <button id="export-comparison-csv" class="soft-button px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-medium text-sm sm:text-base" style="color: var(--button-primary-start);">📊 CSV</button>
+                            <button id="export-comparison-csv" class="soft-button px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-medium text-sm sm:text-base" style="color: var(--button-primary-start);" aria-label="导出对比结果为CSV文件">📊 CSV</button>
                         </div>
                     </div>
                 </div>
@@ -611,35 +686,35 @@
         </div>
 
         <!-- 简易计算器工具 -->
-        <div id="calculator-tool-section" class="hidden">
+        <div id="calculator-tool-section" class="hidden" role="tabpanel">
             <div class="max-w-md mx-auto">
-                <div class="soft-card p-4 sm:p-8">
+                <div class="soft-card p-4 sm:p-8" tabindex="0" aria-label="简易计算器，支持键盘输入">
                     <h2 class="text-xl sm:text-2xl font-bold text-center dreamy-gradient mb-4 sm:mb-6">计算器</h2>
                     <div class="soft-card-inset p-4 sm:p-6 mb-4 sm:mb-6">
-                        <div id="calc-expression" class="text-right text-sm sm:text-lg h-6 sm:h-8 overflow-hidden" style="color: var(--text-tertiary);"></div>
-                        <div id="calc-display" class="text-right text-3xl sm:text-4xl font-bold overflow-hidden break-words" style="color: var(--text-primary);">0</div>
+                        <div id="calc-expression" class="text-right text-sm sm:text-lg h-6 sm:h-8 overflow-hidden" style="color: var(--text-tertiary);" aria-label="表达式"></div>
+                        <div id="calc-display" class="text-right text-3xl sm:text-4xl font-bold overflow-hidden break-words" style="color: var(--text-primary);" aria-live="polite">0</div>
                     </div>
-                    <div class="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4">
-                        <button class="calc-button calc-button-clear py-3 sm:py-4 text-base sm:text-lg" data-calc="clear">C</button>
-                        <button class="calc-button calc-button-special py-3 sm:py-4 text-base sm:text-lg" data-calc="backspace">⌫</button>
-                        <button class="calc-button calc-button-special py-3 sm:py-4 text-base sm:text-lg" data-calc="%">%</button>
-                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="/">÷</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="7">7</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="8">8</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="9">9</button>
-                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="*">×</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="4">4</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="5">5</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="6">6</button>
-                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="-">−</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="1">1</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="2">2</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="3">3</button>
-                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="+">+</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="0">0</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="00">00</button>
-                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc=".">.</button>
-                        <button class="calc-button calc-button-equal py-3 sm:py-4 text-base sm:text-lg" data-calc="=">=</button>
+                    <div class="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4" role="group" aria-label="计算器按键">
+                        <button class="calc-button calc-button-clear py-3 sm:py-4 text-base sm:text-lg" data-calc="clear" aria-label="清除">C</button>
+                        <button class="calc-button calc-button-special py-3 sm:py-4 text-base sm:text-lg" data-calc="backspace" aria-label="退格">⌫</button>
+                        <button class="calc-button calc-button-special py-3 sm:py-4 text-base sm:text-lg" data-calc="%" aria-label="百分号">%</button>
+                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="/" aria-label="除号">÷</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="7" aria-label="7">7</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="8" aria-label="8">8</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="9" aria-label="9">9</button>
+                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="*" aria-label="乘号">×</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="4" aria-label="4">4</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="5" aria-label="5">5</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="6" aria-label="6">6</button>
+                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="-" aria-label="减号">−</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="1" aria-label="1">1</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="2" aria-label="2">2</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="3" aria-label="3">3</button>
+                        <button class="calc-button calc-button-operator py-3 sm:py-4 text-base sm:text-lg" data-calc="+" aria-label="加号">+</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="0" aria-label="0">0</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="00" aria-label="00">00</button>
+                        <button class="calc-button py-3 sm:py-4 text-base sm:text-lg" data-calc="." aria-label="小数点">.</button>
+                        <button class="calc-button calc-button-equal py-3 sm:py-4 text-base sm:text-lg" data-calc="=" aria-label="等于">=</button>
                     </div>
                 </div>
             </div>
@@ -697,7 +772,14 @@
                 },
                 validationTimer: null,
                 fullscreenElement: null,
-                fullscreenCloseBtn: null
+                fullscreenCloseBtn: null,
+                toastTimer: null
+            };
+
+            // 屏幕阅读器播报
+            const announce = (message) => {
+                const announcer = document.getElementById('sr-announcer');
+                if (announcer) announcer.textContent = message;
             };
 
             // ==================== 辅助函数 ====================
@@ -711,10 +793,13 @@
 
             const showToast = (message, duration = 3000) => {
                 const toast = document.getElementById('toast');
+                if (state.toastTimer) clearTimeout(state.toastTimer);
                 toast.textContent = message;
                 toast.classList.add('show');
-                setTimeout(() => {
+                announce(message);
+                state.toastTimer = setTimeout(() => {
                     toast.classList.remove('show');
+                    state.toastTimer = null;
                 }, duration);
             };
 
@@ -829,6 +914,22 @@
                 }
             };
 
+            // 利率单位切换时自动换算
+            const convertRateOnUnitChange = (inputId, unitSelectId, oldUnit) => {
+                const input = document.getElementById(inputId);
+                const newUnit = document.getElementById(unitSelectId).value;
+                if (!input || input.value === '') return;
+                let val = parseFloat(input.value);
+                if (isNaN(val)) return;
+                
+                if (oldUnit === 'percent' && newUnit === 'permill') {
+                    val = val * 10 / 12;
+                } else if (oldUnit === 'permill' && newUnit === 'percent') {
+                    val = val * 12 / 10;
+                }
+                input.value = val.toFixed(6).replace(/\.?0+$/, '');
+            };
+
             const attachDebounceValidation = () => {
                 const rateInputs = [
                     { input: 'interest-rate', error: 'error-interest-rate', unit: 'interest-rate-unit', note: 'rate-note-standard' },
@@ -857,7 +958,7 @@
                 });
             };
 
-            // ==================== 全屏表格功能 ====================
+            // ==================== 全屏表格功能 (已移除历史记录操作) ====================
             function toggleFullscreen(container) {
                 if (state.fullscreenElement) {
                     exitFullscreen();
@@ -872,6 +973,7 @@
                 const closeBtn = document.createElement('button');
                 closeBtn.className = 'fullscreen-close-btn';
                 closeBtn.innerHTML = '✕ 退出全屏';
+                closeBtn.setAttribute('aria-label', '退出全屏');
                 closeBtn.addEventListener('click', exitFullscreen);
                 document.body.appendChild(closeBtn);
                 
@@ -879,7 +981,7 @@
                 state.fullscreenElement = container;
                 state.fullscreenCloseBtn = closeBtn;
                 
-                showToast('已进入全屏，点击左上角按钮或按返回键/ESC退出');
+                showToast('已进入全屏，点击左上角按钮或按ESC退出');
             }
 
             function exitFullscreen() {
@@ -916,7 +1018,7 @@
                 return mid.times(12).toNumber();
             }
 
-            // ==================== 核心计算函数 ====================
+            // ==================== 核心计算函数 (全程使用Decimal) ====================
             function computeLoanDetails(principal, annualRate, months, type, frequency = 'monthly') {
                 const P = new Decimal(principal);
                 const r_annual = new Decimal(annualRate);
@@ -1075,6 +1177,7 @@
                 };
             }
 
+            // 反推利率 (全程Decimal)
             function reverseRateFromPayment(loanAmount, payment, totalPeriods, periodsPerYear) {
                 const P_dec = new Decimal(loanAmount);
                 const payment_dec = new Decimal(payment);
@@ -1102,33 +1205,16 @@
                     return null;
                 }
 
-                let low = 0;
-                let high = maxPeriodRate;
-                let testHigh = high;
-                while (testHigh <= 1.0) {
-                    const one_plus_r = Decimal(1).plus(testHigh);
-                    const pow_n = one_plus_r.pow(totalPeriods);
-                    const numerator = P_dec.times(testHigh).times(pow_n);
-                    const denominator = pow_n.minus(1);
-                    const testPayment = numerator.div(denominator).toNumber();
-                    if (testPayment >= payment) {
-                        high = testHigh;
-                        break;
-                    }
-                    testHigh = Math.min(testHigh * 2, 1.0);
-                }
-
-                if (high < 1e-10) {
-                    return { periodRate: 0, annualRate: 0 };
-                }
-
-                let mid;
+                let low = new Decimal(0);
+                let high = new Decimal(maxPeriodRate);
+                let mid = new Decimal(0);
                 let found = false;
+
                 for (let i = 0; i < CONFIG.MAX_ITERATIONS; i++) {
-                    mid = (low + high) / 2;
-                    if (mid < 1e-12) {
-                        const testPayment = P_dec.div(totalPeriods_dec).toNumber();
-                        if (Math.abs(testPayment - payment) < CONFIG.ABS_EPSILON) {
+                    mid = low.plus(high).div(2);
+                    if (mid.lessThan(1e-12)) {
+                        const testPayment = P_dec.div(totalPeriods_dec);
+                        if (testPayment.minus(payment).abs().lessThan(CONFIG.ABS_EPSILON)) {
                             found = true;
                             break;
                         } else {
@@ -1140,15 +1226,14 @@
                     const pow_n = one_plus_r.pow(totalPeriods);
                     const numerator = P_dec.times(mid).times(pow_n);
                     const denominator = pow_n.minus(1);
-                    const calculated = numerator.div(denominator).toNumber();
+                    const calculated = numerator.div(denominator);
                     
-                    const absDiff = Math.abs(calculated - payment);
-                    const relDiff = absDiff / payment;
-                    if (absDiff < CONFIG.ABS_EPSILON || relDiff < CONFIG.REL_EPSILON) {
+                    const diff = calculated.minus(payment).abs();
+                    if (diff.lessThan(CONFIG.ABS_EPSILON) || diff.div(payment).lessThan(CONFIG.REL_EPSILON)) {
                         found = true;
                         break;
                     }
-                    if (calculated > payment) {
+                    if (calculated.greaterThan(payment)) {
                         high = mid;
                     } else {
                         low = mid;
@@ -1158,16 +1243,14 @@
                     showToast('无法收敛到足够精度，请检查输入是否合理');
                     return null;
                 }
-                return { periodRate: mid, annualRate: mid * periodsPerYear };
+                const periodRate = mid.toNumber();
+                return { periodRate, annualRate: periodRate * periodsPerYear };
             }
 
             // ==================== 图表管理 ====================
             function getChartInstance(ctx, chartType, data, options) {
-                if (ctx.chart && ctx.chart.config.type === chartType) {
-                    ctx.chart.data = data;
-                    ctx.chart.options = options;
-                    ctx.chart.update();
-                    return ctx.chart;
+                if (ctx.chart) {
+                    ctx.chart.destroy();
                 }
                 return new Chart(ctx, { type: chartType, data, options });
             }
@@ -1177,6 +1260,14 @@
                 const ctx = canvas.getContext('2d');
                 const total = principal + interest;
                 const percent = total > 0 ? (interest / total * 100).toFixed(1) : '0.0';
+                
+                if (total === 0) {
+                    if (ctx.chart) ctx.chart.destroy();
+                    canvas.style.display = 'none';
+                    return;
+                }
+                canvas.style.display = 'block';
+                
                 const data = {
                     labels: ['本金', '利息'],
                     datasets: [{ data: [principal, interest], backgroundColor: ['#667eea', '#f56565'], borderWidth: 0 }]
@@ -1198,6 +1289,14 @@
                 const ctx = canvas.getContext('2d');
                 const total = principal + interest;
                 const percent = total > 0 ? (interest / total * 100).toFixed(1) : '0.0';
+                
+                if (total === 0) {
+                    if (ctx.chart) ctx.chart.destroy();
+                    canvas.style.display = 'none';
+                    return;
+                }
+                canvas.style.display = 'block';
+                
                 const data = {
                     labels: ['本金', '利息'],
                     datasets: [{ data: [principal, interest], backgroundColor: ['#667eea', '#f56565'], borderWidth: 0 }]
@@ -1284,7 +1383,7 @@
                     <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${formatCurrency(summary.totalPayment)}</td>
                     <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-green-600">${formatCurrency(summary.principal)}</td>
                     <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-red-500">${formatCurrency(summary.totalInterest)}</td>
-                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">0.00</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">—</td>
                 `;
                 tfoot.appendChild(totalRow);
                 table.appendChild(tfoot);
@@ -1299,7 +1398,7 @@
                 if (totalPages <= 1) { container.innerHTML = ''; return; }
                 let html = '';
                 for (let i = 1; i <= totalPages; i++) {
-                    html += `<button class="px-2 sm:px-3 py-1 rounded ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                    html += `<button class="px-2 sm:px-3 py-1 rounded ${i === currentPage ? 'active' : ''}" data-page="${i}" aria-label="第${i}页">${i}</button>`;
                 }
                 container.innerHTML = html;
             }
@@ -1312,6 +1411,7 @@
                     if (!isNaN(page)) {
                         state.schedulePage = page;
                         renderTable(state.standardSchedule, 'schedule-table', 'schedule-pagination', state.lastStandard, page);
+                        announce(`切换到第${page}页`);
                     }
                 });
                 document.getElementById('reverse-schedule-pagination').addEventListener('click', (e) => {
@@ -1321,6 +1421,7 @@
                     if (!isNaN(page)) {
                         state.reverseSchedulePage = page;
                         renderTable(state.reverseSchedule, 'reverse-schedule-table', 'reverse-schedule-pagination', state.lastReverse, page);
+                        announce(`切换到第${page}页`);
                     }
                 });
             }
@@ -1411,6 +1512,7 @@
                     document.getElementById('total-principal').textContent = formatCurrency(loanAmount);
                     document.getElementById('total-interest').textContent = formatCurrency(result.totalInterest);
                     document.getElementById('total-payment').textContent = formatCurrency(result.totalPayment);
+                    announce(`计算结果：月供${formatCurrency(result.monthlyPayment||0)}，总利息${formatCurrency(result.totalInterest)}`);
 
                     const irrContainer = document.getElementById('irr-container');
                     if (state.currentRepaymentType === 'equal-principal-equal-interest' && result.monthlyPayment > 0) {
@@ -1517,7 +1619,7 @@
                         const result = reverseRateFromPayment(loanAmount, payment, totalPeriods, periodsPerYear);
                         if (!result) return;
 
-                        const periodRate = result.periodRate;
+                        const periodRate = new Decimal(result.periodRate);
                         const annualRate = result.annualRate;
                         const monthlyRate = annualRate / 12;
 
@@ -1548,7 +1650,7 @@
 
                         document.getElementById('reverse-annual-rate').textContent = (annualRate * 100).toFixed(2) + '%';
                         document.getElementById('reverse-monthly-rate').textContent = (monthlyRate * 1000).toFixed(2) + '厘';
-                    } else { // 先息后本模式
+                    } else { // 先息后本
                         const interestInput = document.getElementById('reverse-interest-payment');
                         const interestPayment = validateNonNegative(interestInput.value, '每期利息金额', 'error-reverse-interest');
                         if (!interestPayment) return;
@@ -1607,6 +1709,7 @@
                     document.getElementById('reverse-total-principal').textContent = formatCurrency(loanAmount);
                     document.getElementById('reverse-total-interest').textContent = formatCurrency(state.lastReverse.totalInterest);
                     document.getElementById('reverse-total-payment').textContent = formatCurrency(state.lastReverse.totalPayment);
+                    announce(`反推年化利率：${(state.lastReverse.annualRate*100).toFixed(2)}%`);
                     
                     state.reverseSchedulePage = 1;
                     renderTable(state.reverseSchedule, 'reverse-schedule-table', 'reverse-schedule-pagination', state.lastReverse, 1);
@@ -1686,10 +1789,67 @@
 
                     updateComparisonChart(resA.schedule, resB.schedule);
                     document.getElementById('comparison-results').classList.remove('hidden');
+                    announce('对比分析完成');
                 } finally {
                     state.isCalculating = false;
                     btn.disabled = false;
                 }
+            }
+
+            // ==================== 重置功能 ====================
+            function resetStandardForm() {
+                document.getElementById('loan-amount').value = '';
+                document.getElementById('interest-rate').value = '';
+                document.getElementById('interest-rate-unit').value = 'percent';
+                document.getElementById('loan-term').value = '';
+                document.getElementById('term-unit').value = 'years';
+                document.getElementById('payment-frequency').value = 'monthly';
+                setRepaymentType('equal-principal-interest');
+                clearError('error-loan-amount');
+                clearError('error-interest-rate');
+                clearError('error-loan-term');
+                document.getElementById('monthly-payment').textContent = '--';
+                document.getElementById('first-payment').textContent = '--';
+                document.getElementById('total-principal').textContent = '--';
+                document.getElementById('total-interest').textContent = '--';
+                document.getElementById('total-payment').textContent = '--';
+                document.getElementById('irr-container').classList.add('hidden');
+                state.standardSchedule = [];
+                state.lastStandard = { principal:0, totalInterest:0, totalPayment:0, annualRate:0, totalPeriods:0 };
+                renderTable([], 'schedule-table', 'schedule-pagination', state.lastStandard, 1);
+                const canvas = document.getElementById('payment-chart');
+                const ctx = canvas.getContext('2d');
+                if (ctx.chart) ctx.chart.destroy();
+                showToast('参数已重置');
+            }
+
+            function resetReverseForm() {
+                document.getElementById('reverse-loan-amount').value = '';
+                document.getElementById('reverse-payment').value = '';
+                document.getElementById('reverse-total-interest-input').value = '';
+                document.getElementById('reverse-interest-payment').value = '';
+                document.getElementById('reverse-loan-term').value = '';
+                document.getElementById('reverse-term-unit').value = 'years';
+                document.getElementById('reverse-payment-frequency').value = 'monthly';
+                document.getElementById('basis-payment').checked = true;
+                setReverseMode('equal-principal-interest');
+                clearError('error-reverse-loan-amount');
+                clearError('error-reverse-payment');
+                clearError('error-reverse-total-interest');
+                clearError('error-reverse-interest');
+                clearError('error-reverse-term');
+                document.getElementById('reverse-annual-rate').textContent = '--';
+                document.getElementById('reverse-monthly-rate').textContent = '--';
+                document.getElementById('reverse-total-principal').textContent = '--';
+                document.getElementById('reverse-total-interest').textContent = '--';
+                document.getElementById('reverse-total-payment').textContent = '--';
+                state.reverseSchedule = [];
+                state.lastReverse = { principal:0, totalInterest:0, totalPayment:0, annualRate:0, totalPeriods:0 };
+                renderTable([], 'reverse-schedule-table', 'reverse-schedule-pagination', state.lastReverse, 1);
+                const canvas = document.getElementById('reverse-payment-chart');
+                const ctx = canvas.getContext('2d');
+                if (ctx.chart) ctx.chart.destroy();
+                showToast('反推参数已重置');
             }
 
             // ==================== 导出Excel ====================
@@ -1727,13 +1887,14 @@
                 <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${state.lastStandard.totalPayment.toFixed(2)}</td>
                 <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#22c55e;">${state.lastStandard.principal.toFixed(2)}</td>
                 <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#ef4444;">${state.lastStandard.totalInterest.toFixed(2)}</td>
-                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">0.00</td></tr></table></body></html>`;
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">—</td></tr></table></body></html>`;
 
                 const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = fileName;
                 link.click();
+                showToast('导出成功');
             }
 
             function exportReverseScheduleExcel() {
@@ -1770,13 +1931,14 @@
                 <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">${state.lastReverse.totalPayment.toFixed(2)}</td>
                 <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#22c55e;">${state.lastReverse.principal.toFixed(2)}</td>
                 <td style="border:1px solid #d0d7de;padding:4px;text-align:center;color:#ef4444;">${state.lastReverse.totalInterest.toFixed(2)}</td>
-                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">0.00</td></tr></table></body></html>`;
+                <td style="border:1px solid #d0d7de;padding:4px;text-align:center;">—</td></tr></table></body></html>`;
 
                 const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = fileName;
                 link.click();
+                showToast('导出成功');
             }
 
             function exportComparisonCSV() {
@@ -1794,6 +1956,7 @@
                 link.download = `方案对比_${dateStr}.csv`;
                 link.href = URL.createObjectURL(blob);
                 link.click();
+                showToast('导出成功');
             }
 
             // ==================== 简易计算器 ====================
@@ -1818,6 +1981,7 @@
                         state.calcCurrent = String(result);
                         state.calcExpression = '';
                         state.calcNewInput = true;
+                        announce(`计算结果：${result}`);
                     } catch (e) {
                         state.calcCurrent = '表达式错误';
                         state.calcExpression = '';
@@ -1843,12 +2007,17 @@
                 document.getElementById('calc-display').textContent = state.calcCurrent;
             }
 
+            // 键盘事件
             function handleCalcKey(e) {
+                if (state.currentMainSection !== 'calculator-tool') return;
                 const target = e.target;
                 if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable) return;
-                if (state.currentMainSection !== 'calculator-tool') return;
+                
                 const key = e.key;
-                if (key.startsWith('Arrow') || key === 'PageUp' || key === 'PageDown' || key === 'Home' || key === 'End') e.preventDefault();
+                if (key.startsWith('Arrow') || key === 'PageUp' || key === 'PageDown' || key === 'Home' || key === 'End') {
+                    e.preventDefault();
+                }
+                
                 if (/\d/.test(key)) calcAppend(key);
                 else if (key === '.') calcAppend('.');
                 else if (key === '+' || key === '-' || key === '*' || key === '/') calcAppend(key);
@@ -1871,7 +2040,7 @@
                     const label = labels[i];
                     const termAttr = isStandard ? 'data-term' : 'data-reverse-term';
                     const unitAttr = isStandard ? 'data-unit' : 'data-reverse-unit';
-                    html += `<button class="term-quick-btn" ${termAttr}="${value}" ${unitAttr}="${unit}">${label}</button>`;
+                    html += `<button class="term-quick-btn" ${termAttr}="${value}" ${unitAttr}="${unit}" aria-label="设置贷款期限为${label}">${label}</button>`;
                 }
                 container.innerHTML = html;
             }
@@ -1884,17 +2053,19 @@
                 if (term !== undefined && unit !== undefined) {
                     document.getElementById('loan-term').value = term;
                     document.getElementById('term-unit').value = unit;
-                    const amount = document.getElementById('loan-amount').value;
-                    const rate = document.getElementById('interest-rate').value;
-                    if (!amount) {
-                        document.getElementById('loan-amount').value = 1000000;
-                        showToast('已填充默认贷款总额100万元');
+                    const amountInput = document.getElementById('loan-amount');
+                    const rateInput = document.getElementById('interest-rate');
+                    let filled = false;
+                    if (!amountInput.value) {
+                        amountInput.value = 1000000;
+                        filled = true;
                     }
-                    if (!rate) {
-                        document.getElementById('interest-rate').value = 4.5;
+                    if (!rateInput.value) {
+                        rateInput.value = 4.5;
                         document.getElementById('interest-rate-unit').value = 'percent';
-                        showToast('已填充默认年利率4.5%');
+                        filled = true;
                     }
+                    if (filled) showToast('已填充默认贷款总额100万元和年利率4.5%');
                     clearError('error-loan-amount');
                     clearError('error-interest-rate');
                     clearError('error-loan-term');
@@ -1910,9 +2081,9 @@
                 if (term !== undefined && unit !== undefined) {
                     document.getElementById('reverse-loan-term').value = term;
                     document.getElementById('reverse-term-unit').value = unit;
-                    const amount = document.getElementById('reverse-loan-amount').value;
-                    if (!amount) {
-                        document.getElementById('reverse-loan-amount').value = 1000000;
+                    const amountInput = document.getElementById('reverse-loan-amount');
+                    if (!amountInput.value) {
+                        amountInput.value = 1000000;
                         showToast('已填充默认贷款总额100万元，请填写还款额或总利息');
                     } else {
                         setTimeout(() => calculateReverseRate(), 100);
@@ -1928,20 +2099,22 @@
                 ['calculator','comparison','calculator-tool'].forEach(s => {
                     const btn = document.getElementById(`main-tab-${s}`);
                     const sec = document.getElementById(`${s}-section`);
-                    if (s === section) {
-                        btn.classList.add('soft-tab-active'); btn.classList.remove('soft-button');
-                        sec.classList.remove('hidden');
-                    } else {
-                        btn.classList.add('soft-button'); btn.classList.remove('soft-tab-active');
-                        sec.classList.add('hidden');
-                    }
+                    const isSelected = s === section;
+                    btn.classList.toggle('soft-tab-active', isSelected);
+                    btn.classList.toggle('soft-button', !isSelected);
+                    btn.setAttribute('aria-selected', isSelected);
+                    sec.classList.toggle('hidden', !isSelected);
                 });
             }
 
             function switchCalculatorType(type) {
                 state.currentCalculatorType = type;
-                document.getElementById('tab-standard').className = type==='standard' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
-                document.getElementById('tab-reverse').className = type==='reverse' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
+                const standardBtn = document.getElementById('tab-standard');
+                const reverseBtn = document.getElementById('tab-reverse');
+                standardBtn.className = type==='standard' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
+                reverseBtn.className = type==='reverse' ? 'soft-tab-active px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium' : 'soft-button px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium';
+                standardBtn.setAttribute('aria-selected', type==='standard');
+                reverseBtn.setAttribute('aria-selected', type==='reverse');
                 document.getElementById('standard-calculator').classList.toggle('hidden', type!=='standard');
                 document.getElementById('reverse-calculator').classList.toggle('hidden', type!=='reverse');
                 if (type === 'standard') {
@@ -1964,6 +2137,7 @@
                     const el = document.getElementById(id);
                     if (el) {
                         el.className = 'px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium transition-all ' + (key === type ? 'soft-tab-active' : 'soft-button');
+                        el.setAttribute('aria-pressed', key === type);
                     }
                 });
                 const freqSection = document.getElementById('payment-frequency-section');
@@ -1979,8 +2153,13 @@
 
             function setReverseMode(mode) {
                 state.currentReverseMode = mode;
-                document.getElementById('btn-reverse-epi').className = mode==='equal-principal-interest' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
-                document.getElementById('btn-reverse-io').className = mode==='interest-only' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
+                const epiBtn = document.getElementById('btn-reverse-epi');
+                const ioBtn = document.getElementById('btn-reverse-io');
+                epiBtn.className = mode==='equal-principal-interest' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
+                ioBtn.className = mode==='interest-only' ? 'soft-tab-active px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium' : 'soft-button px-2 sm:px-4 py-3 sm:py-4 rounded-xl font-medium';
+                epiBtn.setAttribute('aria-pressed', mode==='equal-principal-interest');
+                ioBtn.setAttribute('aria-pressed', mode==='interest-only');
+                
                 const paymentSection = document.getElementById('reverse-payment-section');
                 const interestSection = document.getElementById('reverse-interest-section');
                 const totalInterestSection = document.getElementById('reverse-total-interest-section');
@@ -2031,9 +2210,12 @@
                 unitSelects.forEach(item => {
                     const select = document.getElementById(item.select);
                     if (select) {
+                        let oldUnit = select.value;
                         select.addEventListener('change', () => {
                             updateRateNote(item.select, item.note);
+                            convertRateOnUnitChange(item.inputId, item.select, oldUnit);
                             revalidateRateOnUnitChange(item.inputId, item.errorId, item.select, item.note);
+                            oldUnit = select.value;
                         });
                         updateRateNote(item.select, item.note);
                     }
@@ -2065,7 +2247,9 @@
                 document.getElementById('export-reverse-schedule-csv').addEventListener('click', exportReverseScheduleExcel);
                 document.getElementById('export-comparison-csv').addEventListener('click', exportComparisonCSV);
 
-                // 全屏展开功能
+                document.getElementById('reset-standard').addEventListener('click', resetStandardForm);
+                document.getElementById('reset-reverse').addEventListener('click', resetReverseForm);
+
                 document.getElementById('expand-table-btn').addEventListener('click', () => {
                     toggleFullscreen(document.getElementById('schedule-table-container'));
                 });
@@ -2107,12 +2291,12 @@
                 setupBasisToggle();
                 setupPaginationDelegation();
 
-                // 监听返回键退出全屏
-                window.addEventListener('popstate', () => {
-                    if (state.fullscreenElement) exitFullscreen();
-                });
+                // 监听ESC退出全屏
                 document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && state.fullscreenElement) exitFullscreen();
+                    if (e.key === 'Escape' && state.fullscreenElement) {
+                        exitFullscreen();
+                        e.preventDefault();
+                    }
                 });
             }
 
